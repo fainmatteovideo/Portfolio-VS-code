@@ -1,14 +1,571 @@
-body, html { margin: 0; padding: 0; min-height: 100%; background-color: #050505; font-family: 'Inter', sans-serif; color: white; overflow-x: hidden; scroll-behavior: smooth; }
+body,
+html {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background-color: #050505;
+    font-family: 'Inter', sans-serif;
+    color: white;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
 
-.nav-link { position: relative; padding-bottom: 2px; transition: opacity 0.3s; }
-.nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: white; transition: width 0.3s; }
-.nav-link:hover::after { width: 100%; }
-.nav-link.active::after { width: 100%; }
+.nav-link {
+    position: relative;
+    padding-bottom: 2px;
+    transition: opacity 0.3s;
+}
 
-.fade-in { animation: fadeIn 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards; opacity: 0; transform: translateY(20px); will-change: transform, opacity; }
-.delay-1 { animation-delay: 0.1s; }
-.delay-2 { animation-delay: 0.2s; }
-@keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: white;
+    transition: width 0.3s;
+}
 
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.nav-link.active::after {
+    width: 100%;
+}
+
+.fade-in {
+    animation: fadeIn 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    opacity: 0;
+    transform: translateY(20px);
+    will-change: transform, opacity;
+}
+
+.delay-1 {
+    animation-delay: 0.1s;
+}
+
+.delay-2 {
+    animation-delay: 0.2s;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Glassmorphism Header on Scroll */
+nav {
+    transition: background-color 0.4s ease, backdrop-filter 0.4s ease, padding 0.4s ease !important;
+}
+
+nav.nav-scrolled {
+    background-color: rgba(12, 12, 14, 0.85) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+}
+
+/* =========================================
+   Mobile Responsiveness (Max-width 768px)
+   ========================================= */
+@media (max-width: 768px) {
+
+    /* ========== 1. HOME PAGE ========== */
+    .slide-number-container {
+        display: none !important;
+    }
+
+    .video-container {
+        border: none !important;
+        border-radius: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        max-width: none !important;
+        max-height: none !important;
+    }
+
+    /* Prev/Next totalmente ai bordi dello schermo (specificità aumentata per sovrascrivere style in index.html) */
+    body .swiper-button-prev {
+        left: 0.3cm !important;
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+        width: 30px !important;
+        justify-content: flex-start !important; /* Allinea il testo attaccato a sinistra */
+    }
+
+    body .swiper-button-next {
+        right: 0.3cm !important;
+        padding-right: 0 !important;
+        margin-right: 0 !important;
+        width: 30px !important;
+        justify-content: flex-end !important; /* Allinea il testo attaccato a destra */
+    }
+
+    .slide-text-container {
+        top: calc(15% + 1cm) !important;
+        bottom: auto !important;
+    }
+
+    .slide-text-container .mt-3 {
+        margin-top: 0.2rem !important; /* Più vicini tra loro */
+    }
+
+    /* Carosello loghi in home rimosso da qui (spostato in 1024px) */
+
+    /* ========== 2. WORK PAGE — Commercial, Documentary, Motion Graphic ========== */
+
+    /* Sezione works: nessun padding laterale per i video */
+    #works-list {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    #works-list>* {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    /* Blocchi flex video+testo: tolgo gap laterale */
+    #commercial-grid .flex.flex-col-reverse,
+    #documentary-grid .flex.flex-col-reverse,
+    #motion-graphic-grid .flex.flex-col-reverse {
+        gap: 16px !important;
+    }
+
+    /* Video wrapper a tutto schermo: mantieni padding-bottom per l'aspect ratio (NO padding: 0) */
+    .video-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    /* Security Office & Cafe videos scalati 16% in più per toccare bene i bordi */
+    #commercial-grid>div:nth-child(1) .video-wrapper,
+    #commercial-grid>div:nth-child(4) .video-wrapper {
+        transform: scale(1.16) !important;
+        transform-origin: center center !important;
+    }
+
+    /* Contenitori lg:w-[65%] e lg:w-[35%] a 100% */
+    .w-\[65\%\],
+    .lg\:w-\[65\%\],
+    .w-\[35\%\],
+    .lg\:w-\[35\%\],
+    .w-\[95\%\] {
+        width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        box-sizing: border-box;
+    }
+
+    /* Testo e loghi: mantieni un po' di padding interno */
+    #commercial-grid .flex.flex-col.justify-start,
+    #documentary-grid .flex.flex-col.justify-start,
+    #motion-graphic-grid .flex.flex-col.justify-start {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+    }
+
+    /* Loghi generali 30% più piccoli */
+    #works-list img[alt*="Logo"],
+    #works-list img[alt*="logo"] {
+        transform: scale(0.7) !important;
+        transform-origin: center !important;
+    }
+
+    /* Loghi specifici modificati su richiesta */
+    img[alt="Swisscom Logo"],
+    img[alt="Stories Logo"] {
+        margin-left: -30px !important;
+    }
+
+    img[alt="BTRY Logo"] {
+        margin-top: -5px !important;
+    }
+
+    img[alt="Raiffeisenbank Logo"] {
+        margin-top: 11px !important;
+    }
+
+    img[alt="Hope Group Logo"] {
+        transform: scale(0.56) !important;
+        margin-top: -30px !important;
+    }
+
+    img[alt="Trees for the Future Logo"] {
+        transform: scale(0.6) !important;
+        margin-top: -85px !important;
+    }
+
+    img[alt="Aceli Africa Logo"] {
+        transform: scale(0.6) !important;
+        margin-top: -75px !important;
+    }
+
+    /* Spaziature specifiche sotto i loghi di Commercial */
+    #commercial-grid>div:nth-child(8) .lg\:w-\[35\%\] {
+        margin-bottom: 21px !important;
+        /* Raiffeisen: abbassa carosello di 0.7cm */
+    }
+
+    /* Spaziature specifiche sotto i loghi di Documentary */
+    #documentary-grid>div:nth-child(1) .lg\:w-\[35\%\] {
+        margin-bottom: -30px !important;
+        /* Chris: abbassato il contenuto sotto di 1cm rispetto ai -60px */
+    }
+
+    #documentary-grid>div:nth-child(3) .lg\:w-\[35\%\] {
+        margin-bottom: -120px !important;
+        /* Trees */
+    }
+
+    #documentary-grid>div:nth-child(5) .lg\:w-\[35\%\] {
+        margin-bottom: -30px !important;
+        /* Aceli: abbassato carosello di 1cm rispetto ai -60px */
+    }
+
+    /* Ridurre spazio in pagina About tra descrizione e Creative Partners */
+    .fade-in.delay-2.mt-16.mb-20.px-10 {
+        margin-top: 1.5rem !important;
+    }
+
+    .fade-in.delay-2.mt-16.mb-20.px-10 span.text-\[10px\] {
+        font-size: 9px !important;
+    }
+
+    .fade-in.delay-2.border-t.border-white\/10.pt-24 {
+        padding-top: 1.5rem !important;
+    }
+
+    /* Caroselli stills: altezza container e larghezza items scalati proporzionalmente */
+    .stills-marquee-container {
+        height: 95px !important;
+        margin-top: 12px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .stills-marquee-item {
+        width: 151px !important;
+    }
+
+    /* ========== 3. WORK PAGE — Griglie generali e Social / Verticali ========== */
+
+    /* Applica 1 colonna a tutte le griglie tranne quelle dei video verticali */
+    .grid:not(.grid-cols-2) {
+        grid-template-columns: 1fr !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    /* Qualsiasi griglia impostata a 2 colonne (video verticali social/motion) rimane a 2 colonne su mobile */
+    #works-list .grid.grid-cols-2 {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+
+    /* ========== 4. WORK PAGE — Tipografia più piccola ========== */
+    .text-2xl,
+    .text-3xl,
+    h2,
+    h3 {
+        font-size: 1.4rem !important;
+        line-height: 1.3 !important;
+        text-align: center;
+    }
+
+    #works-list .text-2xl,
+    #works-list .text-3xl,
+    #works-list h2,
+    #works-list h3 {
+        font-size: 1.1rem !important;
+        line-height: 1.2 !important;
+    }
+
+    #works-list .text-\[13px\],
+    #works-list .text-\[14px\],
+    #works-list .text-\[15px\] {
+        font-size: 10px !important;
+        line-height: 1.4 !important;
+    }
+
+    #works-list .text-xs,
+    #works-list .text-sm {
+        font-size: 9px !important;
+    }
+
+    #works-list .mb-6 {
+        margin-bottom: 0.75rem !important;
+    }
+
+    #works-list .mt-8 {
+        margin-top: 1rem !important;
+    }
+
+    #works-list .gap-8 {
+        gap: 0.5rem !important;
+    }
+
+    #works-list .gap-2 {
+        gap: 2px !important;
+    }
+
+    #works-list .pb-20 {
+        padding-bottom: 2.5rem !important;
+    }
+
+    /* ========== 5. Spaziature generiche ========== */
+    .pt-10,
+    .pt-8 {
+        padding-top: 1.5rem !important;
+    }
+
+    .pb-10 {
+        padding-bottom: 1.5rem !important;
+    }
+
+    .mt-20 {
+        margin-top: 2rem !important;
+    }
+
+    .mb-16 {
+        margin-bottom: 2rem !important;
+    }
+
+    .gap-8,
+    .gap-16 {
+        gap: 1rem !important;
+    }
+
+    /* ========== 6. Copyright centrato rimosso da qui (spostato in 1024px) ========== */
+
+    /* ========== 7. ABOUT PAGE — Team carousel ========== */
+    /* Ripristino layout desktop (riga orizzontale) con immagini ridimensionate */
+    .team-container {
+        gap: 20px !important;
+        flex-wrap: nowrap !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
+    }
+
+    .team-card {
+        width: 90px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .team-img {
+        width: 90px !important;
+        height: 90px !important;
+    }
+
+    /* Risoluzione bug: il padding p-12 consumava tutto lo spazio dell'img su mobile nascondendola */
+    img[alt="Kordial"] {
+        padding: 5px !important;
+    }
+
+    /* Logo Kordial originale bianco: nessun override bg-white */
+
+    /* Testo della card attiva: visibile, centrato, su più righe */
+    /* Mantiene la transizione desktop (opacity/visibility) */
+    .team-card.active span.text-sm,
+    .team-card.active span.text-\[9px\],
+    .team-card.active p {
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        max-width: 260px !important;
+        text-align: center !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: block !important;
+    }
+
+    /* Nascondere testo card non attive su mobile */
+    .team-card:not(.active) span,
+    .team-card:not(.active) p {
+        display: none !important;
+    }
+
+    /* ========== 8. Social Icons Footer — 15% più piccole ========== */
+    .social-links-wrapper {
+        flex-direction: row !important;
+        justify-content: center !important;
+        flex-wrap: wrap !important;
+        gap: 25px !important;
+    }
+
+    .social-text {
+        display: none !important;
+    }
+
+    .social-links-wrapper svg {
+        width: 16px !important;
+        height: 16px !important;
+    }
+}
+
+/* =========================================
+   iPad & Mobile Specifics (Max-width 1024px)
+   ========================================= */
+@media (max-width: 1024px) {
+
+    /* Caroselli loghi full width: escono fuori dai bordi */
+    .marquee-container {
+        width: 100vw !important;
+        margin-left: calc(-50vw + 50%) !important;
+        margin-right: calc(-50vw + 50%) !important;
+        max-width: none !important;
+    }
+
+    /* Copyright centrato (risolve sovrapposizione email su iPad e Mobile) */
+    .absolute.bottom-4.left-4 {
+        position: relative !important;
+        bottom: auto !important;
+        left: auto !important;
+        text-align: center !important;
+        width: 100% !important;
+        margin-top: 20px !important;
+    }
+
+    /* Carosello loghi Home page (-15% scale, 2cm più in alto) */
+    .fixed.bottom-\[5vh\] {
+        bottom: calc(5vh + 60px) !important;
+    }
+
+    .fixed.bottom-\[5vh\] .marquee-container {
+        transform: scale(0.85) !important;
+        transform-origin: center center !important;
+        width: 118vw !important;
+        /* Compensa lo scale per riempire i 100vw: 100 / 0.85 = 117.6 */
+        margin-left: calc(-59vw + 50%) !important;
+        margin-right: calc(-59vw + 50%) !important;
+    }
+
+    /* Menu Selected Works filter buttons arrangement */
+    #works-list .flex-wrap.gap-8 {
+        row-gap: 1rem !important; 
+        column-gap: 2.25rem !important; /* Spazietto intermedio */
+    }
+
+    .filter-btn[data-filter="motion-graphic"] {
+        flex-basis: 100%;
+        text-align: center;
+        margin-top: 0.5rem;
+    }
+}
+
+/* =========================================
+   SOLO iPad Specifics (769px - 1024px)
+   ========================================= */
+@media (min-width: 769px) and (max-width: 1024px) {
+
+    /* Caroselli loghi: 30% più grandi e 2cm più in alto rispetto a mobile */
+    .marquee-container {
+        transform: scale(1.3) !important;
+        transform-origin: center center !important;
+        margin-top: -49px !important; /* 0.3cm lower */
+        /* Per mantenere 100vw visibili con scale(1.3): 100 / 1.3 = ~77vw */
+        width: 77vw !important;
+        margin-left: calc(-38.5vw + 50%) !important;
+        margin-right: calc(-38.5vw + 50%) !important;
+    }
+
+    /* Testo sopra il carosello in About Page */
+    .fade-in.delay-2.mt-16.mb-20.px-10 span.text-\[10px\] {
+        display: block;
+        transform: translateY(-19px) !important; /* 0.5cm higher */
+    }
+
+    /* Sovrascrivo scale 0.85 per Home Page iPad */
+    .fixed.bottom-\[5vh\] .marquee-container {
+        transform: scale(1.3) !important;
+        margin-top: 0 !important;
+        margin-bottom: 60px !important;
+        width: 77vw !important;
+        margin-left: calc(-38.5vw + 50%) !important;
+        margin-right: calc(-38.5vw + 50%) !important;
+    }
+
+    /* Titoletto Copyright: 2cm più in basso */
+    .absolute.bottom-4.left-4 {
+        margin-top: 80px !important;
+    }
+
+    /* Video Commercial posizioni specifiche per iPad */
+    #commercial-grid>div:nth-child(1) {
+        margin-top: -15px !important;
+    }
+    #commercial-grid>div:nth-child(1) .lg\:w-\[65\%\] {
+        margin-top: -38px !important; /* Solo il video Security Office 1cm in alto */
+    }
+
+    /* OST Wing */
+    #commercial-grid>div:nth-child(3) {
+        margin-top: 49px !important; /* 0.5cm lower */
+    }
+
+    /* Security Cafe */
+    #commercial-grid>div:nth-child(4) {
+        margin-top: 30px !important;
+    }
+
+    /* BTRY */
+    #commercial-grid>div:nth-child(6) {
+        margin-top: 36px !important; /* 0.4cm lower */
+    }
+
+    /* Raiffeisen */
+    #commercial-grid>div:nth-child(8) {
+        margin-top: 45px !important; /* 0.4cm lower */
+    }
+
+    /* Carousel under Raiffeisen */
+    #commercial-grid>div:nth-child(9) {
+        margin-top: 15px !important; /* 0.4cm lower */
+    }
+
+    /* Home page videos: occupano 100vw (circa +15%) e numeretti allineati con Videographer */
+    .video-container {
+        width: 100vw !important;
+        max-width: 100vw !important;
+        height: 56.25vw !important;
+        max-height: none !important;
+        border-radius: 0 !important;
+    }
+
+    .slide-number-container {
+        margin-bottom: 12px !important; /* Allinea leggermente più in alto */
+    }
+
+    /* Raiffeisen: 1cm in basso */
+}
+
+/* =========================================
+   SOLO Desktop Specifics (Min-width 1025px)
+   ========================================= */
+@media (min-width: 1025px) {
+
+    /* Security Cafe: blocco di testo e loghi abbassati di 0.7cm + 0.5cm (video resta immutato) */
+    #commercial-grid>div:nth-child(4) .lg\:w-\[35\%\] {
+        margin-top: 36px !important;
+    }
+}

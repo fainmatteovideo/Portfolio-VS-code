@@ -293,16 +293,30 @@
 
     <nav class="fixed top-0 w-full z-50 flex justify-between items-start pt-8 px-10 bg-gradient-to-b from-[#050505]/50 to-transparent">
         
-        <a href="#top" class="font-medium text-[11px] tracking-[0.3em] uppercase hover:opacity-70 transition-opacity">
+        <a href="#top" class="font-medium text-[11px] tracking-[0.3em] uppercase hover:opacity-70 transition-opacity relative z-[60]">
             Matteo Fain
         </a>
 
+        <!-- Desktop Menu -->
         <div class="hidden md:flex gap-10 text-[10px] uppercase tracking-widest font-light opacity-80 z-20">
             <a href="index.html" class="nav-link active hover:opacity-100 transition">Home</a>
             <a href="work.html" class="nav-link hover:opacity-100 transition">Work</a>
             <a href="about.html" class="nav-link hover:opacity-100 transition">About</a>
         </div>
+
+        <!-- Hamburger Button (Mobile) -->
+        <button id="hamburger-btn" class="md:hidden flex items-center justify-center relative z-[60] text-white focus:outline-none" onclick="toggleMobileMenu()">
+            <svg id="hamburger-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
     </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-[#050505] z-50 flex-col items-center justify-center gap-10 hidden md:hidden">
+        <a href="index.html" class="nav-link active text-lg uppercase tracking-widest font-light opacity-80 hover:opacity-100 transition">Home</a>
+        <a href="work.html" class="nav-link text-lg uppercase tracking-widest font-light opacity-80 hover:opacity-100 transition">Work</a>
+        <a href="about.html" class="nav-link text-lg uppercase tracking-widest font-light opacity-80 hover:opacity-100 transition">About</a>
+    </div>
 
 <section id="top" class="hero-section">
         
@@ -469,6 +483,36 @@
             }, { threshold: 0 });
             marqueeObserver.observe(marqueeTrack);
         }
+    </script>
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const hamb = document.getElementById('hamburger-icon');
+            const close = document.getElementById('close-icon');
+            if(menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                menu.classList.add('flex');
+                hamb.classList.add('hidden');
+                close.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            } else {
+                menu.classList.add('hidden');
+                menu.classList.remove('flex');
+                hamb.classList.remove('hidden');
+                close.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Sticky Header Effect
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 20) {
+                nav.classList.add('nav-scrolled');
+            } else {
+                nav.classList.remove('nav-scrolled');
+            }
+        });
     </script>
 </body>
 </html>
