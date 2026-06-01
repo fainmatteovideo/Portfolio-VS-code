@@ -75,8 +75,8 @@
         .swiper-button-next { right: 80px !important; }
         .swiper-button-prev::after, .swiper-button-next::after { content: '' !important; }
         
-        /* Nessun gradiente, solo blur e leggero sfondo uniforme */
-        .swiper-button-prev:hover, .swiper-button-next:hover { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); background: rgba(0,0,0,0.1); }
+        /* Nessun gradiente, area di navigazione trasparente senza sfocatura */
+        .swiper-button-prev:hover, .swiper-button-next:hover { backdrop-filter: none; -webkit-backdrop-filter: none; background: transparent; }
         
         .nav-text-prev, .nav-text-next { writing-mode: vertical-rl; text-transform: uppercase; font-size: 10px; letter-spacing: 0.3em; opacity: 0.5; transition: all 0.4s ease; font-weight: 300; color: white; }
         .nav-text-prev { transform: rotate(180deg); }
