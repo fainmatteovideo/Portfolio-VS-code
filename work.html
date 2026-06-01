@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matteo Fain | Video Editor & Filmmaker</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+
+        .filter-btn {
+            transition: all 0.4s ease;
+            position: relative;
+            cursor: pointer;
+            padding-bottom: 4px;
+        }
+
+        .filter-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 1px;
+            background: white;
+            transition: width 0.4s ease;
+        }
+
+        .filter-btn:hover {
+            opacity: 1;
+            letter-spacing: 0.4em;
+        }
+
+        .filter-btn:hover::after {
+            width: 10px;
+        }
+
+        .filter-btn.active {
+            opacity: 1;
+            color: white;
+        }
+
+        .filter-btn.active::after {
+            width: 100%;
+        }
+
+        /* Hide scrollbar for carousels */
+        /* Animations are now in style.css */
+
+        /* Social Grid Styles */
+        .social-video-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: transparent;
+            overflow: hidden;
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            position: relative;
+            border-radius: 4px;
+            box-shadow: 0 8px 24px rgba(255, 255, 255, 0.05);
+        }
+
+        .social-video-card.horizontal {
+            aspect-ratio: 16 / 9;
+        }
+
+        .social-video-card:hover {
+            transform: scale(1.02) translateY(-2px);
+            z-index: 20;
+            box-shadow: 0 12px 30px rgba(255, 255, 255, 0.12);
+        }
+
+        .social-video-card iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .social-video-card iframe.gdrive-iframe {
+            pointer-events: auto;
+        }
+
+        .vimeo-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        .volume-icon {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            z-index: 20;
+            width: 32px;
+            height: 32px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .social-video-card:hover .volume-icon {
+            opacity: 1;
+        }
+
+        .volume-icon.idle {
+            opacity: 0 !important;
+        }
+
+        /* Commercial inner video wrapper */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            width: 100%;
+            background: #000;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Infinite Scrolling Stills Marquee under Security Office */
+        .stills-marquee-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            background-color: transparent;
+            margin-top: 24px;
+            margin-bottom: 24px;
+        }
+
+        .stills-marquee-container::before,
+        .stills-marquee-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 120px;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .stills-marquee-container::before {
+            left: 0;
+            background: linear-gradient(to right, #050505 10%, transparent);
+        }
+
+        .stills-marquee-container::after {
+            right: 0;
+            background: linear-gradient(to left, #050505 10%, transparent);
+        }
+
+        .stills-marquee-track {
+            display: flex;
+            width: max-content;
+            animation: stillsMarquee 45s linear infinite;
+            will-change: transform;
+        }
+
+        .stills-marquee-track:hover {
+            animation-play-state: paused;
+        }
+
+        .stills-marquee-track.paused {
+            animation-play-state: paused !important;
+        }
+
+        .stills-marquee-track.reverse {
+            animation-direction: reverse;
+        }
+
+        .stills-marquee-item {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 240px; /* 10% larger than 220px */
+            height: 100%;
+            padding: 0 8px;
+        }
+
+        .stills-marquee-img {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, filter 0.3s ease;
+            filter: brightness(0.85);
+            cursor: pointer;
+        }
+
+        .stills-marquee-img:hover {
+            transform: scale(1.03);
+            filter: brightness(1.0);
+        }
+
+        @keyframes stillsMarquee {
+            0% {
+                transform: translate3d(0, 0, 0);
+            }
+            100% {
+                transform: translate3d(-50%, 0, 0);
+            }
+        }
+    </style>
+</head>
+
+<body oncontextmenu="return false;">
+
+    <nav
+        class="fixed top-0 w-full z-50 flex justify-between items-start pt-8 px-10 bg-gradient-to-b from-[#050505]/50 to-transparent">
+
+        <a href="index.html"
+            class="font-medium text-[11px] tracking-[0.3em] uppercase hover:opacity-70 transition-opacity">
+            Matteo Fain
+        </a>
+
+        <div class="hidden md:flex gap-10 text-[10px] uppercase tracking-widest font-light opacity-80 z-20">
+            <a href="index.html" class="nav-link hover:opacity-100 transition">Home</a>
+            <a href="work.html" class="nav-link active hover:opacity-100 transition">Work</a>
+            <a href="about.html" class="nav-link hover:opacity-100 transition">About</a>
+        </div>
+    </nav>
+
+    <section id="works-list" class="pt-32 px-10 md:px-32 pb-24 bg-[#050505] relative z-20">
+
+        <div class="mb-16 flex flex-col items-center gap-10 border-b border-white/10 pb-10 text-center">
+            <h2 class="text-3xl md:text-4xl font-medium lowercase tracking-tight opacity-90">selected works</h2>
+
+            <div class="flex flex-wrap justify-center gap-8 text-[9px] uppercase tracking-[0.3em] opacity-60">
+                <button class="filter-btn active" data-filter="commercial">Commercial & Corporate</button>
+                <button class="filter-btn" data-filter="social">Social</button>
+                <button class="filter-btn" data-filter="documentary">Documentary</button>
+                <button class="filter-btn" data-filter="motion-graphic">Motion Graphic</button>
+            </div>
+
+            <!-- Intro text specifically for Social section -->
+            <p id="social-intro-text" class="hidden text-xs font-light tracking-[0.1em] opacity-60 text-center max-w-[620px] mx-auto leading-relaxed mt-2 px-4">
+                My background includes also a year and a half as the video editor for a major YouTube channel with over 2.6 million subscribers. Now, I partner with creators and brands to produce impactful content across fashion, animation, events, and music videos.
+            </p>
+
+            <!-- Intro text specifically for Documentary section -->
+            <p id="docu-intro-text" class="hidden text-xs font-light tracking-[0.1em] opacity-60 text-center max-w-[620px] mx-auto leading-relaxed mt-2 px-4">
+                My documentary experience focuses on editing and color grading, primarily collaborating with NGOs on projects across Africa to bring impactful, real-world stories to light.
+            </p>
+
+            <!-- Intro text specifically for Commercial & Corporate section -->
+            <p id="comm-intro-text" class="hidden text-xs font-light tracking-[0.1em] opacity-60 text-center max-w-[620px] mx-auto leading-relaxed mt-2 px-4">
+                My corporate and commercial work spans on-set production and post-production. I assist startups on set to bring their image videos to life, while also working as a motion designer to create engaging commercial content.
+            </p>
+
+            <!-- Intro text specifically for Motion Graphic section -->
+            <p id="motion-intro-text" class="hidden text-xs font-light tracking-[0.1em] opacity-60 text-center max-w-[620px] mx-auto leading-relaxed mt-2 px-4">
+                My motion graphics work ranges from handling long and complex music video projects to integrating VFX and animation into social reels.
+            </p>
+        </div>
+
+
+
+        <!-- Commercial Grid that activates instead of list when 'Commercial' is clicked -->
+        <div id="commercial-grid" class="w-full pt-5 pb-20 fade-in">
+            <div class="w-full fade-in">
+                <div class="flex flex-col-reverse lg:flex-row gap-8 lg:gap-16 items-center lg:items-center">
+                    <div
+                        class="w-full lg:w-[35%] flex flex-col justify-start items-center lg:items-center text-center pt-4 lg:pt-10">
+                        <h2 class="text-2xl md:text-3xl font-bold tracking-wider mb-6">Security - Office</h2>
+                        <h3 class="text-[13px] md:text-[15px] font-bold mb-6 text-white/90">UI design, texture and animation</h3>
+                        <div class="flex flex-col gap-2 text-[13px] md:text-[14px] font-light text-white/90">
+                            <p>Client: Swisscom</p>
+                            <p>Production: Stories AG</p>
+                            <p>Director: Samuel Morris</p>
+                            <p>DOP: Léo Schrepel</p>
+                            <p>Producer: Vera Matta, Meret Früh</p>
+                            <p>Agency: Mona & Mateo</p>
+                            <p>Matteo Fain: motion graphic</p>
+                        </div>
+                        <!-- Logos -->
+                        <div class="mt-8 flex gap-8 justify-center items-center">
+                            <img src="assets/img transparent/swisscom logo.png" alt="Swisscom Logo" style="height: 62px; width: auto; margin-top: 10px;" class="opacity-100" loading="lazy">
+                            <img src="assets/img transparent/stories logo.png" alt="Stories Logo" style="height: 62px; width: auto; margin-top: 10px;" class="opacity-100" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-[65%] flex flex-col">
+                        <div class="video-wrapper relative pointer-events-none">
+                            <iframe loading="lazy"
+                                src="https://player.vimeo.com/video/1171989015?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                                frameborder="0" allow="autoplay; fullscreen" class="w-full h-full"
+                                style="pointer-events: auto;"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Infinite Scrolling Stills Marquee -->
+            <div class="fade-in delay-1 stills-marquee-container">
+                <div class="stills-marquee-track">
+                    <!-- Group 1 -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/office stills/o1.webp" alt="Office Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/office stills/08.webp" alt="Office Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/office stills/05.webp" alt="Office Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/office stills/03.webp" alt="Office Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/office stills/010.webp" alt="Office Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/office stills/06.webp" alt="Office Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/office stills/09.webp" alt="Office Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/office stills/011.webp" alt="Office Still" loading="lazy" class="stills-marquee-img"></div>
+
+                    <!-- Group 2 (Duplicate for seamless loop) -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/office stills/o1.webp" alt="Office Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/office stills/08.webp" alt="Office Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/office stills/05.webp" alt="Office Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/office stills/03.webp" alt="Office Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/office stills/010.webp" alt="Office Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/office stills/06.webp" alt="Office Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/office stills/09.webp" alt="Office Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/office stills/011.webp" alt="Office Still" loading="lazy" class="stills-marquee-img"></div>
+                </div>
+            </div>
+
+            <!-- OST Wing -->
+            <div class="pt-8 pb-10 w-full fade-in">
+                <div class="flex flex-col lg:flex-row gap-8 lg:gap-16 items-center lg:items-start border-t border-white/10 pt-10">
+                    <div class="w-full lg:w-[65%] flex flex-col">
+                        <div class="video-wrapper relative pointer-events-none">
+                            <iframe loading="lazy"
+                                src="https://player.vimeo.com/video/1197366584?autoplay=1&amp;loop=1&amp;muted=1&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                                frameborder="0" allow="autoplay; fullscreen" class="w-full h-full"
+                                style="pointer-events: auto;"></iframe>
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-[35%] flex flex-col justify-start items-center lg:items-center text-center pt-4 lg:pt-10">
+                        <h2 class="text-2xl md:text-3xl font-bold tracking-wider mb-6">OST Wing</h2>
+                        <div class="flex flex-col gap-2 text-[13px] md:text-[14px] font-light text-white/90">
+                            <p>Agency: kordial.ch</p>
+                            <p>Director / Grading: Damian Ruchti</p>
+                            <p>DP / CamOp: Nils Bätscher</p>
+                            <p>Grip / Gaffer: Noah Steiner</p>
+                            <p>VFX Artist: Jonas Schertenleib</p>
+                            <p>Editor: Matteo Fain</p>
+                            <p>Script: Stefan Saladin</p>
+                            <p>Customer: OST, Stefanie Schnelli</p>
+                        </div>
+                        <!-- Logos -->
+                        <div class="mt-8 flex gap-8 justify-center items-center">
+                            <img src="assets/img transparent/kordial.png" alt="Kordial Logo" style="height: 43px; width: auto;" class="opacity-100" loading="lazy">
+                            <img src="assets/img transparent/OST .png" alt="OST Logo" style="height: 51px; width: auto;" class="opacity-100" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security - Cafe -->
+            <div class="pt-8 pb-10 w-full fade-in">
+                <div class="flex flex-col-reverse lg:flex-row gap-8 lg:gap-16 items-center lg:items-start border-t border-white/10 pt-10">
+                    <div class="w-full lg:w-[35%] flex flex-col justify-start items-center lg:items-center text-center pt-4 lg:pt-10">
+                        <h2 class="text-2xl md:text-3xl font-bold tracking-wider mb-6">Security - Cafe</h2>
+                        <h3 class="text-[13px] md:text-[15px] font-bold mb-6 text-white/90">UI design, texture and animation</h3>
+                        <div class="flex flex-col gap-2 text-[13px] md:text-[14px] font-light text-white/90">
+                            <p>Client: Swisscom</p>
+                            <p>Production: Stories AG</p>
+                            <p>Director: Samuel Morris</p>
+                            <p>DOP: Léo Schrepel</p>
+                            <p>Producer: Vera Matta, Meret Früh</p>
+                            <p>Agency: Mona & Mateo</p>
+                            <p>Matteo Fain: motion graphic</p>
+                        </div>
+                        <!-- Logos -->
+                        <div class="mt-8 flex gap-8 justify-center items-center">
+                            <img src="assets/img transparent/swisscom logo.png" alt="Swisscom Logo" style="height: 62px; width: auto; margin-top: 10px;" class="opacity-100" loading="lazy">
+                            <img src="assets/img transparent/stories logo.png" alt="Stories Logo" style="height: 62px; width: auto; margin-top: 10px;" class="opacity-100" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-[65%] flex flex-col">
+                        <div class="video-wrapper relative pointer-events-none">
+                            <iframe loading="lazy"
+                                src="https://player.vimeo.com/video/1172299160?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                                frameborder="0" allow="autoplay; fullscreen" class="w-full h-full"
+                                style="pointer-events: auto;"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Infinite Scrolling Stills Marquee -->
+            <div class="fade-in delay-1 stills-marquee-container">
+                <div class="stills-marquee-track reverse">
+                    <!-- Group 1 -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still caffe/c1.webp" alt="Cafe Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still caffe/c2.webp" alt="Cafe Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still caffe/c4.webp" alt="Cafe Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still caffe/s9.webp" alt="Cafe Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still caffe/c5.webp" alt="Cafe Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still caffe/c10.webp" alt="Cafe Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still caffe/c6.webp" alt="Cafe Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still caffe/c8.webp" alt="Cafe Still" loading="lazy" class="stills-marquee-img"></div>
+
+                    <!-- Group 2 (Duplicate for seamless loop) -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still caffe/c1.webp" alt="Cafe Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still caffe/c2.webp" alt="Cafe Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still caffe/c4.webp" alt="Cafe Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still caffe/s9.webp" alt="Cafe Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still caffe/c5.webp" alt="Cafe Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still caffe/c10.webp" alt="Cafe Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still caffe/c6.webp" alt="Cafe Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still caffe/c8.webp" alt="Cafe Still" loading="lazy" class="stills-marquee-img"></div>
+                </div>
+            </div>
+
+            <!-- BTRY -->
+            <div class="pt-8 pb-10 w-full fade-in">
+                <div class="flex flex-col lg:flex-row gap-8 lg:gap-16 items-center lg:items-start border-t border-white/10 pt-10">
+                    <div class="w-full lg:w-[65%] flex flex-col">
+                        <div class="video-wrapper relative pointer-events-none">
+                            <iframe loading="lazy"
+                                src="https://player.vimeo.com/video/1172322519?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0&autopause=0"
+                                frameborder="0" allow="autoplay; fullscreen" class="w-full h-full"
+                                style="pointer-events: auto;"></iframe>
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-[35%] flex flex-col justify-start items-center lg:items-center text-center pt-4 lg:pt-10">
+                        <h2 class="text-2xl md:text-3xl font-bold tracking-wider mb-6">BTRY</h2>
+                        <div class="flex flex-col gap-2 text-[13px] md:text-[14px] font-light text-white/90">
+                            <p>Client: BTRY</p>
+                            <p>Producer: Girts Apskalns</p>
+                            <p>Producer Assistant & Gaffer: Matteo Fain</p>
+                        </div>
+                        <!-- Logos -->
+                        <div class="mt-8 flex gap-8 justify-center items-center">
+                            <img src="assets/img transparent/BTRY.png" alt="BTRY Logo" style="height: 88px; width: auto; margin-top: 45px;" class="opacity-100" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Infinite Scrolling Stills Marquee -->
+            <div class="fade-in delay-1 stills-marquee-container">
+                <div class="stills-marquee-track">
+                    <!-- Group 1 -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/btry stills/B7.webp" alt="BTRY Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/btry stills/btry 4.webp" alt="BTRY Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/btry stills/btry1.webp" alt="BTRY Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/btry stills/btry5.webp" alt="BTRY Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/btry stills/btry7.webp" alt="BTRY Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/btry stills/btry6.webp" alt="BTRY Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/btry stills/btry 3.webp" alt="BTRY Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/btry stills/B9.webp" alt="BTRY Still" loading="lazy" class="stills-marquee-img"></div>
+
+                    <!-- Group 2 (Duplicate for seamless loop) -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/btry stills/B7.webp" alt="BTRY Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/btry stills/btry 4.webp" alt="BTRY Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/btry stills/btry1.webp" alt="BTRY Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/btry stills/btry5.webp" alt="BTRY Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/btry stills/btry7.webp" alt="BTRY Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/btry stills/btry6.webp" alt="BTRY Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/btry stills/btry 3.webp" alt="BTRY Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/btry stills/B9.webp" alt="BTRY Still" loading="lazy" class="stills-marquee-img"></div>
+                </div>
+            </div>
+
+            <!-- Raiffeisenbank -->
+            <div class="pt-8 pb-10 w-full fade-in">
+                <div class="flex flex-col-reverse lg:flex-row gap-8 lg:gap-16 items-center lg:items-start border-t border-white/10 pt-10">
+                    <div class="w-full lg:w-[35%] flex flex-col justify-start items-center lg:items-center text-center pt-4 lg:pt-10">
+                        <h2 class="text-2xl md:text-3xl font-bold tracking-wider mb-6">Raiffeisen Bank</h2>
+                        <div class="flex flex-col gap-2 text-[13px] md:text-[14px] font-light text-white/90">
+                            <p>Client: Raiffeisen Bank</p>
+                            <p>Producer & Filmmaker: Franz Thiel</p>
+                            <p>Video Editor: Matteo Fain</p>
+                        </div>
+                        <!-- Logos -->
+                        <div class="mt-8 flex gap-8 justify-center items-center">
+                            <img src="assets/img transparent/raffesein logo.png" alt="Raiffeisenbank Logo" style="height: 28px; width: auto; margin-top: 40px;" class="opacity-100" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-[65%] flex flex-col">
+                        <div class="video-wrapper relative pointer-events-none">
+                            <iframe loading="lazy"
+                                src="https://player.vimeo.com/video/1196069340?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                                frameborder="0" allow="autoplay; fullscreen" class="w-full h-full"
+                                style="pointer-events: auto;"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Infinite Scrolling Stills Marquee -->
+            <div class="fade-in delay-1 stills-marquee-container">
+                <div class="stills-marquee-track reverse">
+                    <!-- Group 1 -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/bank/Screenshot 2026-05-08 at 18.50.54.webp" alt="Raiffeisenbank Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/bank/Screenshot 2026-05-08 at 18.51.06.webp" alt="Raiffeisenbank Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/bank/Screenshot 2026-05-08 at 18.51.16.webp" alt="Raiffeisenbank Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/bank/Screenshot 2026-05-08 at 18.51.35.webp" alt="Raiffeisenbank Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/bank/Screenshot 2026-05-08 at 18.52.02.webp" alt="Raiffeisenbank Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/bank/Screenshot 2026-05-08 at 18.52.21.webp" alt="Raiffeisenbank Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/bank/Screenshot 2026-05-08 at 18.52.33.webp" alt="Raiffeisenbank Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/bank/Screenshot 2026-05-08 at 18.52.49.webp" alt="Raiffeisenbank Still" loading="lazy" class="stills-marquee-img"></div>
+
+                    <!-- Group 2 (Duplicate for seamless loop) -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/bank/Screenshot 2026-05-08 at 18.50.54.webp" alt="Raiffeisenbank Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/bank/Screenshot 2026-05-08 at 18.51.06.webp" alt="Raiffeisenbank Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/bank/Screenshot 2026-05-08 at 18.51.16.webp" alt="Raiffeisenbank Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/bank/Screenshot 2026-05-08 at 18.51.35.webp" alt="Raiffeisenbank Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/bank/Screenshot 2026-05-08 at 18.52.02.webp" alt="Raiffeisenbank Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/bank/Screenshot 2026-05-08 at 18.52.21.webp" alt="Raiffeisenbank Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/bank/Screenshot 2026-05-08 at 18.52.33.webp" alt="Raiffeisenbank Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/bank/Screenshot 2026-05-08 at 18.52.49.webp" alt="Raiffeisenbank Still" loading="lazy" class="stills-marquee-img"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documentary Grid inline -->
+        <div id="documentary-grid" class="hidden w-full pt-5 pb-20 fade-in">
+            <div class="w-full fade-in pt-5">
+                <div class="flex flex-col-reverse lg:flex-row gap-8 lg:gap-16 items-center lg:items-start">
+                    <div class="w-full lg:w-[35%] flex flex-col justify-start items-center lg:items-center text-center pt-4 lg:pt-10">
+                        <h2 class="text-2xl md:text-3xl font-bold tracking-wider mb-6">Chris</h2>
+                        <h3 class="text-[13px] md:text-[15px] font-bold mb-6">Documentary</h3>
+                        <div class="flex flex-col gap-2 text-[13px] md:text-[14px] font-light text-white/90">
+                            <p>Client: Hope Group - Mbalizi</p>
+                            <p>Producer & Filmmaker: Franz Thiel</p>
+                            <p>Editor: Matteo Fain</p>
+                        </div>
+                        <!-- Logo -->
+                        <div class="mt-20 flex justify-center items-center">
+                            <img src="assets/img transparent/hope logo.png" alt="Hope Group Logo" style="height: 171px; width: auto;" class="opacity-100" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-[65%] flex flex-col">
+                        <div class="video-wrapper relative pointer-events-none">
+                            <iframe loading="lazy"
+                                src="https://player.vimeo.com/video/1196083108?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                                frameborder="0" allow="autoplay; fullscreen" class="w-full h-full"
+                                style="pointer-events: auto;"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Infinite Scrolling Stills Marquee -->
+            <div class="fade-in delay-1 stills-marquee-container">
+                <div class="stills-marquee-track">
+                    <!-- Group 1 -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Still cris/01.webp" alt="CRIS Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Still cris/02.webp" alt="CRIS Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Still cris/03.webp" alt="CRIS Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Still cris/04.webp" alt="CRIS Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Still cris/05.webp" alt="CRIS Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Still cris/06.webp" alt="CRIS Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Still cris/07.webp" alt="CRIS Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Still cris/08.webp" alt="CRIS Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Still cris/09.webp" alt="CRIS Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Still cris/10.webp" alt="CRIS Still" loading="lazy" class="stills-marquee-img"></div>
+
+                    <!-- Group 2 (Duplicate for seamless loop) -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Still cris/01.webp" alt="CRIS Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Still cris/02.webp" alt="CRIS Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Still cris/03.webp" alt="CRIS Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Still cris/04.webp" alt="CRIS Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Still cris/05.webp" alt="CRIS Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Still cris/06.webp" alt="CRIS Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Still cris/07.webp" alt="CRIS Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Still cris/08.webp" alt="CRIS Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Still cris/09.webp" alt="CRIS Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Still cris/10.webp" alt="CRIS Still" loading="lazy" class="stills-marquee-img"></div>
+                </div>
+            </div>
+
+            <!-- TREES (Alternate: Video on Left, Details on Right) -->
+            <div class="pt-20 pb-20 w-full fade-in">
+                <div class="flex flex-col lg:flex-row gap-8 lg:gap-16 items-center lg:items-start border-t border-white/10 pt-20">
+                    <div class="w-full lg:w-[65%] flex flex-col">
+                        <div class="video-wrapper relative pointer-events-none">
+                            <iframe loading="lazy"
+                                src="https://player.vimeo.com/video/1196083268?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                                frameborder="0" allow="autoplay; fullscreen" class="w-full h-full"
+                                style="pointer-events: auto;"></iframe>
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-[35%] flex flex-col justify-start items-center lg:items-center text-center pt-4 lg:pt-10">
+                        <h2 class="text-2xl md:text-3xl font-bold tracking-wider mb-6">Trees for the Future</h2>
+                        <div class="flex flex-col gap-2 text-[13px] md:text-[14px] font-light text-white/90">
+                            <p>Client: Trees for the Future</p>
+                            <p>Producer & Filmmaker: Franz Thiel</p>
+                            <p>Editor: Matteo Fain</p>
+                        </div>
+                        <!-- Logo -->
+                        <div class="mt-6 flex justify-center items-center">
+                            <img src="assets/img transparent/tree logo.png" alt="Trees for the Future Logo" style="height: 288px; width: auto;" class="opacity-100" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Infinite Scrolling Stills Marquee -->
+            <div class="fade-in delay-1 stills-marquee-container">
+                <div class="stills-marquee-track reverse">
+                    <!-- Group 1 -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Trees screenshot/1.webp" alt="Trees Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Trees screenshot/2.webp" alt="Trees Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Trees screenshot/3.webp" alt="Trees Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Trees screenshot/4.webp" alt="Trees Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Trees screenshot/6.webp" alt="Trees Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Trees screenshot/7.webp" alt="Trees Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Trees screenshot/8.webp" alt="Trees Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Trees screenshot/9.webp" alt="Trees Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Trees screenshot/10.webp" alt="Trees Still" loading="lazy" class="stills-marquee-img"></div>
+
+                    <!-- Group 2 (Duplicate for seamless loop) -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Trees screenshot/1.webp" alt="Trees Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Trees screenshot/2.webp" alt="Trees Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Trees screenshot/3.webp" alt="Trees Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Trees screenshot/4.webp" alt="Trees Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Trees screenshot/6.webp" alt="Trees Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Trees screenshot/7.webp" alt="Trees Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Trees screenshot/8.webp" alt="Trees Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Trees screenshot/9.webp" alt="Trees Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/Trees screenshot/10.webp" alt="Trees Still" loading="lazy" class="stills-marquee-img"></div>
+                </div>
+            </div>
+
+            <!-- TCB (Alternate: Details on Left, Video on Right) -->
+            <div class="pt-20 pb-20 w-full fade-in">
+                <div class="flex flex-col-reverse lg:flex-row gap-8 lg:gap-16 items-center lg:items-start border-t border-white/10 pt-20">
+                    <div class="w-full lg:w-[35%] flex flex-col justify-start items-center lg:items-center text-center pt-4 lg:pt-10">
+                        <h2 class="text-2xl md:text-3xl font-bold tracking-wider mb-6 uppercase">TCB</h2>
+                        <div class="flex flex-col gap-2 text-[13px] md:text-[14px] font-light text-white/90">
+                            <p>Client: Aceli Africa & Tanzania Commercial Bank</p>
+                            <p>Producer & Filmmaker: Franz Thiel</p>
+                            <p>Editor: Matteo Fain</p>
+                        </div>
+                        <!-- Logo -->
+                        <div class="mt-28 flex justify-center items-center">
+                            <img src="assets/img transparent/aceli logo.png" alt="Aceli Africa Logo" style="height: 76px; width: auto;" class="opacity-100" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-[65%] flex flex-col">
+                        <div class="video-wrapper relative pointer-events-none">
+                            <iframe loading="lazy"
+                                src="https://player.vimeo.com/video/1196083659?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                                frameborder="0" allow="autoplay; fullscreen" class="w-full h-full"
+                                style="pointer-events: auto;"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Infinite Scrolling Stills Marquee -->
+            <div class="fade-in delay-1 stills-marquee-container">
+                <div class="stills-marquee-track">
+                    <!-- Group 1 -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/01.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/02.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/03.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/04.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/05.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/06.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/07.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/08.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/09.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/10.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/11.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/12.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/13.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/14.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/15.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/18.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+
+                    <!-- Group 2 (Duplicate for seamless loop) -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/01.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/02.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/03.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/04.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/05.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/06.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/07.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/08.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/09.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/10.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/11.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/12.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/13.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/14.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/15.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/TCB still/18.webp" alt="TCB Still" loading="lazy" class="stills-marquee-img"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Motion Graphic Grid that activates instead of list when 'Motion Graphic' is clicked -->
+        <div id="motion-graphic-grid" class="hidden w-full pt-5 pb-20 fade-in">
+            <!-- Filippo Leroy -->
+            <div class="pt-5 pb-10 w-full fade-in">
+                <div class="flex flex-col-reverse lg:flex-row gap-8 lg:gap-16 items-center lg:items-start pt-10">
+                    <div class="w-full lg:w-[35%] flex flex-col justify-start items-center lg:items-center text-center pt-4 lg:pt-10">
+                        <h2 class="text-2xl md:text-3xl font-bold tracking-wider mb-6">Filippo Leroy</h2>
+                        <div class="flex flex-col gap-2 text-[13px] md:text-[14px] font-light text-white/90">
+                            <p>Lyrics music video</p>
+                            <p>Artist: Fulminacci</p>
+                            <p>Editor: Matteo Fain</p>
+                            <p>Platform: YouTube</p>
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-[65%] flex flex-col">
+                        <div class="video-wrapper relative pointer-events-none">
+                            <iframe loading="lazy"
+                                src="https://player.vimeo.com/video/1172326097?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                                frameborder="0" allow="autoplay; fullscreen" class="w-full h-full"
+                                style="pointer-events: auto;"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Infinite Scrolling Stills Marquee for Filippo Leroy -->
+            <div class="fade-in delay-1 stills-marquee-container">
+                <div class="stills-marquee-track">
+                    <!-- Group 1 -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/01.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/02.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/03.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/04.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/05.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/07.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/08.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/09.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/10.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/11.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/12.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+
+                    <!-- Group 2 -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/01.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/02.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/03.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/04.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/05.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/07.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/08.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/09.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/10.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/11.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/still filippo leroy/12.webp" alt="Filippo Leroy Still" loading="lazy" class="stills-marquee-img"></div>
+                </div>
+            </div>
+
+            <!-- Challenge Review -->
+            <div class="pt-8 pb-10 w-full fade-in">
+                <div class="flex flex-col lg:flex-row gap-8 lg:gap-16 items-center lg:items-start border-t border-white/10 pt-10">
+                    <div class="w-full lg:w-[65%] flex flex-col">
+                        <div class="video-wrapper relative pointer-events-none">
+                            <iframe loading="lazy"
+                                src="https://player.vimeo.com/video/1196674967?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                                frameborder="0" allow="autoplay; fullscreen" class="w-full h-full"
+                                style="pointer-events: auto;"></iframe>
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-[35%] flex flex-col justify-start items-center lg:items-center text-center pt-4 lg:pt-10">
+                        <h2 class="text-2xl md:text-3xl font-bold tracking-wider mb-6">Challenge</h2>
+                        <div class="flex flex-col gap-2 text-[13px] md:text-[14px] font-light text-white/90">
+                            <p>Lyrics music video</p>
+                            <p>Client: Ninna & Matti</p>
+                            <p>Editor: Matteo Fain</p>
+                            <p>Platform: YouTube</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Infinite Scrolling Stills Marquee for Challenge Review -->
+            <div class="fade-in delay-1 stills-marquee-container">
+                <div class="stills-marquee-track reverse">
+                    <!-- Group 1 -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/challenge stills/01.webp" alt="Challenge Review Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/challenge stills/02.webp" alt="Challenge Review Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/challenge stills/03.webp" alt="Challenge Review Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/challenge stills/05.webp" alt="Challenge Review Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/challenge stills/06.webp" alt="Challenge Review Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/challenge stills/07.webp" alt="Challenge Review Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/challenge stills/08.webp" alt="Challenge Review Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/challenge stills/10.webp" alt="Challenge Review Still" loading="lazy" class="stills-marquee-img"></div>
+
+                    <!-- Group 2 -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/challenge stills/01.webp" alt="Challenge Review Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/challenge stills/02.webp" alt="Challenge Review Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/challenge stills/03.webp" alt="Challenge Review Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/challenge stills/05.webp" alt="Challenge Review Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/challenge stills/06.webp" alt="Challenge Review Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/challenge stills/07.webp" alt="Challenge Review Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/challenge stills/08.webp" alt="Challenge Review Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/challenge stills/10.webp" alt="Challenge Review Still" loading="lazy" class="stills-marquee-img"></div>
+                </div>
+            </div>
+
+            <!-- Gelato Lyrics -->
+            <div class="pt-8 pb-10 w-full fade-in">
+                <div class="flex flex-col-reverse lg:flex-row gap-8 lg:gap-16 items-center lg:items-start border-t border-white/10 pt-10">
+                    <div class="w-full lg:w-[35%] flex flex-col justify-start items-center lg:items-center text-center pt-4 lg:pt-10">
+                        <h2 class="text-2xl md:text-3xl font-bold tracking-wider mb-6">Gelato</h2>
+                        <div class="flex flex-col gap-2 text-[13px] md:text-[14px] font-light text-white/90">
+                            <p>Lyrics music video</p>
+                            <p>Client: Ninna & Matti</p>
+                            <p>Editor: Matteo Fain</p>
+                            <p>Platform: YouTube</p>
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-[65%] flex flex-col">
+                        <div class="video-wrapper relative pointer-events-none">
+                            <iframe loading="lazy"
+                                src="https://player.vimeo.com/video/1196680074?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                                frameborder="0" allow="autoplay; fullscreen" class="w-full h-full"
+                                style="pointer-events: auto;"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Infinite Scrolling Stills Marquee for Gelato Lyrics -->
+            <div class="fade-in delay-1 stills-marquee-container">
+                <div class="stills-marquee-track">
+                    <!-- Group 1 -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/stills gelato/01.webp" alt="Gelato Lyrics Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/stills gelato/02.webp" alt="Gelato Lyrics Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/stills gelato/03.webp" alt="Gelato Lyrics Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/stills gelato/04.webp" alt="Gelato Lyrics Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/stills gelato/05.webp" alt="Gelato Lyrics Still" loading="lazy" class="stills-marquee-img"></div>
+
+                    <!-- Group 2 (Duplicate for seamless loop) -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/stills gelato/01.webp" alt="Gelato Lyrics Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/stills gelato/02.webp" alt="Gelato Lyrics Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/stills gelato/03.webp" alt="Gelato Lyrics Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/stills gelato/04.webp" alt="Gelato Lyrics Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/stills gelato/05.webp" alt="Gelato Lyrics Still" loading="lazy" class="stills-marquee-img"></div>
+
+                    <!-- Group 3 (Duplicate for seamless loop) -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/stills gelato/01.webp" alt="Gelato Lyrics Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/stills gelato/02.webp" alt="Gelato Lyrics Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/stills gelato/03.webp" alt="Gelato Lyrics Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/stills gelato/04.webp" alt="Gelato Lyrics Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/stills gelato/05.webp" alt="Gelato Lyrics Still" loading="lazy" class="stills-marquee-img"></div>
+
+                    <!-- Group 4 (Duplicate for seamless loop) -->
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/stills gelato/01.webp" alt="Gelato Lyrics Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/stills gelato/02.webp" alt="Gelato Lyrics Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/stills gelato/03.webp" alt="Gelato Lyrics Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/stills gelato/04.webp" alt="Gelato Lyrics Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/img LOW res/stills gelato/05.webp" alt="Gelato Lyrics Still" loading="lazy" class="stills-marquee-img"></div>
+                </div>
+            </div>
+
+            <!-- Separator Line -->
+            <div class="border-t border-white/10 mt-20 pt-16 max-w-[1140px] mx-auto"></div>
+
+            <div class="w-full max-w-[1140px] mx-auto px-4 md:px-0">
+                <!-- Griglia Verticale -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 md:gap-12 items-center place-items-center mb-16">
+                    <!-- 1172581475 -->
+                    <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
+                        onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1172581475?h=d527f1fe80&background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- 1173050896 -->
+                    <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
+                        onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1173050896?h=d9b2a3d2cf&background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- 1172573930 -->
+                    <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
+                        onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1172573930?h=82f5f29f94&background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- 1172331391 -->
+                    <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
+                        onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1172331391?h=13e952276a&background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- 1196229721 -->
+                    <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
+                        onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1196229721?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                </div>
+
+                <!-- Griglia Orizzontale (file da 4) -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 md:gap-12 items-center place-items-center mb-16">
+                    <!-- transizione compro pulisci -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1196609537?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- transizione - casa piccola -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1196609526?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- transition docce -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1196609468?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- transition parrucchiere -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1196609481?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- TRANSITION glass -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1196609475?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- 1196037987 -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1196037987?h=96dd4655a9&background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- cube Oriz -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1172300494?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- 1173056193 -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1173056193?h=05a8814a0a&background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <!-- Social Grid that activates instead of list when 'Social' is clicked -->
+        <div id="social-grid" class="hidden pt-5 pb-20 w-full">
+            <div class="w-full max-w-[1140px] mx-auto px-4 md:px-0">
+                <!-- Griglia Orizzontale -->
+                <div
+                    class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 md:gap-12 items-center place-items-center mb-16">
+                    <!-- Urban Rhythm -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1172300494?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- zz final + intro -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1173056193?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- Zanzibar reel -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1171957086?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- ZVV final -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1171973313?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- amden FINAL -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1172567349?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- quick photo view finder -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1172581759?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- TL_Reel v3 -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1172582337?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- grado -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1172602052?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- fulmi 4 -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1173049098?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- fulmi 3 -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1173049067?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- fulmi 2 -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1173049036?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- fulm1 -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1173048995?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- speed friending 3 -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1196037987?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- speed friending 2 -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1196037935?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63(14.91) 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- sopravvivo stanza piccola -->
+                    <div class="social-video-card horizontal" onclick="toggleMute(this)"
+                        onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1196609442?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63(14.91) 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+
+                </div>
+
+                <!-- Griglia Verticale -->
+                <div
+                    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 md:gap-12 items-center place-items-center">
+                    <!-- Sunglasses slowmo -->
+                    <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
+                        onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1172559030?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- Cubo 3D -->
+                    <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
+                        onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1172330198?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- Card-colored -->
+                    <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
+                        onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1172557843?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- TABS MAIN scale -->
+                    <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
+                        onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1172581475?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- Tomo -->
+                    <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
+                        onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1172331391?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- NET -->
+                    <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
+                        onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1172563639?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- Padelta -->
+                    <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
+                        onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1196095624?h=ea998b76e0&background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- ZZ 2025 (song 1) -->
+                    <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
+                        onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1171988923?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- Model final 422 HQ -->
+                    <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
+                        onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1172574784?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- ydraland -->
+                    <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
+                        onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1172573930?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- music text AE -->
+                    <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
+                        onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1173050896?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- REEL2- bouldering -->
+                    <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
+                        onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1196037591?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- REEL1-bouldering -->
+                    <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
+                        onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1196037592?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+                    <!-- REEL3-bouldering -->
+                    <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
+                        onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1196037590?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+
+                    <!-- REEL1-pubquiz (Moved to vertical grid) -->
+                    <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
+                        onmouseleave="forceIdle(this)">
+                        <iframe loading="lazy"
+                            src="https://player.vimeo.com/video/1196037864?background=1&autoplay=1&muted=1&loop=1"
+                            frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                        <div class="vimeo-overlay"></div>
+                        <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                            </svg></div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <!-- Consolidated Footer -->
+        <div class="w-full pt-10 pb-10 mt-12 flex flex-col items-center border-t border-white/10 relative z-20">
+            <div
+                class="flex flex-col md:flex-row gap-10 md:gap-16 items-center text-xs md:text-sm uppercase tracking-[0.2em] font-light">
+                <a href="mailto:fainmatteo.video@gmail.com"
+                    class="flex items-center gap-4 opacity-50 hover:opacity-100 transition-opacity">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z" />
+                    </svg>
+                    Email
+                </a>
+                <a href="https://www.instagram.com/matte.fain/" target="_blank"
+                    class="flex items-center gap-4 opacity-50 hover:opacity-100 transition-opacity">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                    </svg>
+                    Instagram
+                </a>
+                <a href="https://www.linkedin.com/in/matteo-fain-b979541b1" target="_blank"
+                    class="flex items-center gap-4 opacity-50 hover:opacity-100 transition-opacity">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                    </svg>
+                    LinkedIn
+                </a>
+            </div>
+            <div class="absolute bottom-4 left-4 md:bottom-auto md:top-1/2 md:-translate-y-1/2 md:left-10 opacity-30">
+                <span class="text-[8px] md:text-[9px] uppercase tracking-[0.4em]">Matteo Fain © 2026</span>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://player.vimeo.com/api/player.js"></script>
+    <script>
+        const muteSvg = '<svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>';
+        const unmuteSvg = '<svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>';
+
+        let idleTimers = new Map();
+        const vimeoPlayers = new Map();
+
+        function getVimeoPlayer(iframe) {
+            if (!vimeoPlayers.has(iframe)) {
+                vimeoPlayers.set(iframe, new Vimeo.Player(iframe));
+            }
+            return vimeoPlayers.get(iframe);
+        }
+
+        function forceIdle(container) {
+            const icon = container.querySelector('.volume-icon');
+            if (icon) icon.classList.add('idle');
+        }
+
+        function resetIdleTimer(container) {
+            const icon = container.querySelector('.volume-icon');
+            if (icon) icon.classList.remove('idle');
+
+            if (idleTimers.has(container)) {
+                clearTimeout(idleTimers.get(container));
+            }
+
+            idleTimers.set(container, setTimeout(() => {
+                forceIdle(container);
+            }, 1000));
+        }
+
+        function toggleMute(container) {
+            const iframe = container.querySelector('iframe');
+            if (!iframe) return;
+            if (!iframe.src.includes('vimeo.com')) return;
+            const player = getVimeoPlayer(iframe);
+            const icon = container.querySelector('.volume-icon');
+
+            player.getVolume().then(function (volume) {
+                if (volume === 0) {
+                    player.setVolume(1);
+                    if (icon) icon.innerHTML = unmuteSvg;
+                } else {
+                    player.setVolume(0);
+                    if (icon) icon.innerHTML = muteSvg;
+                }
+            }).catch(function (error) {
+                console.error("Vimeo API error:", error);
+            });
+        }
+
+        // Filter functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const socialGrid = document.getElementById('social-grid');
+            const commGrid = document.getElementById('commercial-grid');
+            const docuGrid = document.getElementById('documentary-grid');
+            const motionGrid = document.getElementById('motion-graphic-grid');
+            const socialIntroText = document.getElementById('social-intro-text');
+            const docuIntroText = document.getElementById('docu-intro-text');
+            const commIntroText = document.getElementById('comm-intro-text');
+            const motionIntroText = document.getElementById('motion-intro-text');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    const filter = btn.getAttribute('data-filter');
+
+                    if (socialGrid) socialGrid.classList.add('hidden');
+                    if (commGrid) commGrid.classList.add('hidden');
+                    if (docuGrid) docuGrid.classList.add('hidden');
+                    if (motionGrid) motionGrid.classList.add('hidden');
+                    if (socialIntroText) socialIntroText.classList.add('hidden');
+                    if (docuIntroText) docuIntroText.classList.add('hidden');
+                    if (commIntroText) commIntroText.classList.add('hidden');
+                    if (motionIntroText) motionIntroText.classList.add('hidden');
+
+                    if (filter === 'commercial' && commGrid) {
+                        commGrid.classList.remove('hidden');
+                        if (commIntroText) commIntroText.classList.remove('hidden');
+                    } else if (filter === 'social' && socialGrid) {
+                        socialGrid.classList.remove('hidden');
+                        if (socialIntroText) socialIntroText.classList.remove('hidden');
+                    } else if (filter === 'documentary' && docuGrid) {
+                        docuGrid.classList.remove('hidden');
+                        if (docuIntroText) docuIntroText.classList.remove('hidden');
+                    } else if (filter === 'motion-graphic' && motionGrid) {
+                        motionGrid.classList.remove('hidden');
+                        if (motionIntroText) motionIntroText.classList.remove('hidden');
+                    }
+                });
+            });
+        });
+
+        // Esegui il filtro iniziale
+        const activeFilter = document.querySelector('.filter-btn.active');
+        if (activeFilter) activeFilter.click();
+
+
+        // Intersection Observer per alleggerire il sito (Play/Pause visibilità)
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const iframe = entry.target.querySelector('iframe');
+                if (!iframe) return;
+                if (!iframe.src.includes('vimeo.com')) return;
+                const player = getVimeoPlayer(iframe);
+                if (entry.isIntersecting) {
+                    player.play().catch(e => console.warn('Autoplay prevented', e));
+                } else {
+                    player.pause().catch(e => console.warn('Pause prevented'));
+                }
+            });
+        }, { threshold: 0.1 }); // Si attiva quando il video è visibile almeno al 10%
+
+        document.querySelectorAll('.video-wrapper, .social-video-card').forEach(container => {
+            videoObserver.observe(container);
+        });
+
+        // Funzione per scorrimento frecce carosello
+        function scrollCarousel(button, direction) {
+            const container = button.parentElement.querySelector('.overflow-x-auto');
+            if (container) {
+                const scrollAmount = container.clientWidth * 0.75;
+                container.scrollBy({ left: scrollAmount * direction, behavior: 'smooth' });
+            }
+        }
+
+        // Intersection Observer per mettere in pausa i caroselli delle stills se non sono visibili
+        const stillsTracks = document.querySelectorAll('.stills-marquee-track');
+        if (stillsTracks.length > 0) {
+            const stillsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const track = entry.target;
+                    if (entry.isIntersecting) {
+                        track.classList.remove('paused');
+                    } else {
+                        track.classList.add('paused');
+                    }
+                });
+            }, { threshold: 0 });
+            stillsTracks.forEach(track => {
+                stillsObserver.observe(track);
+            });
+        }
+    </script>
+</body>
+
+</html>

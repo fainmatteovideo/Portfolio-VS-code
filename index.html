@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matteo Fain | Video Editor & Filmmaker</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+
+        .hero-section { width: 100vw; height: 100vh; position: relative; }
+        .swiper { width: 100%; height: 100%; }
+        .swiper-slide { width: 100% !important; height: 100vh !important; position: relative; overflow: hidden; display: flex; align-items: center; }
+        
+        .hero-title { font-size: clamp(1.1rem, 2.5vw, 1.7rem); line-height: 1.1; letter-spacing: -0.02em; text-transform: lowercase; font-weight: 400; white-space: nowrap; }
+        
+        .reveal-wrapper { overflow: hidden; padding-bottom: 5px; }
+        .reveal-text { display: block; transform: translateY(110%); transition: transform 1s cubic-bezier(0.23, 1, 0.32, 1); }
+        .swiper-slide-active .reveal-text { transform: translateY(0%); }
+
+        .slide-number-container {
+            position: absolute;
+            left: calc(50% - min(120.23vh, 85.5vw) / 2);
+            bottom: 85vh; /* Aligned with top edge of image/video, shifted 4mm lower */
+            z-index: 20;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .slide-text-container {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 85vh; /* Shifted higher by another 2mm for refined spacing */
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            max-width: min(120.23vh, 85.5vw);
+        }
+
+        .video-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120.23vh; /* Exactly 5% smaller than the previous widescreen slot (126.56vh * 0.95) */
+            height: 85.5vh; /* Exactly 5% smaller than the previous height (90vh * 0.95) */
+            max-width: 85.5vw;
+            max-height: 85.5vh;
+            z-index: 0;
+            filter: brightness(0.7);
+            border-radius: 8px; /* Elegant rounded corner box */
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05); /* Very subtle white border for extra depth */
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); /* Sleek shadow */
+        }
+        iframe, video { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+        .overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.1); z-index: 5; }
+
+        /* Aree di navigazione Blur pulito */
+        .swiper-button-prev, .swiper-button-next { position: absolute; top: 0 !important; bottom: 0 !important; width: 100px !important; height: 100% !important; margin: 0 !important; display: flex; align-items: center; justify-content: center; transition: all 0.4s ease; z-index: 40; }
+        .swiper-button-prev { left: 80px !important; }
+        .swiper-button-next { right: 80px !important; }
+        .swiper-button-prev::after, .swiper-button-next::after { content: '' !important; }
+        
+        /* Nessun gradiente, solo blur e leggero sfondo uniforme */
+        .swiper-button-prev:hover, .swiper-button-next:hover { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); background: rgba(0,0,0,0.1); }
+        
+        .nav-text-prev, .nav-text-next { writing-mode: vertical-rl; text-transform: uppercase; font-size: 10px; letter-spacing: 0.3em; opacity: 0.5; transition: all 0.4s ease; font-weight: 300; color: white; }
+        .nav-text-prev { transform: rotate(180deg); }
+        
+        .swiper-button-prev:hover .nav-text-prev, .swiper-button-next:hover .nav-text-next { opacity: 1; letter-spacing: 0.5em; }
+
+        /* Infinite Partner Logos Marquee with Glassmorphism for Home overlay */
+        .marquee-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            background-color: rgba(12, 12, 14, 0.85); /* Semi-transparent ultra-dark charcoal */
+            backdrop-filter: blur(12px); /* High-end apple-style glass blur */
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            height: 84px; /* Slimmed down height for homepage spacing - 15% larger than 72px */
+            display: flex;
+            align-items: center;
+        }
+
+        /* Gradient mask for smooth matte fade at edges matching background blur */
+        .marquee-container::before,
+        .marquee-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 100px;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .marquee-container::before {
+            left: 0;
+            background: linear-gradient(to right, rgba(12, 12, 14, 0.85) 10%, transparent);
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+        }
+
+        .marquee-container::after {
+            right: 0;
+            background: linear-gradient(to left, rgba(12, 12, 14, 0.85) 10%, transparent);
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        .marquee-track {
+            display: flex;
+            width: max-content;
+            animation: marquee 29s linear infinite;
+            will-change: transform;
+        }
+
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+
+        .marquee-track.paused {
+            animation-play-state: paused !important;
+        }
+
+        .marquee-item {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            margin-right: 95px; /* Increased by 25px (~0.8 cm) to widen horizontal spacing */
+        }
+
+        .marquee-logo {
+            height: 32px; /* Logos - 15% larger than 28px, fixed vertical size */
+            max-width: 115px;
+            width: auto;
+            object-fit: contain;
+            opacity: 0.6;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .marquee-logo.logo-lg {
+            height: 64px; /* Increased by 100% (2x) */
+            max-width: 250px;
+        }
+
+        .marquee-logo.logo-xl {
+            height: 112px; /* Increased by 300% (3.5x for visual weight equivalence) */
+            max-width: 250px;
+            margin-left: -35px; /* Restored negative margins to pull narrow items closer */
+            margin-right: -35px;
+        }
+
+        .logo-swisscom {
+            position: relative;
+            top: 28px; /* Lowered by 0.1 cm (24px + 4px = 28px) */
+            left: 12px; /* Shifted right by ~0.4 cm */
+            margin-left: -35px; /* Pull closer to Kordial and Stories */
+            margin-right: -35px;
+        }
+
+        .logo-stories {
+            position: relative;
+            top: 28px; /* Lowered by 0.1 cm (24px + 4px = 28px) */
+            margin-left: -30px; /* Pull closer to Swisscom and Trees */
+            margin-right: -30px;
+        }
+
+        .logo-hope {
+            position: relative;
+            top: 33px; /* Raised by 0.2 cm (41px - 8px = 33px) */
+            height: 64px; /* Doubled scale */
+            max-width: 250px;
+            margin-left: -35px;
+            margin-right: -35px;
+        }
+
+        .logo-bank {
+            position: relative;
+            top: 34px;
+            margin-left: -5px;
+            margin-right: -5px;
+        }
+
+        .logo-girts {
+            position: relative;
+            top: 48px; /* Raised by 0.2 cm (56px - 8px = 48px) */
+            margin-left: -10px;
+            margin-right: -10px;
+        }
+
+        .logo-ost {
+            position: relative;
+            top: 48px; /* Raised by 0.2 cm (56px - 8px = 48px) */
+            left: -16px; /* Shifted left by 0.5 cm */
+            height: 37px; /* Increased by 15% */
+            margin-left: -55px; /* Increased negative margin to pull Zt closer */
+            margin-right: -55px; /* Increased negative margin to pull BTRY closer */
+        }
+
+        .logo-zt {
+            position: relative;
+            top: 10px; /* Raised by 0.2 cm (18px - 8px = 10px) */
+            left: -16px; /* Shifted left by 0.5 cm */
+            margin-left: -85px; /* Increased negative margin to pull MCQ closer */
+            margin-right: -60px; /* Increased negative margin to pull OST closer */
+        }
+
+        .logo-mcq {
+            height: 129px !important; /* 15% larger than 112px */
+            margin-left: -20px; /* Pull closer to Girts and Zt */
+            margin-right: -20px;
+        }
+
+        .logo-btry {
+            position: relative;
+            top: 42px; /* Raised by 0.15 cm (48px - 6px = 42px) */
+            height: 46px !important; /* Made 20% larger than 38px */
+            margin-left: -5px;
+            margin-right: -5px;
+        }
+
+        .logo-raiffeisen {
+            position: relative;
+            top: 37px; /* Raised by 0.2 cm (45px - 8px = 37px) */
+            height: 56px !important; /* Made 75% larger */
+            margin-left: -25px; /* Pull closer to Aceli */
+            margin-right: -25px; /* Pull closer to Kordial */
+        }
+
+        .logo-kordial {
+            position: relative;
+            top: 53px; /* Lowered by 0.1 cm (49px + 4px = 53px) */
+            height: 35px; /* Increased scale by 10% (32px * 1.1 = 35px) */
+            left: 15px; /* Shifted right by 15px */
+            margin-left: -25px; /* Pull closer to Raiffeisen */
+            margin-right: -25px; /* Pull closer to Swisscom when track loops */
+        }
+
+        .logo-aceli {
+            position: relative;
+            top: 31px; /* Raised by 0.3 cm (42px - 11px = 31px) */
+            height: 12px; /* Reduced size by 10% (14px * 0.9 = 12.6px ~ 12px) */
+            max-width: 250px;
+            margin-left: -30px; /* Pull closer to OST and Kordial */
+            margin-right: -30px;
+        }
+
+        .logo-tree {
+            position: relative;
+            top: 10px; /* Raised by an additional 0.1 cm (14px - 4px = 10px) */
+        }
+
+        .logo-byd {
+            position: relative;
+            top: 10px; /* Raised by 0.2 cm (18px - 8px = 10px) */
+        }
+
+        .marquee-logo:hover {
+            opacity: 1;
+            transform: scale(1.04);
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translate3d(0, 0, 0);
+            }
+            100% {
+                transform: translate3d(-50%, 0, 0);
+            }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <nav class="fixed top-0 w-full z-50 flex justify-between items-start pt-8 px-10 bg-gradient-to-b from-[#050505]/50 to-transparent">
+        
+        <a href="#top" class="font-medium text-[11px] tracking-[0.3em] uppercase hover:opacity-70 transition-opacity">
+            Matteo Fain
+        </a>
+
+        <div class="hidden md:flex gap-10 text-[10px] uppercase tracking-widest font-light opacity-80 z-20">
+            <a href="index.html" class="nav-link active hover:opacity-100 transition">Home</a>
+            <a href="work.html" class="nav-link hover:opacity-100 transition">Work</a>
+            <a href="about.html" class="nav-link hover:opacity-100 transition">About</a>
+        </div>
+    </nav>
+
+<section id="top" class="hero-section">
+        
+        <div class="swiper-button-prev"><span class="nav-text-prev">Prev</span></div>
+        <div class="swiper-button-next"><span class="nav-text-next">Next</span></div>
+
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                
+                <div class="swiper-slide">
+                    <div class="video-container">
+                        <iframe src="https://player.vimeo.com/video/1172567953?background=1&autoplay=1&loop=1&muted=1" frameborder="0" allow="autoplay; fullscreen" class="w-full h-full object-cover"></iframe>
+                        <div class="overlay"></div>
+                    </div>
+                    
+                    <div class="slide-number-container">
+                        <span class="text-sm md:text-base font-normal">01</span>
+                        <span class="text-[8px] font-light opacity-40 tracking-widest">/ 03</span>
+                    </div>
+
+                    <div class="slide-text-container">
+                        <div class="reveal-wrapper text-center">
+                            <h1 class="hero-title reveal-text text-center">video editor</h1>
+                        </div>
+                        
+                        <div class="mt-3 flex gap-4 text-[7.5px] uppercase tracking-[0.25em] font-light opacity-60 justify-center">
+                            <span>Corporate / Documentary / Social</span>
+                        </div>
+                    </div>
+                </div>
+  
+                <div class="swiper-slide">
+                    <div class="video-container">
+                        <iframe src="https://player.vimeo.com/video/1172299160?background=1&autoplay=1&loop=1&muted=1" frameborder="0" allow="autoplay; fullscreen" class="w-full h-full object-cover"></iframe>
+                        <div class="overlay"></div>
+                    </div>
+                    <div class="slide-number-container">
+                        <span class="text-sm md:text-base font-normal">02</span>
+                        <span class="text-[8px] font-light opacity-40 tracking-widest">/ 03</span>
+                    </div>
+
+                    <div class="slide-text-container">
+                        <div class="reveal-wrapper text-center">
+                            <h1 class="hero-title reveal-text text-center">videographer</h1>
+                        </div>
+                        <div class="mt-3 flex gap-4 text-[7.5px] uppercase tracking-[0.25em] font-light opacity-60 justify-center">
+                            <span>Direction / Cinematography</span>
+                        </div>
+                    </div>
+                </div>
+  
+                <div class="swiper-slide">
+                    <div class="video-container">
+                        <iframe src="https://player.vimeo.com/video/1173049098?background=1&autoplay=1&loop=1&muted=1" frameborder="0" allow="autoplay; fullscreen" class="w-full h-full object-cover"></iframe>
+                        <div class="overlay"></div>
+                    </div>
+                    <div class="slide-number-container">
+                        <span class="text-sm md:text-base font-normal">03</span>
+                        <span class="text-[8px] font-light opacity-40 tracking-widest">/ 03</span>
+                    </div>
+
+                    <div class="slide-text-container">
+                        <div class="reveal-wrapper text-center">
+                            <h1 class="hero-title reveal-text text-center">motion designer</h1>
+                        </div>
+                        <div class="mt-3 flex gap-4 text-[7.5px] uppercase tracking-[0.25em] font-light opacity-60 justify-center">
+                            <span>Animation / VFX / Title Design</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- Fixed Bottom Partner Logos Marquee (Aligned with widescreen video width and positioned in bottom band) -->
+        <div class="fixed bottom-[5vh] left-1/2 -translate-x-1/2 w-full max-w-[120.23vh] z-30 px-4 md:px-0">
+            <div class="marquee-container">
+                <div class="marquee-track">
+                    <!-- Group 1 -->
+                    <div class="marquee-item"><img class="marquee-logo logo-lg logo-swisscom" loading="eager" src="assets/img%20transparent/swisscom%20logo.png" alt="Swisscom"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-lg logo-stories" loading="eager" src="assets/img%20transparent/stories%20logo.png" alt="Stories AG"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-tree" loading="eager" src="assets/img%20transparent/tree%20logo.png" alt="Trees for the Future"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-hope" loading="eager" src="assets/img%20transparent/hope%20logo.png" alt="Hope Group"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-byd" loading="eager" src="assets/img%20transparent/BYD%20logo.png" alt="BYD"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-girts" loading="eager" src="assets/img%20transparent/girts%20logo.png" alt="Girts"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-mcq" loading="eager" src="assets/img%20transparent/mcq.png" alt="McQueen"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-zt" loading="eager" src="assets/img%20transparent/Zt%20logo.png" alt="Zt"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-ost" loading="eager" src="assets/img%20transparent/OST%20.png" alt="OST"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-btry" loading="eager" src="assets/img%20transparent/BTRY.png" alt="BTRY"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-lg logo-aceli" loading="eager" src="assets/img%20transparent/aceli logo.png" alt="Aceli Africa"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-raiffeisen" loading="eager" src="assets/img%20transparent/raffesein%20logo.png" alt="Raiffeisen Bank"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-kordial" loading="eager" src="assets/img%20transparent/kordial.png" alt="Kordial"></div>
+                    
+                    <!-- Group 2 (Duplicate for infinite seamless loop) -->
+                    <div class="marquee-item"><img class="marquee-logo logo-lg logo-swisscom" loading="eager" src="assets/img%20transparent/swisscom%20logo.png" alt="Swisscom"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-lg logo-stories" loading="eager" src="assets/img%20transparent/stories%20logo.png" alt="Stories AG"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-tree" loading="eager" src="assets/img%20transparent/tree%20logo.png" alt="Trees for the Future"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-hope" loading="eager" src="assets/img%20transparent/hope%20logo.png" alt="Hope Group"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-byd" loading="eager" src="assets/img%20transparent/BYD%20logo.png" alt="BYD"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-girts" loading="eager" src="assets/img%20transparent/girts%20logo.png" alt="Girts"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-mcq" loading="eager" src="assets/img%20transparent/mcq.png" alt="McQueen"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-zt" loading="eager" src="assets/img%20transparent/Zt%20logo.png" alt="Zt"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-ost" loading="eager" src="assets/img%20transparent/OST%20.png" alt="OST"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-btry" loading="eager" src="assets/img%20transparent/BTRY.png" alt="BTRY"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-lg logo-aceli" loading="eager" src="assets/img%20transparent/aceli logo.png" alt="Aceli Africa"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-raiffeisen" loading="eager" src="assets/img%20transparent/raffesein%20logo.png" alt="Raiffeisen Bank"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-kordial" loading="eager" src="assets/img%20transparent/kordial.png" alt="Kordial"></div>
+                </div>
+            </div>
+        </div>
+        
+        </div>
+    </section>
+
+    <script src="https://player.vimeo.com/api/player.js"></script>
+    <script>
+        const vimeoPlayers = new Map();
+        function getVimeoPlayer(iframe) {
+            if (!vimeoPlayers.has(iframe)) {
+                vimeoPlayers.set(iframe, new Vimeo.Player(iframe));
+            }
+            return vimeoPlayers.get(iframe);
+        }
+
+        const swiper = new Swiper(".mySwiper", {
+            slidesPerView: 1, centeredSlides: true, loop: true, speed: 1000, effect: "fade", fadeEffect: { crossFade: true },
+            navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+            mousewheel: { forceToAxis: true, thresholdDelta: 20 },
+            on: {
+                slideChangeTransitionEnd: function () {
+                    // Pausa tutti i video e riproduci solo quello attivo
+                    const allSlides = document.querySelectorAll('.swiper-slide iframe');
+                    allSlides.forEach(iframe => {
+                        try {
+                            if (iframe.src.includes('vimeo.com')) {
+                                const player = getVimeoPlayer(iframe);
+                                player.pause().catch(()=>{});
+                            }
+                        } catch(e) {}
+                    });
+                    
+                    const activeSlide = document.querySelector('.swiper-slide-active iframe');
+                    if (activeSlide && activeSlide.src.includes('vimeo.com')) {
+                        try {
+                            const player = getVimeoPlayer(activeSlide);
+                            player.play().catch(()=>{});
+                        } catch(e) {}
+                    }
+                }
+            }
+        });
+
+        // Intersection Observer per mettere in pausa il carosello dei loghi se non è visibile
+        const marqueeTrack = document.querySelector('.marquee-track');
+        if (marqueeTrack) {
+            const marqueeObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        marqueeTrack.classList.remove('paused');
+                    } else {
+                        marqueeTrack.classList.add('paused');
+                    }
+                });
+            }, { threshold: 0 });
+            marqueeObserver.observe(marqueeTrack);
+        }
+    </script>
+</body>
+</html>
