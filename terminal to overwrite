@@ -1,0 +1,5 @@
+git add --all
+git commit -m "sovrascrittura totale e definitiva"
+git push origin main --force
+
+// comando per sovrascrivere tutto
