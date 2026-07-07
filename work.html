@@ -4,10 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Matteo Fain — Selected Works: Commercial, Documentary, Social, Motion Graphic ed Events. Video Editor e Filmmaker freelance.">
     <title>Matteo Fain | Video Editor & Filmmaker</title>
 
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
 
@@ -264,13 +268,16 @@
     <section id="works-list" class="pt-32 px-10 md:px-32 pb-24 bg-[#050505] relative z-20">
 
         <div class="mb-16 flex flex-col items-center gap-10 border-b border-white/10 pb-10 text-center">
-            <h2 class="text-3xl md:text-4xl font-medium lowercase tracking-tight opacity-90">selected works</h2>
+            <h1 class="text-3xl md:text-4xl font-medium lowercase tracking-tight opacity-90">selected works</h1>
 
             <div class="flex flex-wrap justify-center gap-8 text-[9px] uppercase tracking-[0.3em] opacity-60">
                 <button class="filter-btn active" data-filter="commercial">Commercial & Corporate</button>
                 <button class="filter-btn" data-filter="social">Social</button>
                 <button class="filter-btn" data-filter="documentary">Documentary</button>
-                <button class="filter-btn" data-filter="motion-graphic">Motion Graphic</button>
+                <div class="flex gap-8 whitespace-nowrap">
+                    <button class="filter-btn" data-filter="motion-graphic">Motion Graphic</button>
+                    <button class="filter-btn" data-filter="events">Events</button>
+                </div>
             </div>
 
             <!-- Intro text specifically for Social section -->
@@ -291,6 +298,11 @@
             <!-- Intro text specifically for Motion Graphic section -->
             <p id="motion-intro-text" class="hidden text-xs font-light tracking-[0.1em] opacity-60 text-center max-w-[620px] mx-auto leading-relaxed mt-2 px-4">
                 My motion graphics work ranges from handling long and complex music video projects to integrating VFX and animation into social reels.
+            </p>
+
+            <!-- Intro text specifically for Events section -->
+            <p id="events-intro-text" class="hidden text-xs font-light tracking-[0.1em] opacity-60 text-center max-w-[620px] mx-auto leading-relaxed mt-2 px-4">
+                I help capture the energy of tech and IT conferences, working seamlessly as a solo freelancer or as part of a larger team to deliver high-impact event coverage.
             </p>
         </div>
 
@@ -566,6 +578,181 @@
                     <div class="stills-marquee-item"><img src="assets/img LOW res/bank/Screenshot 2026-05-08 at 18.52.21.webp" alt="Raiffeisenbank Still" loading="lazy" class="stills-marquee-img"></div>
                     <div class="stills-marquee-item"><img src="assets/img LOW res/bank/Screenshot 2026-05-08 at 18.52.33.webp" alt="Raiffeisenbank Still" loading="lazy" class="stills-marquee-img"></div>
                     <div class="stills-marquee-item"><img src="assets/img LOW res/bank/Screenshot 2026-05-08 at 18.52.49.webp" alt="Raiffeisenbank Still" loading="lazy" class="stills-marquee-img"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logistics Grid -->
+        <!-- Events Grid -->
+        <div id="events-grid" class="hidden w-full pt-5 pb-20 fade-in">
+            <div class="w-full fade-in">
+                <div class="flex flex-col-reverse lg:flex-row gap-8 lg:gap-16 items-center lg:items-center">
+                    <div
+                        class="w-full lg:w-[35%] flex flex-col justify-start items-center lg:items-center text-center pt-4 lg:pt-10">
+                        <h2 class="text-2xl md:text-3xl font-bold tracking-wider mb-6">GS1 EXD 2026</h2>
+                        <div class="flex flex-col gap-2 text-[13px] md:text-[14px] font-light text-white/90">
+                            <p>Agency: Kordial</p>
+                            <p>Videographer: Matteo Fain, Damian Ruchti</p>
+                            <p>Editor: Matteo Fain</p>
+                            <p>Color: Damian Ruchti</p>
+                        </div>
+                        <!-- Logos -->
+                        <div class="flex gap-8 justify-center items-center" style="margin-top: calc(2rem + 0.5cm);">
+                            <img src="assets/img transparent/kordial.png" alt="Kordial Logo" style="height: 43px; width: auto;" class="opacity-100" loading="lazy">
+                            <img src="logos clients/GS1 white.png" alt="GS1 Logo" style="height: 62px; width: auto; margin-top: 10px; transform: translate(6px, -2mm);" class="opacity-100" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-[65%] flex flex-col">
+                        <div class="video-wrapper relative pointer-events-none">
+                            <iframe loading="lazy"
+                                src="https://player.vimeo.com/video/1206485408?autoplay=1&amp;loop=1&amp;muted=1&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                                frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" class="w-full h-full"
+                                style="pointer-events: auto;"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Infinite Scrolling Stills Marquee -->
+            <div class="fade-in delay-1 stills-marquee-container">
+                <div class="stills-marquee-track">
+                    <!-- Group 1 -->
+                    <div class="stills-marquee-item"><img src="assets/GS1 excellence stills/Screenshot 2026-07-02 at 16.16.11.webp" alt="GS1 Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 excellence stills/Screenshot 2026-07-02 at 16.16.42.webp" alt="GS1 Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 excellence stills/Screenshot 2026-07-02 at 16.17.01.webp" alt="GS1 Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 excellence stills/Screenshot 2026-07-02 at 16.17.15.webp" alt="GS1 Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 excellence stills/Screenshot 2026-07-02 at 16.17.31.webp" alt="GS1 Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 excellence stills/Screenshot 2026-07-02 at 16.17.45.webp" alt="GS1 Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 excellence stills/Screenshot 2026-07-02 at 16.18.07.webp" alt="GS1 Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 excellence stills/Screenshot 2026-07-02 at 16.18.22.webp" alt="GS1 Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 excellence stills/Screenshot 2026-07-02 at 16.18.34.webp" alt="GS1 Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 excellence stills/Screenshot 2026-07-02 at 16.18.45.webp" alt="GS1 Still" loading="lazy" class="stills-marquee-img"></div>
+
+                    <!-- Group 2 (Duplicate for seamless loop) -->
+                    <div class="stills-marquee-item"><img src="assets/GS1 excellence stills/Screenshot 2026-07-02 at 16.16.11.webp" alt="GS1 Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 excellence stills/Screenshot 2026-07-02 at 16.16.42.webp" alt="GS1 Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 excellence stills/Screenshot 2026-07-02 at 16.17.01.webp" alt="GS1 Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 excellence stills/Screenshot 2026-07-02 at 16.17.15.webp" alt="GS1 Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 excellence stills/Screenshot 2026-07-02 at 16.17.31.webp" alt="GS1 Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 excellence stills/Screenshot 2026-07-02 at 16.17.45.webp" alt="GS1 Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 excellence stills/Screenshot 2026-07-02 at 16.18.07.webp" alt="GS1 Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 excellence stills/Screenshot 2026-07-02 at 16.18.22.webp" alt="GS1 Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 excellence stills/Screenshot 2026-07-02 at 16.18.34.webp" alt="GS1 Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 excellence stills/Screenshot 2026-07-02 at 16.18.45.webp" alt="GS1 Still" loading="lazy" class="stills-marquee-img"></div>
+                </div>
+            </div>
+
+            <!-- SGAIM SSMIG SSGIM Section -->
+            <div class="pt-8 pb-10 w-full fade-in">
+                <div class="flex flex-col lg:flex-row gap-8 lg:gap-16 items-center lg:items-start border-t border-white/10 pt-10">
+                    <div class="w-full lg:w-[65%] flex flex-col">
+                        <div class="video-wrapper relative pointer-events-none">
+                            <iframe loading="lazy"
+                                src="https://player.vimeo.com/video/1206509583?autoplay=1&amp;loop=1&amp;muted=1&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                                frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" class="w-full h-full"
+                                style="pointer-events: auto;"></iframe>
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-[35%] flex flex-col justify-start items-center lg:items-center text-center pt-4 lg:pt-10">
+                        <h2 class="text-2xl md:text-3xl font-bold tracking-wider mb-6">SGAIM SSMIG SSGIM</h2>
+                        <div class="flex flex-col gap-2 text-[13px] md:text-[14px] font-light text-white/90">
+                            <p>Agency: Kordial</p>
+                            <p>Videographer: Matteo Fain, Damian Ruchti</p>
+                            <p>Editor: Matteo Fain</p>
+                            <p>Color: Damian Ruchti</p>
+                        </div>
+                        <!-- Logos -->
+                        <div class="flex gap-8 justify-center items-center" style="margin-top: calc(2rem + 0.5cm);">
+                            <img src="assets/img transparent/kordial.png" alt="Kordial Logo" style="height: 43px; width: auto;" class="opacity-100" loading="lazy">
+                            <img src="logos clients/sgaim white.png" alt="SGAIM Logo" style="height: 50px; width: auto;" class="opacity-100" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Infinite Scrolling Stills Marquee for SGAIM -->
+            <div class="fade-in delay-1 stills-marquee-container">
+                <div class="stills-marquee-track reverse">
+                    <!-- Group 1 -->
+                    <div class="stills-marquee-item"><img src="assets/SGaim stills/Screenshot 2026-07-02 at 17.55.34.webp" alt="SGAIM Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/SGaim stills/Screenshot 2026-07-02 at 17.55.47.webp" alt="SGAIM Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/SGaim stills/Screenshot 2026-07-02 at 17.56.01.webp" alt="SGAIM Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/SGaim stills/Screenshot 2026-07-02 at 17.56.19.webp" alt="SGAIM Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/SGaim stills/Screenshot 2026-07-02 at 17.56.26.webp" alt="SGAIM Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/SGaim stills/Screenshot 2026-07-02 at 17.57.00.webp" alt="SGAIM Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/SGaim stills/Screenshot 2026-07-02 at 17.57.06.webp" alt="SGAIM Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/SGaim stills/Screenshot 2026-07-02 at 17.57.17.webp" alt="SGAIM Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/SGaim stills/Screenshot 2026-07-02 at 17.57.45.webp" alt="SGAIM Still" loading="lazy" class="stills-marquee-img"></div>
+
+                    <!-- Group 2 (Duplicate for seamless loop) -->
+                    <div class="stills-marquee-item"><img src="assets/SGaim stills/Screenshot 2026-07-02 at 17.55.34.webp" alt="SGAIM Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/SGaim stills/Screenshot 2026-07-02 at 17.55.47.webp" alt="SGAIM Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/SGaim stills/Screenshot 2026-07-02 at 17.56.01.webp" alt="SGAIM Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/SGaim stills/Screenshot 2026-07-02 at 17.56.19.webp" alt="SGAIM Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/SGaim stills/Screenshot 2026-07-02 at 17.56.26.webp" alt="SGAIM Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/SGaim stills/Screenshot 2026-07-02 at 17.57.00.webp" alt="SGAIM Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/SGaim stills/Screenshot 2026-07-02 at 17.57.06.webp" alt="SGAIM Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/SGaim stills/Screenshot 2026-07-02 at 17.57.17.webp" alt="SGAIM Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/SGaim stills/Screenshot 2026-07-02 at 17.57.45.webp" alt="SGAIM Still" loading="lazy" class="stills-marquee-img"></div>
+                </div>
+            </div>
+
+            <!-- GS1 Logistic Section -->
+            <div class="pt-8 pb-10 w-full fade-in">
+                <div class="flex flex-col-reverse lg:flex-row gap-8 lg:gap-16 items-center lg:items-start border-t border-white/10 pt-10">
+                    <div class="w-full lg:w-[35%] flex flex-col justify-start items-center lg:items-center text-center pt-4 lg:pt-10">
+                        <h2 class="text-2xl md:text-3xl font-bold tracking-wider mb-6">GS1 Logistic</h2>
+                        <div class="flex flex-col gap-2 text-[13px] md:text-[14px] font-light text-white/90">
+                            <p>Agency: Kordial</p>
+                            <p>Videographer: Matteo Fain, Damian Ruchti</p>
+                            <p>Editor: Matteo Fain</p>
+                            <p>Color: Damian Ruchti</p>
+                        </div>
+                        <!-- Logos -->
+                        <div class="flex gap-8 justify-center items-center" style="margin-top: calc(2rem + 0.5cm);">
+                            <img src="assets/img transparent/kordial.png" alt="Kordial Logo" style="height: 43px; width: auto;" class="opacity-100" loading="lazy">
+                            <img src="logos clients/GS1 white.png" alt="GS1 Logo" style="height: 62px; width: auto; margin-top: 10px; transform: translate(6px, -2mm);" class="opacity-100" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-[65%] flex flex-col">
+                        <div class="video-wrapper relative pointer-events-none">
+                            <iframe loading="lazy"
+                                src="https://player.vimeo.com/video/1206485546?autoplay=1&amp;loop=1&amp;muted=1&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                                frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" class="w-full h-full"
+                                style="pointer-events: auto;"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Infinite Scrolling Stills Marquee for GS1 Logistic -->
+            <div class="fade-in delay-1 stills-marquee-container">
+                <div class="stills-marquee-track">
+                    <!-- Group 1 -->
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.01.29.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.01.43.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.01.53.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.02.02.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.02.14.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.02.23.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.02.41.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.02.48.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.03.00.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.03.29.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.03.44.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+
+                    <!-- Group 2 (Duplicate for seamless loop) -->
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.01.29.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.01.43.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.01.53.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.02.02.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.02.14.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.02.23.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.02.41.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.02.48.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.03.00.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.03.29.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
+                    <div class="stills-marquee-item"><img src="assets/GS1 logistic stills/Screenshot 2026-07-02 at 18.03.44.webp" alt="GS1 Logistic Still" loading="lazy" class="stills-marquee-img"></div>
                 </div>
             </div>
         </div>
@@ -1546,26 +1733,32 @@
             const commGrid = document.getElementById('commercial-grid');
             const docuGrid = document.getElementById('documentary-grid');
             const motionGrid = document.getElementById('motion-graphic-grid');
+            const eventsGrid = document.getElementById('events-grid');
+            
             const socialIntroText = document.getElementById('social-intro-text');
             const docuIntroText = document.getElementById('docu-intro-text');
             const commIntroText = document.getElementById('comm-intro-text');
             const motionIntroText = document.getElementById('motion-intro-text');
+            const eventsIntroText = document.getElementById('events-intro-text');
 
             filterBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     filterBtns.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-
+                    
                     const filter = btn.getAttribute('data-filter');
 
                     if (socialGrid) socialGrid.classList.add('hidden');
                     if (commGrid) commGrid.classList.add('hidden');
                     if (docuGrid) docuGrid.classList.add('hidden');
                     if (motionGrid) motionGrid.classList.add('hidden');
+                    if (eventsGrid) eventsGrid.classList.add('hidden');
+
                     if (socialIntroText) socialIntroText.classList.add('hidden');
                     if (docuIntroText) docuIntroText.classList.add('hidden');
                     if (commIntroText) commIntroText.classList.add('hidden');
                     if (motionIntroText) motionIntroText.classList.add('hidden');
+                    if (eventsIntroText) eventsIntroText.classList.add('hidden');
 
                     if (filter === 'commercial' && commGrid) {
                         commGrid.classList.remove('hidden');
@@ -1579,6 +1772,9 @@
                     } else if (filter === 'motion-graphic' && motionGrid) {
                         motionGrid.classList.remove('hidden');
                         if (motionIntroText) motionIntroText.classList.remove('hidden');
+                    } else if (filter === 'events' && eventsGrid) {
+                        eventsGrid.classList.remove('hidden');
+                        if (eventsIntroText) eventsIntroText.classList.remove('hidden');
                     }
                 });
             });

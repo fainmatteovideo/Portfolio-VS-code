@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Matteo Fain — Video Editor, Filmmaker e Motion Designer freelance. Portfolio di progetti corporate, documentary, social e motion graphics.">
     <title>Matteo Fain | Video Editor & Filmmaker</title>
     
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -65,6 +69,7 @@
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.05); /* Very subtle white border for extra depth */
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); /* Sleek shadow */
+            will-change: transform; /* GPU compositing hint for smooth Swiper transitions */
         }
         iframe, video { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
         .overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.1); z-index: 5; }
@@ -328,7 +333,7 @@
                 
                 <div class="swiper-slide">
                     <div class="video-container">
-                        <iframe src="https://player.vimeo.com/video/1172567953?background=1&autoplay=1&loop=1&muted=1" frameborder="0" allow="autoplay; fullscreen" class="w-full h-full object-cover"></iframe>
+                        <iframe src="https://player.vimeo.com/video/1172567953?background=1&autoplay=1&loop=1&muted=1" frameborder="0" allow="autoplay; fullscreen" loading="eager" class="w-full h-full object-cover"></iframe>
                         <div class="overlay"></div>
                     </div>
                     
@@ -350,7 +355,7 @@
   
                 <div class="swiper-slide">
                     <div class="video-container">
-                        <iframe src="https://player.vimeo.com/video/1172299160?background=1&autoplay=1&loop=1&muted=1" frameborder="0" allow="autoplay; fullscreen" class="w-full h-full object-cover"></iframe>
+                        <iframe src="https://player.vimeo.com/video/1172299160?background=1&autoplay=1&loop=1&muted=1" frameborder="0" allow="autoplay; fullscreen" loading="lazy" class="w-full h-full object-cover"></iframe>
                         <div class="overlay"></div>
                     </div>
                     <div class="slide-number-container">
@@ -360,7 +365,7 @@
 
                     <div class="slide-text-container">
                         <div class="reveal-wrapper text-center">
-                            <h1 class="hero-title reveal-text text-center">videographer</h1>
+                            <h2 class="hero-title reveal-text text-center">videographer</h2>
                         </div>
                         <div class="mt-3 flex gap-4 text-[7.5px] uppercase tracking-[0.25em] font-light opacity-60 justify-center">
                             <span>Direction / Cinematography</span>
@@ -370,7 +375,7 @@
   
                 <div class="swiper-slide">
                     <div class="video-container">
-                        <iframe src="https://player.vimeo.com/video/1173049098?background=1&autoplay=1&loop=1&muted=1" frameborder="0" allow="autoplay; fullscreen" class="w-full h-full object-cover"></iframe>
+                        <iframe src="https://player.vimeo.com/video/1173049098?background=1&autoplay=1&loop=1&muted=1" frameborder="0" allow="autoplay; fullscreen" loading="lazy" class="w-full h-full object-cover"></iframe>
                         <div class="overlay"></div>
                     </div>
                     <div class="slide-number-container">
@@ -380,7 +385,7 @@
 
                     <div class="slide-text-container">
                         <div class="reveal-wrapper text-center">
-                            <h1 class="hero-title reveal-text text-center">motion designer</h1>
+                            <h2 class="hero-title reveal-text text-center">motion designer</h2>
                         </div>
                         <div class="mt-3 flex gap-4 text-[7.5px] uppercase tracking-[0.25em] font-light opacity-60 justify-center">
                             <span>Animation / VFX / Title Design</span>
@@ -396,34 +401,34 @@
             <div class="marquee-container">
                 <div class="marquee-track">
                     <!-- Group 1 -->
-                    <div class="marquee-item"><img class="marquee-logo logo-lg logo-swisscom" loading="eager" src="assets/img%20transparent/swisscom%20logo.png" alt="Swisscom"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-lg logo-stories" loading="eager" src="assets/img%20transparent/stories%20logo.png" alt="Stories AG"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-tree" loading="eager" src="assets/img%20transparent/tree%20logo.png" alt="Trees for the Future"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-hope" loading="eager" src="assets/img%20transparent/hope%20logo.png" alt="Hope Group"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-byd" loading="eager" src="assets/img%20transparent/BYD%20logo.png" alt="BYD"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-girts" loading="eager" src="assets/img%20transparent/girts%20logo.png" alt="Girts"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-mcq" loading="eager" src="assets/img%20transparent/mcq.png" alt="McQueen"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-zt" loading="eager" src="assets/img%20transparent/Zt%20logo.png" alt="Zt"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-ost" loading="eager" src="assets/img%20transparent/OST%20.png" alt="OST"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-btry" loading="eager" src="assets/img%20transparent/BTRY.png" alt="BTRY"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-lg logo-aceli" loading="eager" src="assets/img%20transparent/aceli logo.png" alt="Aceli Africa"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-raiffeisen" loading="eager" src="assets/img%20transparent/raffesein%20logo.png" alt="Raiffeisen Bank"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-kordial" loading="eager" src="assets/img%20transparent/kordial.png" alt="Kordial"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-lg logo-swisscom" loading="eager" decoding="async" src="assets/img%20transparent/swisscom%20logo.png" alt="Swisscom"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-lg logo-stories" loading="eager" decoding="async" src="assets/img%20transparent/stories%20logo.png" alt="Stories AG"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-tree" loading="eager" decoding="async" src="assets/img%20transparent/tree%20logo.png" alt="Trees for the Future"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-hope" loading="eager" decoding="async" src="assets/img%20transparent/hope%20logo.png" alt="Hope Group"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-byd" loading="eager" decoding="async" src="assets/img%20transparent/BYD%20logo.png" alt="BYD"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-girts" loading="eager" decoding="async" src="assets/img%20transparent/girts%20logo.png" alt="Girts"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-mcq" loading="eager" decoding="async" src="assets/img%20transparent/mcq.png" alt="McQueen"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-zt" loading="eager" decoding="async" src="assets/img%20transparent/Zt%20logo.png" alt="Zt"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-ost" loading="eager" decoding="async" src="assets/img%20transparent/OST%20.png" alt="OST"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-btry" loading="eager" decoding="async" src="assets/img%20transparent/BTRY.png" alt="BTRY"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-lg logo-aceli" loading="eager" decoding="async" src="assets/img%20transparent/aceli logo.png" alt="Aceli Africa"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-raiffeisen" loading="eager" decoding="async" src="assets/img%20transparent/raffesein%20logo.png" alt="Raiffeisen Bank"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-kordial" loading="eager" decoding="async" src="assets/img%20transparent/kordial.png" alt="Kordial"></div>
                     
                     <!-- Group 2 (Duplicate for infinite seamless loop) -->
-                    <div class="marquee-item"><img class="marquee-logo logo-lg logo-swisscom" loading="eager" src="assets/img%20transparent/swisscom%20logo.png" alt="Swisscom"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-lg logo-stories" loading="eager" src="assets/img%20transparent/stories%20logo.png" alt="Stories AG"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-tree" loading="eager" src="assets/img%20transparent/tree%20logo.png" alt="Trees for the Future"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-hope" loading="eager" src="assets/img%20transparent/hope%20logo.png" alt="Hope Group"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-byd" loading="eager" src="assets/img%20transparent/BYD%20logo.png" alt="BYD"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-girts" loading="eager" src="assets/img%20transparent/girts%20logo.png" alt="Girts"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-mcq" loading="eager" src="assets/img%20transparent/mcq.png" alt="McQueen"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-zt" loading="eager" src="assets/img%20transparent/Zt%20logo.png" alt="Zt"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-ost" loading="eager" src="assets/img%20transparent/OST%20.png" alt="OST"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-btry" loading="eager" src="assets/img%20transparent/BTRY.png" alt="BTRY"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-lg logo-aceli" loading="eager" src="assets/img%20transparent/aceli logo.png" alt="Aceli Africa"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-raiffeisen" loading="eager" src="assets/img%20transparent/raffesein%20logo.png" alt="Raiffeisen Bank"></div>
-                    <div class="marquee-item"><img class="marquee-logo logo-kordial" loading="eager" src="assets/img%20transparent/kordial.png" alt="Kordial"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-lg logo-swisscom" loading="lazy" decoding="async" src="assets/img%20transparent/swisscom%20logo.png" alt="Swisscom"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-lg logo-stories" loading="lazy" decoding="async" src="assets/img%20transparent/stories%20logo.png" alt="Stories AG"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-tree" loading="lazy" decoding="async" src="assets/img%20transparent/tree%20logo.png" alt="Trees for the Future"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-hope" loading="lazy" decoding="async" src="assets/img%20transparent/hope%20logo.png" alt="Hope Group"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-byd" loading="lazy" decoding="async" src="assets/img%20transparent/BYD%20logo.png" alt="BYD"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-girts" loading="lazy" decoding="async" src="assets/img%20transparent/girts%20logo.png" alt="Girts"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-mcq" loading="lazy" decoding="async" src="assets/img%20transparent/mcq.png" alt="McQueen"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-xl logo-zt" loading="lazy" decoding="async" src="assets/img%20transparent/Zt%20logo.png" alt="Zt"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-ost" loading="lazy" decoding="async" src="assets/img%20transparent/OST%20.png" alt="OST"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-btry" loading="lazy" decoding="async" src="assets/img%20transparent/BTRY.png" alt="BTRY"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-lg logo-aceli" loading="lazy" decoding="async" src="assets/img%20transparent/aceli logo.png" alt="Aceli Africa"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-raiffeisen" loading="lazy" decoding="async" src="assets/img%20transparent/raffesein%20logo.png" alt="Raiffeisen Bank"></div>
+                    <div class="marquee-item"><img class="marquee-logo logo-kordial" loading="lazy" decoding="async" src="assets/img%20transparent/kordial.png" alt="Kordial"></div>
                 </div>
             </div>
         </div>

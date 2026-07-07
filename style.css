@@ -97,6 +97,7 @@ nav.nav-scrolled {
         height: 100vh !important;
         max-width: none !important;
         max-height: none !important;
+        will-change: transform;
     }
 
     /* Prev/Next totalmente ai bordi dello schermo (specificità aumentata per sovrascrivere style in index.html) */
@@ -106,6 +107,10 @@ nav.nav-scrolled {
         margin-left: 0 !important;
         width: 30px !important;
         justify-content: flex-start !important; /* Allinea il testo attaccato a sinistra */
+        height: 60px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        bottom: auto !important;
     }
 
     body .swiper-button-next {
@@ -114,6 +119,10 @@ nav.nav-scrolled {
         margin-right: 0 !important;
         width: 30px !important;
         justify-content: flex-end !important; /* Allinea il testo attaccato a destra */
+        height: 60px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        bottom: auto !important;
     }
 
     .slide-text-container {
@@ -125,7 +134,15 @@ nav.nav-scrolled {
         margin-top: 0.2rem !important; /* Più vicini tra loro */
     }
 
-    /* Carosello loghi in home rimosso da qui (spostato in 1024px) */
+    /* Marquee a piena larghezza su mobile — nessun padding laterale */
+    body .fixed.bottom-\[5vh\] {
+        max-width: 100vw !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    body .marquee-container {
+        border-radius: 0 !important;
+    }
 
     /* ========== 2. WORK PAGE — Commercial, Documentary, Motion Graphic ========== */
 
@@ -421,7 +438,70 @@ nav.nav-scrolled {
         width: 16px !important;
         height: 16px !important;
     }
+
+    /* ========== 9. Filter bar — avvolgi bottoni su schermi molto piccoli ========== */
+    #works-list .flex.gap-8.whitespace-nowrap {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        white-space: normal !important;
+        gap: 0.75rem 1.5rem !important;
+    }
+
+    /* ========== 10. Padding testo mobile — azzerare pt-4 tra video e testo ========== */
+    #commercial-grid .pt-4,
+    #events-grid .pt-4,
+    #documentary-grid .pt-4,
+    #motion-graphic-grid .pt-4 {
+        padding-top: 0 !important;
+    }
 }
+
+/* =========================================
+   Schermi molto piccoli (<380px — iPhone SE)
+   ========================================= */
+@media (max-width: 380px) {
+    /* Social grid verticale: gap minimo per adattarsi allo schermo */
+    #works-list .grid.grid-cols-2 {
+        gap: 6px !important;
+        padding-left: 6px !important;
+        padding-right: 6px !important;
+    }
+}
+
+/* =========================================
+   Touch device — Rimuovi hover stuck
+   ========================================= */
+@media (hover: none) {
+    /* Le card social non rimangono "sollevate" dopo il tap */
+    .social-video-card:hover {
+        transform: none !important;
+        box-shadow: 0 8px 24px rgba(255, 255, 255, 0.05) !important;
+    }
+
+    /* Le immagini stills non rimangono scalate dopo il tap */
+    .stills-marquee-img:hover {
+        transform: none !important;
+        filter: brightness(0.85) !important;
+    }
+
+    /* I loghi del marquee non rimangono evidenziati dopo il tap */
+    .marquee-logo:hover {
+        opacity: 0.6 !important;
+        transform: none !important;
+    }
+}
+
+/* =========================================
+   Performance — content-visibility per griglie nascoste
+   ========================================= */
+#events-grid.hidden,
+#documentary-grid.hidden,
+#motion-graphic-grid.hidden,
+#social-grid.hidden {
+    content-visibility: hidden;
+}
+
+
 
 /* =========================================
    iPad & Mobile Specifics (Max-width 1024px)
