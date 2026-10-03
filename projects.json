@@ -1,0 +1,784 @@
+{
+  "categories": [
+    {
+      "id": "commercial",
+      "label": "Commercial & Corporate",
+      "intro": "My corporate and commercial work spans on-set production and post-production. I assist startups on set to bring their image videos to life, while also working as a motion designer to create engaging commercial content."
+    },
+    {
+      "id": "social",
+      "label": "Social",
+      "intro": "My background includes also a year and a half as the video editor for a major YouTube channel with over 2.6 million subscribers. Now, I partner with creators and brands to produce impactful content across fashion, animation, events, and music videos."
+    },
+    {
+      "id": "documentary",
+      "label": "Documentary",
+      "intro": "My documentary experience focuses on editing and color grading, primarily collaborating with NGOs on projects across Africa to bring impactful, real-world stories to light."
+    },
+    {
+      "id": "motion-graphic",
+      "label": "Motion Graphic",
+      "intro": "My motion graphics work ranges from handling long and complex music video projects to integrating VFX and animation into social reels."
+    },
+    {
+      "id": "events",
+      "label": "Events",
+      "intro": "I help capture the energy of tech and IT conferences, working seamlessly as a solo freelancer or as part of a larger team to deliver high-impact event coverage."
+    }
+  ],
+  "projects": [
+    {
+      "id": "security-office",
+      "title": "Security - Office",
+      "subtitle": "UI design, texture and animation",
+      "category": "commercial",
+      "vimeo": "1171989015",
+      "credits": [
+        "Client: Swisscom",
+        "Production: Stories AG",
+        "Director: Samuel Morris",
+        "DOP: Léo Schrepel",
+        "Producer: Vera Matta, Meret Früh",
+        "Agency: Mona & Mateo",
+        "Matteo Fain: motion graphic"
+      ],
+      "logos": [
+        {
+          "src": "assets/logos/swisscom.webp",
+          "alt": "Swisscom"
+        },
+        {
+          "src": "assets/logos/stories.webp",
+          "alt": "Stories"
+        }
+      ],
+      "thumbnail": "assets/stills/security-office/11.webp",
+      "stills": [
+        "assets/stills/security-office/11.webp",
+        "assets/stills/security-office/09.webp",
+        "assets/stills/security-office/06.webp",
+        "assets/stills/security-office/04.webp",
+        "assets/stills/security-office/01.webp",
+        "assets/stills/security-office/07.webp",
+        "assets/stills/security-office/10.webp",
+        "assets/stills/security-office/02.webp"
+      ]
+    },
+    {
+      "id": "ost-wing",
+      "title": "OST Wing",
+      "subtitle": "",
+      "category": "commercial",
+      "vimeo": "1197366584",
+      "credits": [
+        "Agency: kordial.ch",
+        "Director / Grading: Damian Ruchti",
+        "DP / CamOp: Nils Bätscher",
+        "Grip / Gaffer: Noah Steiner",
+        "VFX Artist: Jonas Schertenleib",
+        "Editor: Matteo Fain",
+        "Script: Stefan Saladin",
+        "Customer: OST, Stefanie Schnelli"
+      ],
+      "logos": [
+        {
+          "src": "assets/logos/kordial.webp",
+          "alt": "Kordial"
+        },
+        {
+          "src": "assets/logos/ost.webp",
+          "alt": "OST"
+        }
+      ],
+      "thumbnail": "assets/stills/ost-wing/01.webp",
+      "stills": [
+        "assets/stills/ost-wing/01.webp",
+        "assets/stills/ost-wing/02.webp",
+        "assets/stills/ost-wing/03.webp",
+        "assets/stills/ost-wing/04.webp",
+        "assets/stills/ost-wing/05.webp",
+        "assets/stills/ost-wing/06.webp",
+        "assets/stills/ost-wing/07.webp"
+      ]
+    },
+    {
+      "id": "security-cafe",
+      "title": "Security - Cafe",
+      "subtitle": "UI design, texture and animation",
+      "category": "commercial",
+      "vimeo": "1172299160",
+      "credits": [
+        "Client: Swisscom",
+        "Production: Stories AG",
+        "Director: Samuel Morris",
+        "DOP: Léo Schrepel",
+        "Producer: Vera Matta, Meret Früh",
+        "Agency: Mona & Mateo",
+        "Matteo Fain: motion graphic"
+      ],
+      "logos": [
+        {
+          "src": "assets/logos/swisscom.webp",
+          "alt": "Swisscom"
+        },
+        {
+          "src": "assets/logos/stories.webp",
+          "alt": "Stories"
+        }
+      ],
+      "thumbnail": "assets/stills/security-cafe/01.webp",
+      "stills": [
+        "assets/stills/security-cafe/01.webp",
+        "assets/stills/security-cafe/03.webp",
+        "assets/stills/security-cafe/05.webp",
+        "assets/stills/security-cafe/10.webp",
+        "assets/stills/security-cafe/06.webp",
+        "assets/stills/security-cafe/02.webp",
+        "assets/stills/security-cafe/07.webp",
+        "assets/stills/security-cafe/09.webp"
+      ]
+    },
+    {
+      "id": "btry",
+      "title": "BTRY",
+      "subtitle": "",
+      "category": "commercial",
+      "vimeo": "1172322519",
+      "credits": [
+        "Client: BTRY",
+        "Producer: Girts Apskalns",
+        "Producer Assistant & Gaffer: Matteo Fain"
+      ],
+      "logos": [
+        {
+          "src": "assets/logos/btry.webp",
+          "alt": "BTRY"
+        }
+      ],
+      "thumbnail": "assets/stills/btry/03.webp",
+      "stills": [
+        "assets/stills/btry/03.webp",
+        "assets/stills/btry/08.webp",
+        "assets/stills/btry/09.webp",
+        "assets/stills/btry/10.webp",
+        "assets/stills/btry/12.webp",
+        "assets/stills/btry/11.webp",
+        "assets/stills/btry/07.webp",
+        "assets/stills/btry/05.webp"
+      ]
+    },
+    {
+      "id": "raiffeisen-bank",
+      "title": "Raiffeisen Bank",
+      "subtitle": "",
+      "category": "commercial",
+      "vimeo": "1196069340",
+      "credits": [
+        "Client: Raiffeisen Bank",
+        "Producer & Filmmaker: Franz Thiel",
+        "Video Editor: Matteo Fain"
+      ],
+      "logos": [
+        {
+          "src": "assets/logos/raiffeisen.webp",
+          "alt": "Raiffeisenbank"
+        }
+      ],
+      "thumbnail": "assets/stills/raiffeisen/01.webp",
+      "stills": [
+        "assets/stills/raiffeisen/01.webp",
+        "assets/stills/raiffeisen/02.webp",
+        "assets/stills/raiffeisen/03.webp",
+        "assets/stills/raiffeisen/04.webp",
+        "assets/stills/raiffeisen/05.webp",
+        "assets/stills/raiffeisen/06.webp",
+        "assets/stills/raiffeisen/07.webp",
+        "assets/stills/raiffeisen/08.webp"
+      ]
+    },
+    {
+      "id": "gs1-exd-2026",
+      "title": "GS1 EXD 2026",
+      "subtitle": "",
+      "category": "events",
+      "vimeo": "1206485408",
+      "credits": [
+        "Agency: Kordial",
+        "Videographer: Matteo Fain, Damian Ruchti",
+        "Editor: Matteo Fain",
+        "Color: Damian Ruchti"
+      ],
+      "logos": [
+        {
+          "src": "assets/logos/kordial.webp",
+          "alt": "Kordial"
+        },
+        {
+          "src": "assets/logos/gs1.webp",
+          "alt": "GS1"
+        }
+      ],
+      "thumbnail": "assets/stills/gs1-exd-2026/01.webp",
+      "stills": [
+        "assets/stills/gs1-exd-2026/01.webp",
+        "assets/stills/gs1-exd-2026/02.webp",
+        "assets/stills/gs1-exd-2026/03.webp",
+        "assets/stills/gs1-exd-2026/04.webp",
+        "assets/stills/gs1-exd-2026/05.webp",
+        "assets/stills/gs1-exd-2026/06.webp",
+        "assets/stills/gs1-exd-2026/07.webp",
+        "assets/stills/gs1-exd-2026/08.webp",
+        "assets/stills/gs1-exd-2026/09.webp",
+        "assets/stills/gs1-exd-2026/10.webp"
+      ]
+    },
+    {
+      "id": "sgaim-ssmig-ssgim",
+      "title": "SGAIM SSMIG SSGIM",
+      "subtitle": "",
+      "category": "events",
+      "vimeo": "1206509583",
+      "credits": [
+        "Agency: Kordial",
+        "Videographer: Matteo Fain, Damian Ruchti",
+        "Editor: Matteo Fain",
+        "Color: Damian Ruchti"
+      ],
+      "logos": [
+        {
+          "src": "assets/logos/kordial.webp",
+          "alt": "Kordial"
+        },
+        {
+          "src": "assets/logos/sgaim.webp",
+          "alt": "SGAIM"
+        }
+      ],
+      "thumbnail": "assets/stills/sgaim/01.webp",
+      "stills": [
+        "assets/stills/sgaim/01.webp",
+        "assets/stills/sgaim/02.webp",
+        "assets/stills/sgaim/03.webp",
+        "assets/stills/sgaim/04.webp",
+        "assets/stills/sgaim/05.webp",
+        "assets/stills/sgaim/06.webp",
+        "assets/stills/sgaim/07.webp",
+        "assets/stills/sgaim/08.webp",
+        "assets/stills/sgaim/09.webp"
+      ]
+    },
+    {
+      "id": "gs1-logistic",
+      "title": "GS1 Logistic",
+      "subtitle": "",
+      "category": "events",
+      "vimeo": "1206485546",
+      "credits": [
+        "Agency: Kordial",
+        "Videographer: Matteo Fain, Damian Ruchti",
+        "Editor: Matteo Fain",
+        "Color: Damian Ruchti"
+      ],
+      "logos": [
+        {
+          "src": "assets/logos/kordial.webp",
+          "alt": "Kordial"
+        },
+        {
+          "src": "assets/logos/gs1.webp",
+          "alt": "GS1"
+        }
+      ],
+      "thumbnail": "assets/stills/gs1-logistic/01.webp",
+      "stills": [
+        "assets/stills/gs1-logistic/01.webp",
+        "assets/stills/gs1-logistic/02.webp",
+        "assets/stills/gs1-logistic/03.webp",
+        "assets/stills/gs1-logistic/04.webp",
+        "assets/stills/gs1-logistic/05.webp",
+        "assets/stills/gs1-logistic/06.webp",
+        "assets/stills/gs1-logistic/07.webp",
+        "assets/stills/gs1-logistic/08.webp",
+        "assets/stills/gs1-logistic/09.webp",
+        "assets/stills/gs1-logistic/10.webp",
+        "assets/stills/gs1-logistic/11.webp"
+      ]
+    },
+    {
+      "id": "chris",
+      "title": "Chris",
+      "subtitle": "Documentary",
+      "category": "documentary",
+      "vimeo": "1196083108",
+      "credits": [
+        "Client: Hope Group - Mbalizi",
+        "Producer & Filmmaker: Franz Thiel",
+        "Editor: Matteo Fain"
+      ],
+      "logos": [
+        {
+          "src": "assets/logos/hope.webp",
+          "alt": "Hope Group"
+        }
+      ],
+      "thumbnail": "assets/stills/chris/01.webp",
+      "stills": [
+        "assets/stills/chris/01.webp",
+        "assets/stills/chris/02.webp",
+        "assets/stills/chris/03.webp",
+        "assets/stills/chris/04.webp",
+        "assets/stills/chris/05.webp",
+        "assets/stills/chris/06.webp",
+        "assets/stills/chris/07.webp",
+        "assets/stills/chris/08.webp",
+        "assets/stills/chris/09.webp",
+        "assets/stills/chris/10.webp"
+      ]
+    },
+    {
+      "id": "trees-for-the-future",
+      "title": "Trees for the Future",
+      "subtitle": "",
+      "category": "documentary",
+      "vimeo": "1196083268",
+      "credits": [
+        "Client: Trees for the Future",
+        "Producer & Filmmaker: Franz Thiel",
+        "Editor: Matteo Fain"
+      ],
+      "logos": [
+        {
+          "src": "assets/logos/trees.webp",
+          "alt": "Trees for the Future"
+        }
+      ],
+      "thumbnail": "assets/stills/trees/01.webp",
+      "stills": [
+        "assets/stills/trees/01.webp",
+        "assets/stills/trees/03.webp",
+        "assets/stills/trees/04.webp",
+        "assets/stills/trees/05.webp",
+        "assets/stills/trees/06.webp",
+        "assets/stills/trees/07.webp",
+        "assets/stills/trees/08.webp",
+        "assets/stills/trees/09.webp",
+        "assets/stills/trees/02.webp"
+      ]
+    },
+    {
+      "id": "tcb",
+      "title": "TCB",
+      "subtitle": "",
+      "category": "documentary",
+      "vimeo": "1196083659",
+      "credits": [
+        "Client: Aceli Africa & Tanzania Commercial Bank",
+        "Producer & Filmmaker: Franz Thiel",
+        "Editor: Matteo Fain"
+      ],
+      "logos": [
+        {
+          "src": "assets/logos/aceli.webp",
+          "alt": "Aceli Africa"
+        }
+      ],
+      "thumbnail": "assets/stills/tcb/01.webp",
+      "stills": [
+        "assets/stills/tcb/01.webp",
+        "assets/stills/tcb/02.webp",
+        "assets/stills/tcb/03.webp",
+        "assets/stills/tcb/04.webp",
+        "assets/stills/tcb/05.webp",
+        "assets/stills/tcb/06.webp",
+        "assets/stills/tcb/07.webp",
+        "assets/stills/tcb/08.webp",
+        "assets/stills/tcb/09.webp",
+        "assets/stills/tcb/10.webp",
+        "assets/stills/tcb/11.webp",
+        "assets/stills/tcb/12.webp",
+        "assets/stills/tcb/13.webp",
+        "assets/stills/tcb/14.webp",
+        "assets/stills/tcb/15.webp",
+        "assets/stills/tcb/16.webp"
+      ]
+    },
+    {
+      "id": "filippo-leroy",
+      "title": "Filippo Leroy",
+      "subtitle": "",
+      "category": "motion-graphic",
+      "vimeo": "1172326097",
+      "credits": [
+        "Lyrics music video",
+        "Artist: Fulminacci",
+        "Editor: Matteo Fain",
+        "Platform: YouTube"
+      ],
+      "logos": [],
+      "thumbnail": "assets/stills/filippo-leroy/01.webp",
+      "stills": [
+        "assets/stills/filippo-leroy/01.webp",
+        "assets/stills/filippo-leroy/02.webp",
+        "assets/stills/filippo-leroy/03.webp",
+        "assets/stills/filippo-leroy/04.webp",
+        "assets/stills/filippo-leroy/05.webp",
+        "assets/stills/filippo-leroy/06.webp",
+        "assets/stills/filippo-leroy/07.webp",
+        "assets/stills/filippo-leroy/08.webp",
+        "assets/stills/filippo-leroy/09.webp",
+        "assets/stills/filippo-leroy/10.webp",
+        "assets/stills/filippo-leroy/11.webp"
+      ]
+    },
+    {
+      "id": "challenge",
+      "title": "Challenge",
+      "subtitle": "",
+      "category": "motion-graphic",
+      "vimeo": "1196674967",
+      "credits": [
+        "Lyrics music video",
+        "Client: Ninna & Matti",
+        "Editor: Matteo Fain",
+        "Platform: YouTube"
+      ],
+      "logos": [],
+      "thumbnail": "assets/stills/challenge/01.webp",
+      "stills": [
+        "assets/stills/challenge/01.webp",
+        "assets/stills/challenge/02.webp",
+        "assets/stills/challenge/03.webp",
+        "assets/stills/challenge/04.webp",
+        "assets/stills/challenge/05.webp",
+        "assets/stills/challenge/06.webp",
+        "assets/stills/challenge/07.webp",
+        "assets/stills/challenge/08.webp"
+      ]
+    },
+    {
+      "id": "gelato",
+      "title": "Gelato",
+      "subtitle": "",
+      "category": "motion-graphic",
+      "vimeo": "1196680074",
+      "credits": [
+        "Lyrics music video",
+        "Client: Ninna & Matti",
+        "Editor: Matteo Fain",
+        "Platform: YouTube"
+      ],
+      "logos": [],
+      "thumbnail": "assets/stills/gelato/01.webp",
+      "stills": [
+        "assets/stills/gelato/01.webp",
+        "assets/stills/gelato/02.webp",
+        "assets/stills/gelato/03.webp",
+        "assets/stills/gelato/04.webp",
+        "assets/stills/gelato/05.webp"
+      ]
+    }
+  ],
+  "reels": [
+    {
+      "category": "motion-graphic",
+      "vimeo": "1172581475",
+      "hash": "d527f1fe80",
+      "orientation": "vertical",
+      "label": "1172581475"
+    },
+    {
+      "category": "motion-graphic",
+      "vimeo": "1173050896",
+      "hash": "d9b2a3d2cf",
+      "orientation": "vertical",
+      "label": "1173050896"
+    },
+    {
+      "category": "motion-graphic",
+      "vimeo": "1172573930",
+      "hash": "82f5f29f94",
+      "orientation": "vertical",
+      "label": "1172573930"
+    },
+    {
+      "category": "motion-graphic",
+      "vimeo": "1172331391",
+      "hash": "13e952276a",
+      "orientation": "vertical",
+      "label": "1172331391"
+    },
+    {
+      "category": "motion-graphic",
+      "vimeo": "1196229721",
+      "hash": "",
+      "orientation": "vertical",
+      "label": "1196229721"
+    },
+    {
+      "category": "motion-graphic",
+      "vimeo": "1196609537",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "transizione compro pulisci"
+    },
+    {
+      "category": "motion-graphic",
+      "vimeo": "1196609526",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "transizione - casa piccola"
+    },
+    {
+      "category": "motion-graphic",
+      "vimeo": "1196609468",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "transition docce"
+    },
+    {
+      "category": "motion-graphic",
+      "vimeo": "1196609481",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "transition parrucchiere"
+    },
+    {
+      "category": "motion-graphic",
+      "vimeo": "1196609475",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "TRANSITION glass"
+    },
+    {
+      "category": "motion-graphic",
+      "vimeo": "1196037987",
+      "hash": "96dd4655a9",
+      "orientation": "horizontal",
+      "label": "1196037987"
+    },
+    {
+      "category": "motion-graphic",
+      "vimeo": "1172300494",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "cube Oriz"
+    },
+    {
+      "category": "motion-graphic",
+      "vimeo": "1173056193",
+      "hash": "05a8814a0a",
+      "orientation": "horizontal",
+      "label": "1173056193"
+    },
+    {
+      "category": "social",
+      "vimeo": "1172300494",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "Urban Rhythm"
+    },
+    {
+      "category": "social",
+      "vimeo": "1173056193",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "zz final + intro"
+    },
+    {
+      "category": "social",
+      "vimeo": "1171957086",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "Zanzibar reel"
+    },
+    {
+      "category": "social",
+      "vimeo": "1171973313",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "ZVV final"
+    },
+    {
+      "category": "social",
+      "vimeo": "1172567349",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "amden FINAL"
+    },
+    {
+      "category": "social",
+      "vimeo": "1172581759",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "quick photo view finder"
+    },
+    {
+      "category": "social",
+      "vimeo": "1172582337",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "TL_Reel v3"
+    },
+    {
+      "category": "social",
+      "vimeo": "1172602052",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "grado"
+    },
+    {
+      "category": "social",
+      "vimeo": "1173049098",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "fulmi 4"
+    },
+    {
+      "category": "social",
+      "vimeo": "1173049067",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "fulmi 3"
+    },
+    {
+      "category": "social",
+      "vimeo": "1173049036",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "fulmi 2"
+    },
+    {
+      "category": "social",
+      "vimeo": "1173048995",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "fulm1"
+    },
+    {
+      "category": "social",
+      "vimeo": "1196037987",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "speed friending 3"
+    },
+    {
+      "category": "social",
+      "vimeo": "1196037935",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "speed friending 2"
+    },
+    {
+      "category": "social",
+      "vimeo": "1196609442",
+      "hash": "",
+      "orientation": "horizontal",
+      "label": "sopravvivo stanza piccola"
+    },
+    {
+      "category": "social",
+      "vimeo": "1172559030",
+      "hash": "",
+      "orientation": "vertical",
+      "label": "Sunglasses slowmo"
+    },
+    {
+      "category": "social",
+      "vimeo": "1172330198",
+      "hash": "",
+      "orientation": "vertical",
+      "label": "Cubo 3D"
+    },
+    {
+      "category": "social",
+      "vimeo": "1172557843",
+      "hash": "",
+      "orientation": "vertical",
+      "label": "Card-colored"
+    },
+    {
+      "category": "social",
+      "vimeo": "1172581475",
+      "hash": "",
+      "orientation": "vertical",
+      "label": "TABS MAIN scale"
+    },
+    {
+      "category": "social",
+      "vimeo": "1172331391",
+      "hash": "",
+      "orientation": "vertical",
+      "label": "Tomo"
+    },
+    {
+      "category": "social",
+      "vimeo": "1172563639",
+      "hash": "",
+      "orientation": "vertical",
+      "label": "NET"
+    },
+    {
+      "category": "social",
+      "vimeo": "1196095624",
+      "hash": "ea998b76e0",
+      "orientation": "vertical",
+      "label": "Padelta"
+    },
+    {
+      "category": "social",
+      "vimeo": "1171988923",
+      "hash": "",
+      "orientation": "vertical",
+      "label": "ZZ 2025 (song 1)"
+    },
+    {
+      "category": "social",
+      "vimeo": "1172574784",
+      "hash": "",
+      "orientation": "vertical",
+      "label": "Model final 422 HQ"
+    },
+    {
+      "category": "social",
+      "vimeo": "1172573930",
+      "hash": "",
+      "orientation": "vertical",
+      "label": "ydraland"
+    },
+    {
+      "category": "social",
+      "vimeo": "1173050896",
+      "hash": "",
+      "orientation": "vertical",
+      "label": "music text AE"
+    },
+    {
+      "category": "social",
+      "vimeo": "1196037591",
+      "hash": "",
+      "orientation": "vertical",
+      "label": "REEL2- bouldering"
+    },
+    {
+      "category": "social",
+      "vimeo": "1196037592",
+      "hash": "",
+      "orientation": "vertical",
+      "label": "REEL1-bouldering"
+    },
+    {
+      "category": "social",
+      "vimeo": "1196037590",
+      "hash": "",
+      "orientation": "vertical",
+      "label": "REEL3-bouldering"
+    },
+    {
+      "category": "social",
+      "vimeo": "1196037864",
+      "hash": "",
+      "orientation": "vertical",
+      "label": "REEL1-pubquiz (Moved to vertical grid)"
+    }
+  ]
+}
