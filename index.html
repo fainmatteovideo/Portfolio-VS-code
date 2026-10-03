@@ -6,17 +6,53 @@
   <title>Matteo Fain | Video Editor &amp; Filmmaker – Zurich</title>
   <meta name="description" content="Matteo Fain – freelance video editor and filmmaker based in Zurich. Corporate, events, documentary and social content.">
   <meta name="theme-color" content="#070708">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/logo/apple-touch-icon.png">
   <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preconnect" href="https://player.vimeo.com">
   <link rel="stylesheet" href="style.css">
+  <script src="https://player.vimeo.com/api/player.js" defer></script>
+  <script src="main.js" defer></script>
 </head>
 <body>
 
+  <!-- Menu -->
+  <header class="site-nav" id="site-nav">
+    <a class="site-nav__logo" href="#top" aria-label="Matteo Fain – back to top">
+      <img src="assets/logo/mf-logo-white.png" alt="" width="717" height="1034">
+    </a>
+    <nav class="site-nav__links" aria-label="Main">
+      <a class="label" href="#work">Work</a>
+      <a class="label" href="#process">How I work</a>
+      <a class="label" href="#about">About</a>
+      <a class="label" href="#contact">Contact</a>
+    </nav>
+    <button class="site-nav__toggle label" id="menu-toggle" aria-expanded="false" aria-controls="mobile-menu">Menu</button>
+  </header>
+
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <nav aria-label="Main mobile">
+      <a href="#work"><span class="label faint">01</span>Work</a>
+      <a href="#process"><span class="label faint">02</span>How I work</a>
+      <a href="#about"><span class="label faint">03</span>About</a>
+      <a href="#contact"><span class="label faint">04</span>Contact</a>
+    </nav>
+  </div>
+
   <!-- 1. Apertura -->
-  <section id="top" class="section">
-    <div class="container">
-      <p class="label muted">Video editor &amp; filmmaker — Zurich</p>
-      <h1 class="display">Matteo Fain</h1>
+  <section id="top" class="hero">
+    <!-- Showreel provvisorio: per sostituirlo basta cambiare l'ID Vimeo in data-vimeo -->
+    <div class="hero__video" data-vimeo="1172567953">
+      <iframe src="https://player.vimeo.com/video/1172567953?background=1&amp;autoplay=1&amp;loop=1&amp;muted=1&amp;dnt=1"
+              title="Showreel" allow="autoplay; fullscreen" tabindex="-1" aria-hidden="true"></iframe>
     </div>
+    <div class="hero__content">
+      <h1 class="hero__logo">
+        <img src="assets/logo/mf-logo-white.png" alt="Matteo Fain" width="717" height="1034">
+      </h1>
+      <p class="hero__tagline label">Video editor &amp; filmmaker — Zurich</p>
+    </div>
+    <a class="hero__scroll label faint" href="#work">Scroll</a>
   </section>
 
   <!-- 2. Lavori -->
