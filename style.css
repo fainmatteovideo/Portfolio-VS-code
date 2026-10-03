@@ -3,21 +3,20 @@
    Un solo foglio di stile. Mobile first.
    ========================================================================== */
 
-/* --- Font (self-hosted, Archivo variabile: peso 100–900, larghezza 62–125) */
+/* --- Font (self-hosted, Figtree variabile: peso 300–900, licenza OFL) ---
+   Alternativa gratuita ad Averta (riferimento: sandwich.co) */
 @font-face {
-  font-family: "Archivo";
-  src: url("assets/fonts/archivo-latin.woff2") format("woff2");
-  font-weight: 100 900;
-  font-stretch: 62% 125%;
+  font-family: "Figtree";
+  src: url("assets/fonts/figtree-latin.woff2") format("woff2");
+  font-weight: 300 900;
   font-style: normal;
   font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: "Archivo";
-  src: url("assets/fonts/archivo-latin-ext.woff2") format("woff2");
-  font-weight: 100 900;
-  font-stretch: 62% 125%;
+  font-family: "Figtree";
+  src: url("assets/fonts/figtree-latin-ext.woff2") format("woff2");
+  font-weight: 300 900;
   font-style: normal;
   font-display: swap;
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
@@ -35,9 +34,9 @@
   --c-line: rgba(243, 242, 239, 0.12);
 
   /* Font */
-  --f-sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --stretch-display: 125%;    /* Archivo Expanded per i titoli */
-  --stretch-text: 100%;
+  --f-sans: "Figtree", "Helvetica Neue", Arial, sans-serif;
+  --w-display: 850;           /* titoli molto neri, come "Featured Work" */
+  --w-text: 400;
 
   /* Scala tipografica fluida */
   --fs-label: 0.6875rem;                                   /* 11px */
@@ -45,7 +44,7 @@
   --fs-body: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);      /* 16–17px */
   --fs-lead: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
   --fs-h3: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
-  --fs-h2: clamp(1.75rem, 1.2rem + 2.6vw, 3.5rem);
+  --fs-h2: clamp(2.5rem, 1.6rem + 4.4vw, 5.5rem);
   --fs-display: clamp(2.5rem, 1.2rem + 6.5vw, 7.5rem);
 
   /* Spaziature */
@@ -87,8 +86,7 @@ body {
   color: var(--c-text);
   font-family: var(--f-sans);
   font-size: var(--fs-body);
-  font-weight: 350;
-  font-stretch: var(--stretch-text);
+  font-weight: var(--w-text);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -129,36 +127,34 @@ body::after {
 }
 
 /* --- Tipografia ---------------------------------------------------------- */
+/* Titoli: maiuscole/minuscole normali, peso molto alto, spaziatura stretta */
 .display,
 h1, h2 {
-  font-stretch: var(--stretch-display);
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.01em;
-  text-transform: uppercase;
+  font-weight: var(--w-display);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
 }
 .display { font-size: var(--fs-display); }
 h2 { font-size: var(--fs-h2); }
 h3 {
   font-size: var(--fs-h3);
-  font-stretch: 110%;
-  font-weight: 500;
+  font-weight: 700;
   line-height: 1.2;
+  letter-spacing: -0.015em;
 }
 
 /* Etichette: maiuscolo piccolo con tracking ampio (menu, filtri, numeri) */
 .label {
   font-size: var(--fs-label);
-  font-weight: 500;
-  font-stretch: 112%;
-  letter-spacing: 0.24em;
+  font-weight: 600;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   line-height: 1.4;
 }
 
 .lead {
   font-size: var(--fs-lead);
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.5;
   max-width: var(--text-width);
 }
@@ -265,10 +261,9 @@ h3 {
   align-items: baseline;
   gap: 1rem;
   font-size: clamp(1.75rem, 8vw, 2.5rem);
-  font-stretch: var(--stretch-display);
-  font-weight: 600;
+  font-weight: var(--w-display);
   line-height: 1;
-  text-transform: uppercase;
+  letter-spacing: -0.03em;
 }
 
 /* ==========================================================================
@@ -560,13 +555,16 @@ h3 {
 .stills__track.is-dragging { cursor: grabbing; scroll-snap-type: none; }
 .stills__track.is-dragging img { pointer-events: none; }
 
+/* 4 stills per larghezza del video (2 e mezzo su mobile, così si capisce che scorre) */
 .stills__item {
-  flex: 0 0 auto;
-  height: clamp(96px, 14vw, 200px);
+  flex: 0 0 calc((100% - 8px * 1.4) / 2.4);
   aspect-ratio: 16 / 9;
   scroll-snap-align: start;
   background-color: #0c0c0e;
   overflow: hidden;
+}
+@media (min-width: 768px) {
+  .stills__item { flex-basis: calc((100% - 8px * 3) / 4); }
 }
 .stills__item img {
   width: 100%;
@@ -616,11 +614,10 @@ h3 {
 }
 .project__num { color: var(--c-text-faint); }
 .project__title {
-  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.5rem);
-  font-stretch: var(--stretch-display);
-  font-weight: 600;
-  line-height: 1.05;
-  text-transform: uppercase;
+  font-size: clamp(1.75rem, 1.2rem + 2vw, 3rem);
+  font-weight: var(--w-display);
+  line-height: 1;
+  letter-spacing: -0.03em;
 }
 .project__subtitle {
   grid-column: 2;
@@ -640,24 +637,22 @@ h3 {
 .project__credits span { display: block; color: var(--c-text-faint); }
 
 .project__logos {
+  grid-column: 2;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1.5rem 2rem;
+  gap: 1.5rem 2.5rem;
+  margin-top: 1.75rem;
 }
-.project__logos img {
-  width: auto;
-  opacity: 0.85;
-}
+.project__logos img { width: auto; }
 
 @media (min-width: 900px) {
   .project__meta {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
     column-gap: var(--space-l);
     align-items: start;
   }
-  .project__credits { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .project__logos { justify-content: flex-end; min-width: 140px; }
+  .project__credits { padding-top: 0.6rem; }
 }
 
 /* --- Griglia reel (Social, Motion Graphic) ------------------------------- */
@@ -737,4 +732,15 @@ h3 {
     padding-inline: var(--gutter);
   }
   .clients__track li[aria-hidden] { display: none; }
+}
+
+/* Pallino separatore (es. "Video production • Zurich") */
+.dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin: 0 0.9em 0.2em;
+  border-radius: 50%;
+  background: currentColor;
+  vertical-align: middle;
 }

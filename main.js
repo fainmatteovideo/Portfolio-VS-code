@@ -112,9 +112,9 @@
           <span class="project__num label"></span>
           <h3 class="project__title">${esc(p.title)}</h3>
           ${p.subtitle ? `<p class="project__subtitle">${esc(p.subtitle)}</p>` : ""}
+          ${logos ? `<div class="project__logos">${logos}</div>` : ""}
         </div>
         <ul class="project__credits">${credits}</ul>
-        <div class="project__logos">${logos}</div>
       </div>
     </article>`;
   }
@@ -286,13 +286,13 @@
     const swap = () => {
       let n = 0;
       list.querySelectorAll(".project").forEach((p) => {
-        const show = cat === "all" || p.dataset.category === cat;
+        const show = p.dataset.category === cat;
         p.hidden = !show;
         if (show) p.querySelector(".project__num").textContent = String(++n).padStart(2, "0");
       });
       const category = data.categories.find((c) => c.id === cat);
       intro.textContent = category ? category.intro : "";
-      reelsBox.innerHTML = cat === "all" ? "" : reelsHTML(data.reels, cat);
+      reelsBox.innerHTML = reelsHTML(data.reels, cat);
       observe(reelsBox);
     };
 
@@ -332,7 +332,6 @@
     .then((json) => {
       data = json;
       filterList.innerHTML =
-        '<button class="filter label" data-filter="all" aria-pressed="true">All</button>' +
         data.categories.map((c) =>
           `<button class="filter label" data-filter="${esc(c.id)}" aria-pressed="false">${esc(c.label)}</button>`).join("");
       filterList.addEventListener("click", (e) => {
@@ -342,8 +341,9 @@
 
       list.innerHTML = data.projects.map(projectHTML).join("");
       list.querySelectorAll(".stills").forEach(setupStills);
-      list.querySelectorAll(".project__logos img").forEach((img) => sizeLogo(img, 40));
-      applyFilter("all", false);
+      const projectLogoBase = window.matchMedia("(min-width: 768px)").matches ? 84 : 60;
+      list.querySelectorAll(".project__logos img").forEach((img) => sizeLogo(img, projectLogoBase));
+      applyFilter(data.categories[0].id, false);
       observe(list);
     })
     .catch(() => {
