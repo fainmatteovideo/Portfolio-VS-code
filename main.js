@@ -308,6 +308,25 @@
     }, 450);
   }
 
+  /* --- Carosello loghi clienti ------------------------------------------ */
+  const track = document.querySelector(".clients__track");
+  if (track) {
+    // seconda copia della fila: con translateX(-50%) lo scorrimento è continuo
+    [...track.children].forEach((li) => {
+      const copy = li.cloneNode(true);
+      copy.setAttribute("aria-hidden", "true");
+      copy.querySelector("img").alt = "";
+      track.appendChild(copy);
+    });
+    const logoBase = window.matchMedia("(min-width: 768px)").matches ? 48 : 36;
+    track.querySelectorAll("img").forEach((img) => sizeLogo(img, logoBase));
+    // velocità costante (~35 px/s) qualunque sia la larghezza dei loghi
+    const setSpeed = () => track.style.setProperty("--marquee-duration", (track.scrollWidth / 2 / 35) + "s");
+    window.addEventListener("load", setSpeed);
+    // fuori dallo schermo l'animazione si ferma
+    new IntersectionObserver(([e]) => track.classList.toggle("is-paused", !e.isIntersecting)).observe(track);
+  }
+
   fetch("projects.json")
     .then((r) => r.json())
     .then((json) => {

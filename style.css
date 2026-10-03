@@ -681,3 +681,60 @@ h3 {
 }
 .reels .video__sound { right: 8px; bottom: 8px; padding: 6px 8px; }
 .reels .video__sound em { display: none; }
+
+/* ==========================================================================
+   Carosello loghi clienti
+   ========================================================================== */
+.clients {
+  padding-block: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+  border-top: 1px solid var(--c-line);
+  border-bottom: 1px solid var(--c-line);
+}
+.clients .label { margin-bottom: var(--space-m); }
+
+.clients__marquee {
+  overflow: hidden;
+  /* i loghi entrano ed escono sfumando */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+}
+.clients__track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: marquee var(--marquee-duration, 60s) linear infinite;
+  will-change: transform;
+}
+.clients__track li {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  height: 88px;
+  padding-inline: clamp(1.5rem, 3vw, 3rem);
+}
+.clients__track img {
+  width: auto;
+  opacity: 0.7;
+  transition: opacity var(--dur-fast) ease;
+}
+.clients__track img:hover { opacity: 1; }
+.clients__marquee:hover .clients__track { animation-play-state: paused; }
+.clients__track.is-paused { animation-play-state: paused; }
+
+@keyframes marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+/* Movimento ridotto: niente scorrimento, loghi in una griglia ordinata */
+@media (prefers-reduced-motion: reduce) {
+  .clients__marquee { -webkit-mask-image: none; mask-image: none; }
+  .clients__track {
+    width: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: none;
+    padding-inline: var(--gutter);
+  }
+  .clients__track li[aria-hidden] { display: none; }
+}
