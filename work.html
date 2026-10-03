@@ -12,6 +12,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap">
+    <!-- Vimeo preconnect per lazy loading tab -->
+    <link rel="preconnect" href="https://player.vimeo.com">
+    <link rel="preconnect" href="https://i.vimeocdn.com" crossorigin>
+    <link rel="dns-prefetch" href="https://player.vimeo.com">
+    <link rel="dns-prefetch" href="https://i.vimeocdn.com">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
 
@@ -144,6 +149,28 @@
             left: 0;
             width: 100%;
             height: 100%;
+        }
+
+        /* Poster image mostrato mentre il video lazy-loaded si connette a Vimeo */
+        .video-poster-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 2;          /* sopra l'iframe (z-index: auto) */
+            pointer-events: none;
+            transition: opacity 0.7s ease;
+            background: #050505; /* fallback scuro se thumbnail non disponibile */
+        }
+        .video-poster-img.fade-out {
+            opacity: 0;
+        }
+        /* Poster nelle social card: rispetta overlay e volume icon */
+        .social-video-card .video-poster-img {
+            z-index: 1; /* overlay è z-2, volume icon è sopra */
+            border-radius: inherit;
         }
 
         /* Infinite Scrolling Stills Marquee under Security Office */
@@ -605,7 +632,7 @@
                     <div class="w-full lg:w-[65%] flex flex-col">
                         <div class="video-wrapper relative pointer-events-none">
                             <iframe loading="lazy"
-                                src="https://player.vimeo.com/video/1206485408?autoplay=1&amp;loop=1&amp;muted=1&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                                data-src="https://player.vimeo.com/video/1206485408?autoplay=1&amp;loop=1&amp;muted=1&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
                                 frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" class="w-full h-full"
                                 style="pointer-events: auto;"></iframe>
                         </div>
@@ -648,7 +675,7 @@
                     <div class="w-full lg:w-[65%] flex flex-col">
                         <div class="video-wrapper relative pointer-events-none">
                             <iframe loading="lazy"
-                                src="https://player.vimeo.com/video/1206509583?autoplay=1&amp;loop=1&amp;muted=1&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                                data-src="https://player.vimeo.com/video/1206509583?autoplay=1&amp;loop=1&amp;muted=1&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
                                 frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" class="w-full h-full"
                                 style="pointer-events: auto;"></iframe>
                         </div>
@@ -717,7 +744,7 @@
                     <div class="w-full lg:w-[65%] flex flex-col">
                         <div class="video-wrapper relative pointer-events-none">
                             <iframe loading="lazy"
-                                src="https://player.vimeo.com/video/1206485546?autoplay=1&amp;loop=1&amp;muted=1&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                                data-src="https://player.vimeo.com/video/1206485546?autoplay=1&amp;loop=1&amp;muted=1&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
                                 frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" class="w-full h-full"
                                 style="pointer-events: auto;"></iframe>
                         </div>
@@ -777,7 +804,7 @@
                     <div class="w-full lg:w-[65%] flex flex-col">
                         <div class="video-wrapper relative pointer-events-none">
                             <iframe loading="lazy"
-                                src="https://player.vimeo.com/video/1196083108?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                                data-src="https://player.vimeo.com/video/1196083108?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
                                 frameborder="0" allow="autoplay; fullscreen" class="w-full h-full"
                                 style="pointer-events: auto;"></iframe>
                         </div>
@@ -820,7 +847,7 @@
                     <div class="w-full lg:w-[65%] flex flex-col">
                         <div class="video-wrapper relative pointer-events-none">
                             <iframe loading="lazy"
-                                src="https://player.vimeo.com/video/1196083268?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                                data-src="https://player.vimeo.com/video/1196083268?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
                                 frameborder="0" allow="autoplay; fullscreen" class="w-full h-full"
                                 style="pointer-events: auto;"></iframe>
                         </div>
@@ -885,7 +912,7 @@
                     <div class="w-full lg:w-[65%] flex flex-col">
                         <div class="video-wrapper relative pointer-events-none">
                             <iframe loading="lazy"
-                                src="https://player.vimeo.com/video/1196083659?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                                data-src="https://player.vimeo.com/video/1196083659?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
                                 frameborder="0" allow="autoplay; fullscreen" class="w-full h-full"
                                 style="pointer-events: auto;"></iframe>
                         </div>
@@ -952,7 +979,7 @@
                     <div class="w-full lg:w-[65%] flex flex-col">
                         <div class="video-wrapper relative pointer-events-none">
                             <iframe loading="lazy"
-                                src="https://player.vimeo.com/video/1172326097?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                                data-src="https://player.vimeo.com/video/1172326097?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
                                 frameborder="0" allow="autoplay; fullscreen" class="w-full h-full"
                                 style="pointer-events: auto;"></iframe>
                         </div>
@@ -997,7 +1024,7 @@
                     <div class="w-full lg:w-[65%] flex flex-col">
                         <div class="video-wrapper relative pointer-events-none">
                             <iframe loading="lazy"
-                                src="https://player.vimeo.com/video/1196674967?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                                data-src="https://player.vimeo.com/video/1196674967?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
                                 frameborder="0" allow="autoplay; fullscreen" class="w-full h-full"
                                 style="pointer-events: auto;"></iframe>
                         </div>
@@ -1054,7 +1081,7 @@
                     <div class="w-full lg:w-[65%] flex flex-col">
                         <div class="video-wrapper relative pointer-events-none">
                             <iframe loading="lazy"
-                                src="https://player.vimeo.com/video/1196680074?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                                data-src="https://player.vimeo.com/video/1196680074?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
                                 frameborder="0" allow="autoplay; fullscreen" class="w-full h-full"
                                 style="pointer-events: auto;"></iframe>
                         </div>
@@ -1105,7 +1132,7 @@
                     <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
                         onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1172581475?h=d527f1fe80&background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1172581475?h=d527f1fe80&background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1117,7 +1144,7 @@
                     <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
                         onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1173050896?h=d9b2a3d2cf&background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1173050896?h=d9b2a3d2cf&background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1129,7 +1156,7 @@
                     <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
                         onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1172573930?h=82f5f29f94&background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1172573930?h=82f5f29f94&background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1141,7 +1168,7 @@
                     <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
                         onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1172331391?h=13e952276a&background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1172331391?h=13e952276a&background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1153,7 +1180,7 @@
                     <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
                         onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1196229721?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1196229721?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1169,7 +1196,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1196609537?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1196609537?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1181,7 +1208,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1196609526?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1196609526?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1193,7 +1220,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1196609468?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1196609468?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1205,7 +1232,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1196609481?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1196609481?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1217,7 +1244,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1196609475?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1196609475?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1229,7 +1256,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1196037987?h=96dd4655a9&background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1196037987?h=96dd4655a9&background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1241,7 +1268,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1172300494?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1172300494?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1253,7 +1280,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1173056193?h=05a8814a0a&background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1173056193?h=05a8814a0a&background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1277,7 +1304,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1172300494?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1172300494?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1289,7 +1316,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1173056193?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1173056193?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1301,7 +1328,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1171957086?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1171957086?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1313,7 +1340,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1171973313?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1171973313?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1325,7 +1352,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1172567349?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1172567349?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1337,7 +1364,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1172581759?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1172581759?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1349,7 +1376,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1172582337?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1172582337?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1361,7 +1388,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1172602052?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1172602052?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1373,7 +1400,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1173049098?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1173049098?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1385,7 +1412,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1173049067?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1173049067?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1397,7 +1424,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1173049036?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1173049036?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1409,7 +1436,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1173048995?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1173048995?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1421,7 +1448,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1196037987?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1196037987?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1433,7 +1460,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1196037935?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1196037935?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1445,7 +1472,7 @@
                     <div class="social-video-card horizontal" onclick="toggleMute(this)"
                         onmousemove="resetIdleTimer(this)" onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1196609442?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1196609442?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1463,7 +1490,7 @@
                     <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
                         onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1172559030?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1172559030?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1475,7 +1502,7 @@
                     <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
                         onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1172330198?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1172330198?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1487,7 +1514,7 @@
                     <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
                         onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1172557843?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1172557843?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1499,7 +1526,7 @@
                     <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
                         onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1172581475?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1172581475?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1511,7 +1538,7 @@
                     <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
                         onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1172331391?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1172331391?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1523,7 +1550,7 @@
                     <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
                         onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1172563639?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1172563639?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1535,7 +1562,7 @@
                     <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
                         onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1196095624?h=ea998b76e0&background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1196095624?h=ea998b76e0&background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1547,7 +1574,7 @@
                     <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
                         onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1171988923?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1171988923?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1559,7 +1586,7 @@
                     <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
                         onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1172574784?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1172574784?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1571,7 +1598,7 @@
                     <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
                         onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1172573930?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1172573930?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1583,7 +1610,7 @@
                     <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
                         onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1173050896?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1173050896?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1595,7 +1622,7 @@
                     <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
                         onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1196037591?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1196037591?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1607,7 +1634,7 @@
                     <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
                         onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1196037592?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1196037592?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1619,7 +1646,7 @@
                     <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
                         onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1196037590?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1196037590?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1632,7 +1659,7 @@
                     <div class="social-video-card" onclick="toggleMute(this)" onmousemove="resetIdleTimer(this)"
                         onmouseleave="forceIdle(this)">
                         <iframe loading="lazy"
-                            src="https://player.vimeo.com/video/1196037864?background=1&autoplay=1&muted=1&loop=1"
+                            data-src="https://player.vimeo.com/video/1196037864?background=1&autoplay=1&muted=1&loop=1"
                             frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
                         <div class="vimeo-overlay"></div>
                         <div class="volume-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1673,7 +1700,7 @@
         </div>
     </section>
 
-    <script src="https://player.vimeo.com/api/player.js"></script>
+    <script data-src="https://player.vimeo.com/api/player.js"></script>
     <script>
         const muteSvg = '<svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>';
         const unmuteSvg = '<svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>';
@@ -1741,6 +1768,148 @@
             const motionIntroText = document.getElementById('motion-intro-text');
             const eventsIntroText = document.getElementById('events-intro-text');
 
+            // ─── Lazy Tab Loading ──────────────────────────────────────────
+            // Coda throttled per le fetch thumbnail (max 6 concorrenti)
+            const thumbQueue = [];
+            let thumbRunning = 0;
+            const THUMB_CONCURRENCY = 6;
+
+            function processThumbQueue() {
+                while (thumbRunning < THUMB_CONCURRENCY && thumbQueue.length > 0) {
+                    thumbRunning++;
+                    thumbQueue.shift()();
+                }
+            }
+
+            function fetchVimeoThumb(videoId, hashParam, targetWidth) {
+                return new Promise(resolve => {
+                    thumbQueue.push(async () => {
+                        try {
+                            const vimeoUrl = hashParam
+                                ? `https://vimeo.com/${videoId}/${hashParam}`
+                                : `https://vimeo.com/${videoId}`;
+                            const resp = await fetch(
+                                `https://vimeo.com/api/oembed.json?url=${encodeURIComponent(vimeoUrl)}&width=${targetWidth}`,
+                                { cache: 'force-cache' }
+                            );
+                            if (!resp.ok) throw new Error('oEmbed error');
+                            const data = await resp.json();
+                            resolve(data.thumbnail_url || null);
+                        } catch(e) {
+                            resolve(null);
+                        } finally {
+                            thumbRunning--;
+                            processThumbQueue();
+                        }
+                    });
+                    processThumbQueue();
+                });
+            }
+
+            function setupPosterFadeout(iframe, poster) {
+                if (!poster) return;
+                
+                let faded = false;
+                const fadeOut = () => {
+                    if (faded) return;
+                    faded = true;
+                    poster.classList.add('fade-out');
+                    setTimeout(() => poster.remove(), 750);
+                };
+
+                // Fallback di sicurezza: rimuovi comunque dopo 4 secondi
+                setTimeout(fadeOut, 4000);
+
+                if (typeof Vimeo !== 'undefined') {
+                    try {
+                        const player = getVimeoPlayer(iframe);
+                        player.on('play', function onPlay() {
+                            fadeOut();
+                            player.off('play', onPlay);
+                        });
+                    } catch(e) {
+                        setTimeout(fadeOut, 2000);
+                    }
+                } else {
+                    setTimeout(fadeOut, 2000);
+                }
+            }
+
+            // Intersection Observer per alleggerire il sito e lazy-loading on-scroll
+            const videoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const iframe = entry.target.querySelector('iframe');
+                    if (!iframe) return;
+
+                    // 1. Lazy load trigger: se entra nel buffer (rootMargin) e ha data-src
+                    if (entry.isIntersecting && iframe.dataset.src) {
+                        iframe.src = iframe.dataset.src;
+                        iframe.removeAttribute('data-src');
+                        if (iframe.posterElement) {
+                            setupPosterFadeout(iframe, iframe.posterElement);
+                        }
+                    }
+
+                    // 2. Play/Pause trigger: solo se l'iframe è già stato caricato (ha src reale)
+                    if (!iframe.src || !iframe.src.includes('vimeo.com')) return;
+                    
+                    const player = getVimeoPlayer(iframe);
+                    if (entry.isIntersecting) {
+                        player.play().catch(e => console.warn('Autoplay prevented', e));
+                    } else {
+                        player.pause().catch(e => console.warn('Pause prevented'));
+                    }
+                });
+            }, { 
+                // Buffer di 1.5 schermi sopra e sotto: i video caricano MOLTO prima che
+                // l'utente ci arrivi, rendendo l'esperienza fluida e senza strappi.
+                rootMargin: '150% 0px 150% 0px', 
+                threshold: 0 
+            });
+
+            // Inizializza poster, fetch e osserva tutti i video immediatamente
+            function initAllVideoPosters() {
+                document.querySelectorAll('.video-wrapper, .social-video-card').forEach(container => {
+                    const iframe = container.querySelector('iframe');
+                    if (!iframe) return;
+
+                    const dataSrc = iframe.dataset.src || iframe.src;
+                    if (!dataSrc) return;
+                    
+                    const videoIdMatch = dataSrc.match(/\/video\/(\d+)/);
+                    const hashMatch = dataSrc.match(/[?&]h=([a-f0-9]+)/);
+                    const videoId = videoIdMatch?.[1];
+                    if (!videoId) return;
+
+                    // Crea e inserisce il poster
+                    const poster = document.createElement('img');
+                    poster.className = 'video-poster-img';
+                    poster.alt = '';
+                    poster.setAttribute('aria-hidden', 'true');
+                    iframe.parentElement.appendChild(poster);
+                    iframe.posterElement = poster;
+
+                    // Se l'iframe è già attivo, imposta fadeout
+                    if (iframe.src && iframe.src.includes('vimeo.com')) {
+                        setupPosterFadeout(iframe, poster);
+                    }
+
+                    // Recupera thumbnail
+                    const isSocial = container.classList.contains('social-video-card');
+                    const targetWidth = isSocial ? 360 : 640;
+
+                    fetchVimeoThumb(videoId, hashMatch?.[1], targetWidth).then(thumbUrl => {
+                        if (thumbUrl && poster.isConnected) {
+                            poster.src = thumbUrl;
+                        }
+                    });
+
+                    // OSSERVA IL CONTAINER SUBITO: 
+                    // Il lazy loading e il play/pause sono gestiti automaticamente in base allo scroll!
+                    videoObserver.observe(container);
+                });
+            }
+
             filterBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     filterBtns.forEach(b => b.classList.remove('active'));
@@ -1778,31 +1947,14 @@
                     }
                 });
             });
+
+            // Avvia la pre-generazione dei poster per tutti i video immediatamente
+            initAllVideoPosters();
         });
 
         // Esegui il filtro iniziale
         const activeFilter = document.querySelector('.filter-btn.active');
         if (activeFilter) activeFilter.click();
-
-
-        // Intersection Observer per alleggerire il sito (Play/Pause visibilità)
-        const videoObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const iframe = entry.target.querySelector('iframe');
-                if (!iframe) return;
-                if (!iframe.src.includes('vimeo.com')) return;
-                const player = getVimeoPlayer(iframe);
-                if (entry.isIntersecting) {
-                    player.play().catch(e => console.warn('Autoplay prevented', e));
-                } else {
-                    player.pause().catch(e => console.warn('Pause prevented'));
-                }
-            });
-        }, { threshold: 0.1 }); // Si attiva quando il video è visibile almeno al 10%
-
-        document.querySelectorAll('.video-wrapper, .social-video-card').forEach(container => {
-            videoObserver.observe(container);
-        });
 
         // Funzione per scorrimento frecce carosello
         function scrollCarousel(button, direction) {
