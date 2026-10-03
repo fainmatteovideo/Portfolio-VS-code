@@ -2,6 +2,10 @@
 (function () {
   "use strict";
 
+  /* --- Anno nel footer ---------------------------------------------------- */
+  const year = document.getElementById("year");
+  if (year) year.textContent = new Date().getFullYear();
+
   /* --- Menu: fondo leggero quando si lascia l'apertura ------------------- */
   const nav = document.getElementById("site-nav");
   const hero = document.getElementById("top");
