@@ -56,13 +56,25 @@
   </section>
 
   <!-- 2. Lavori -->
-  <section id="work" class="section">
+  <!-- I progetti vengono generati da projects.json (vedi main.js) -->
+  <section id="work" class="section work">
     <div class="container">
       <div class="section-head">
         <p class="label faint">01 — Work</p>
         <h2>Selected works</h2>
       </div>
-      <p class="lead muted">My corporate and commercial work spans on-set production and post-production. I assist startups on set to bring their image videos to life, while also working as a motion designer to create engaging commercial content.</p>
+    </div>
+
+    <div class="filters" id="filters">
+      <div class="container">
+        <div class="filters__list" role="group" aria-label="Filter projects by category"></div>
+      </div>
+    </div>
+
+    <div class="container">
+      <p class="work__intro muted" id="work-intro" aria-live="polite"></p>
+      <div class="work__list" id="work-list"></div>
+      <div class="reels" id="reels"></div>
     </div>
   </section>
 
