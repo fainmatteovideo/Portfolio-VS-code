@@ -235,6 +235,9 @@
     root.querySelectorAll(".reveal").forEach((el) => reducedMotion ? el.classList.add("is-visible") : revealObserver.observe(el));
   }
 
+  // Comparsa morbida anche per gli elementi già presenti nella pagina (servizi, step, about)
+  document.querySelectorAll(".reveal").forEach((el) => reducedMotion ? el.classList.add("is-visible") : revealObserver.observe(el));
+
   // Click / tastiera sul video = audio
   work.addEventListener("click", (e) => {
     const v = e.target.closest(".video");
