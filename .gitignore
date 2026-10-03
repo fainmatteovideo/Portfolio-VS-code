@@ -1,0 +1,6 @@
+# File di sistema macOS
+.DS_Store
+
+# Originali pesanti: restano sul computer, fuori dalla repo
+img hig res/
+logos clients/
