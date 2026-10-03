@@ -831,3 +831,107 @@ h3 {
   }
   .process__points { padding-top: 0.75rem; }
 }
+
+/* ==========================================================================
+   4. About
+   ========================================================================== */
+.about__grid {
+  display: grid;
+  gap: var(--space-l);
+}
+.about__photo {
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background-color: #0c0c0e;
+  max-width: 520px;
+}
+.about__photo img { width: 100%; height: 100%; object-fit: cover; }
+
+.about__text { display: grid; gap: 1.25rem; max-width: 58ch; color: var(--c-text-muted); }
+.about__lead {
+  color: var(--c-text);
+  font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.6rem);
+  font-weight: var(--w-display);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+
+@media (min-width: 900px) {
+  .about__grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: var(--space-l);
+    align-items: center;
+  }
+}
+
+/* --- Collaborazioni ------------------------------------------------------ */
+.partners {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-l);
+  border-top: 1px solid var(--c-line);
+}
+.partners__head { max-width: 46ch; margin-bottom: var(--space-l); }
+.partners__title {
+  font-size: clamp(2rem, 1.4rem + 2.6vw, 3.75rem);
+  font-weight: var(--w-display);
+  letter-spacing: -0.035em;
+  line-height: 1;
+  margin-bottom: var(--space-s);
+}
+
+/* Mobile: fila orizzontale con swipe. Da tablet in su: tre colonne */
+.partners__list {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 74%;
+  gap: var(--space-s);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  margin-inline: calc(var(--gutter) * -1);
+  padding-inline: var(--gutter);
+  scroll-padding-inline: var(--gutter);
+}
+.partners__list::-webkit-scrollbar { display: none; }
+.partner { scroll-snap-align: start; }
+@media (min-width: 700px) {
+  .partners__list {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-l) var(--space-m);
+    overflow: visible;
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+}
+
+.partner__img {
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background-color: #0c0c0e;
+  margin-bottom: 1.25rem;
+}
+.partner__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(0.35);
+  transform: scale(1.001);
+  transition: transform var(--dur-slow) var(--ease), filter var(--dur-slow) var(--ease);
+}
+/* Kordial è un logo: su fondo bianco, centrato */
+.partner__img--logo { background-color: #f3f2ef; display: grid; place-items: center; }
+.partner__img--logo img { width: 70%; height: auto; object-fit: contain; filter: none; }
+
+.partner:hover .partner__img img { transform: scale(1.04); filter: grayscale(0); }
+.partner:hover .partner__img--logo img { transform: scale(1.04); }
+
+.partner__name {
+  font-size: clamp(1.5rem, 1.25rem + 1vw, 2rem);
+  font-weight: var(--w-display);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 0.4rem;
+}
+.partner__text { margin-top: 0.9rem; max-width: 38ch; }
