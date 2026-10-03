@@ -140,10 +140,10 @@
   /* --- Loghi: stessa altezza "visiva" a prescindere dalle proporzioni ----- */
   // Un logo molto largo con la stessa altezza di uno quadrato sembra enorme:
   // l'altezza scala con la radice delle proporzioni.
-  function sizeLogo(img, base) {
+  function sizeLogo(img, base, maxFactor = 1.5) {
     const apply = () => {
       const ratio = img.naturalWidth / img.naturalHeight || 1;
-      img.style.height = Math.round(Math.min(base * 1.5, Math.max(base * 0.45, base / Math.sqrt(ratio)))) + "px";
+      img.style.height = Math.round(Math.min(base * maxFactor, Math.max(base * 0.45, base / Math.sqrt(ratio)))) + "px";
     };
     img.complete && img.naturalWidth ? apply() : img.addEventListener("load", apply, { once: true });
   }
@@ -325,8 +325,9 @@
       copy.querySelector("img").alt = "";
       track.appendChild(copy);
     });
-    const logoBase = window.matchMedia("(min-width: 768px)").matches ? 48 : 36;
-    track.querySelectorAll("img").forEach((img) => sizeLogo(img, logoBase));
+    const logoBase = window.matchMedia("(min-width: 768px)").matches ? 60 : 44;
+    // fascia sottile: anche i loghi verticali non superano ~1,1 volte la base
+    track.querySelectorAll("img").forEach((img) => sizeLogo(img, logoBase, 1.1));
     // velocità costante (~35 px/s) qualunque sia la larghezza dei loghi
     const setSpeed = () => track.style.setProperty("--marquee-duration", (track.scrollWidth / 2 / 35) + "s");
     window.addEventListener("load", setSpeed);

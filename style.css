@@ -44,7 +44,7 @@
   --fs-body: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);      /* 16–17px */
   --fs-lead: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
   --fs-h3: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
-  --fs-h2: clamp(2.5rem, 1.6rem + 4.4vw, 5.5rem);
+  --fs-h2: clamp(2rem, 1.5rem + 2.2vw, 3.25rem);
   --fs-display: clamp(2.5rem, 1.2rem + 6.5vw, 7.5rem);
 
   /* Spaziature */
@@ -53,7 +53,7 @@
   --space-s: 1rem;
   --space-m: 2rem;
   --space-l: clamp(3rem, 2rem + 4vw, 6rem);
-  --space-xl: clamp(6rem, 4rem + 8vw, 12rem);    /* tra le sezioni */
+  --space-xl: clamp(4rem, 3rem + 5vw, 8rem);     /* tra le sezioni */
   --max-width: 1440px;
   --nav-h: 74px;
   --text-width: 60ch;
@@ -178,9 +178,12 @@ h3 {
 .section-head {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: var(--space-s);
   margin-bottom: var(--space-l);
+  text-align: center;
 }
+.section-head .lead { max-width: 52ch; }
 
 .visually-hidden {
   position: absolute !important;
@@ -410,6 +413,8 @@ h3 {
   padding-inline: var(--gutter);
 }
 .filters__list::-webkit-scrollbar { display: none; }
+.filters__list .filter:first-child { margin-left: auto; }
+.filters__list .filter:last-child { margin-right: auto; }
 
 .filter {
   position: relative;
@@ -436,7 +441,8 @@ h3 {
 .work__intro {
   max-width: 56ch;
   min-height: 1px;
-  margin-top: var(--space-m);
+  margin: var(--space-m) auto 0;
+  text-align: center;
   font-weight: 300;
   transition: opacity var(--dur-med) var(--ease);
 }
@@ -614,7 +620,7 @@ h3 {
 }
 .project__num { color: var(--c-text-faint); }
 .project__title {
-  font-size: clamp(1.75rem, 1.2rem + 2vw, 3rem);
+  font-size: clamp(1.5rem, 1.2rem + 1.3vw, 2.4rem);
   font-weight: var(--w-display);
   line-height: 1;
   letter-spacing: -0.03em;
@@ -681,11 +687,11 @@ h3 {
    Carosello loghi clienti
    ========================================================================== */
 .clients {
-  padding-block: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+  padding-block: clamp(1.25rem, 1rem + 1vw, 2rem);
   border-top: 1px solid var(--c-line);
   border-bottom: 1px solid var(--c-line);
 }
-.clients .label { margin-bottom: var(--space-m); }
+.clients .label { margin-bottom: 0.75rem; text-align: center; }
 
 .clients__marquee {
   overflow: hidden;
@@ -704,7 +710,7 @@ h3 {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  height: 88px;
+  height: 76px;
   padding-inline: clamp(1.5rem, 3vw, 3rem);
 }
 .clients__track img {
@@ -760,7 +766,7 @@ h3 {
   border-bottom: 1px solid var(--c-line);
 }
 .services__list h3 {
-  font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+  font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.85rem);
   font-weight: var(--w-display);
   letter-spacing: -0.03em;
   line-height: 1.05;
@@ -781,12 +787,12 @@ h3 {
 .process__list { border-top: 1px solid var(--c-line); }
 .process__step {
   display: grid;
-  gap: var(--space-s);
-  padding-block: var(--space-m) var(--space-l);
+  gap: 0.6rem;
+  padding-block: 1.25rem 1.5rem;
   border-bottom: 1px solid var(--c-line);
 }
 .process__num {
-  font-size: clamp(3rem, 2rem + 5vw, 6.5rem);
+  font-size: clamp(1.75rem, 1.4rem + 1.6vw, 2.75rem);
   font-weight: var(--w-display);
   letter-spacing: -0.05em;
   line-height: 0.9;
@@ -794,17 +800,18 @@ h3 {
   font-variant-numeric: tabular-nums;
 }
 .process__text h3 {
-  font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.75rem);
+  font-size: clamp(1.25rem, 1.1rem + 0.7vw, 1.75rem);
   font-weight: var(--w-display);
   letter-spacing: -0.03em;
-  line-height: 1.05;
-  margin-bottom: 0.75rem;
+  line-height: 1.1;
+  margin-bottom: 0.35rem;
 }
-.process__text p { font-size: var(--fs-lead); line-height: 1.45; max-width: 32ch; }
+.process__text p { max-width: 40ch; }
 
 .process__points {
   display: grid;
-  gap: 0.6rem;
+  gap: 0.25rem;
+  font-size: var(--fs-small);
   color: var(--c-text-muted);
 }
 .process__points li {
@@ -824,12 +831,12 @@ h3 {
 
 @media (min-width: 900px) {
   .process__step {
-    grid-template-columns: minmax(7rem, 0.6fr) minmax(0, 1.2fr) minmax(0, 1fr);
+    grid-template-columns: minmax(5rem, 0.4fr) minmax(0, 1.2fr) minmax(0, 1fr);
     column-gap: var(--space-l);
     align-items: start;
-    padding-block: var(--space-l);
+    padding-block: 1.5rem;
   }
-  .process__points { padding-top: 0.75rem; }
+  .process__points { padding-top: 0.3rem; }
 }
 
 /* ==========================================================================
@@ -843,14 +850,19 @@ h3 {
   aspect-ratio: 4 / 5;
   overflow: hidden;
   background-color: #0c0c0e;
-  max-width: 520px;
+  width: 100%;
+  max-width: 240px;
+  margin-inline: auto;
 }
-.about__photo img { width: 100%; height: 100%; object-fit: cover; }
+@media (min-width: 900px) {
+  .about__photo { max-width: 340px; }
+}
+.about__photo img { width: 100%; height: 100%; object-fit: cover; object-position: 42% center; }
 
 .about__text { display: grid; gap: 1.25rem; max-width: 58ch; color: var(--c-text-muted); }
 .about__lead {
   color: var(--c-text);
-  font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.6rem);
+  font-size: clamp(1.35rem, 1.1rem + 1vw, 2rem);
   font-weight: var(--w-display);
   letter-spacing: -0.03em;
   line-height: 1.1;
@@ -859,9 +871,11 @@ h3 {
 
 @media (min-width: 900px) {
   .about__grid {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-columns: 340px minmax(0, 1fr);
     column-gap: var(--space-l);
     align-items: center;
+    max-width: 1080px;
+    margin-inline: auto;
   }
 }
 
@@ -871,9 +885,9 @@ h3 {
   padding-top: var(--space-l);
   border-top: 1px solid var(--c-line);
 }
-.partners__head { max-width: 46ch; margin-bottom: var(--space-l); }
+.partners__head { max-width: 46ch; margin: 0 auto var(--space-l); text-align: center; }
 .partners__title {
-  font-size: clamp(2rem, 1.4rem + 2.6vw, 3.75rem);
+  font-size: clamp(1.6rem, 1.3rem + 1.4vw, 2.4rem);
   font-weight: var(--w-display);
   letter-spacing: -0.035em;
   line-height: 1;
@@ -939,14 +953,15 @@ h3 {
 /* ==========================================================================
    5. Contatti e footer
    ========================================================================== */
-.contact { padding-bottom: var(--space-l); }
+.contact { padding-bottom: var(--space-l); text-align: center; }
+.contact .section-head { margin-bottom: var(--space-m); }
 
 .contact__email {
   display: inline-block;
   position: relative;
-  font-size: clamp(1.4rem, 0.6rem + 4.2vw, 4.5rem);
+  font-size: clamp(1.25rem, 0.9rem + 1.6vw, 2.25rem);
   font-weight: var(--w-display);
-  letter-spacing: -0.035em;
+  letter-spacing: -0.03em;
   line-height: 1.1;
   word-break: break-word;
 }
@@ -967,8 +982,9 @@ h3 {
 .contact__links {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 1rem 2.5rem;
-  margin-top: var(--space-l);
+  margin-top: var(--space-m);
 }
 .contact__links a {
   color: var(--c-text-muted);
@@ -991,3 +1007,20 @@ h3 {
 @media (min-width: 900px) {
   .site-footer__top { margin-left: auto; }
 }
+
+/* ==========================================================================
+   Pagina privacy
+   ========================================================================== */
+.legal { padding-top: calc(var(--nav-h) + var(--space-l)); }
+.legal__text {
+  max-width: 66ch;
+  margin-inline: auto;
+  color: var(--c-text-muted);
+}
+.legal__text h3 {
+  margin: 2.25rem 0 0.5rem;
+  color: var(--c-text);
+  font-size: 1.15rem;
+}
+.legal__text p + p { margin-top: 1rem; }
+.legal__text a { text-decoration: underline; text-underline-offset: 3px; }
