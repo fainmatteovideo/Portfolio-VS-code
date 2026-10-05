@@ -914,18 +914,38 @@
     window.addEventListener("scroll", updateCover, { passive: true });
     updateCover();
   }
-  if (act && !reducedMotion) {
+  // il pannello si ferma a sua volta quando il suo fondo tocca lo schermo, e About ci sale sopra
+  const about = document.getElementById("about");
+  const pinAct = () => act && act.style.setProperty("--act-top", Math.min(0, window.innerHeight - act.offsetHeight) + "px");
+  if (act && "ResizeObserver" in window) new ResizeObserver(pinAct).observe(act);
+  window.addEventListener("resize", pinAct);
+  pinAct();
+  if (act && about) {
     let actTicking = false;
+    // taglio diagonale di un bordo che sale: ripido quando entra dal basso, dritto quando arriva in cima
+    const slantFor = (top, vh) => {
+      if (reducedMotion) return 0;
+      const p = Math.min(1, Math.max(0, 1 - top / vh));
+      return (1 - p) * vh * (window.innerWidth >= 768 ? 0.24 : 0.12);
+    };
+    const setEdge = (el, slant, top, vh) => {
+      el.style.setProperty("--slant", slant.toFixed(1) + "px");
+      el.style.setProperty("--angle", (-Math.atan2(slant, el.offsetWidth) * 180 / Math.PI).toFixed(3) + "deg");
+      el.style.setProperty("--edge", (0.3 + 0.7 * Math.min(1, Math.max(0, top / vh))).toFixed(2));
+    };
     const updateAct = () => {
       actTicking = false;
       const vh = window.innerHeight;
-      const top = act.getBoundingClientRect().top;
-      const p = Math.min(1, Math.max(0, 1 - top / vh));
-      const max = vh * (window.innerWidth >= 768 ? 0.24 : 0.12);
-      const slant = (1 - p) * max;
-      act.style.setProperty("--slant", slant.toFixed(1) + "px");
-      act.style.setProperty("--angle", (-Math.atan2(slant, act.offsetWidth) * 180 / Math.PI).toFixed(3) + "deg");
-      act.style.setProperty("--edge", (1 - p * 0.7).toFixed(2));
+      const actTop = act.getBoundingClientRect().top;
+      const aboutTop = about.getBoundingClientRect().top;
+      const inSlant = slantFor(actTop, vh);
+      const outSlant = slantFor(aboutTop, vh);
+      setEdge(act, inSlant, actTop, vh);
+      setEdge(about, outSlant, aboutTop, vh);
+      // il pannello viene tagliato dove arriva About (stessa diagonale, più bassa a sinistra)
+      const cut = aboutTop - actTop;
+      act.style.setProperty("--cut-r", cut.toFixed(1) + "px");
+      act.style.setProperty("--cut-l", (cut + outSlant).toFixed(1) + "px");
     };
     window.addEventListener("scroll", () => {
       if (!actTicking) { actTicking = true; requestAnimationFrame(updateAct); }

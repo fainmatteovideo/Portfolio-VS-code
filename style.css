@@ -1624,16 +1624,19 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   position: sticky;
   top: var(--work-top, 0px);
 }
-.work.is-covered { visibility: hidden; }
+.work.is-covered { visibility: hidden; opacity: 0; }   /* opacity: anche la slide attiva (visibility: visible) sparisce */
 
 .act {
   --slant: 0px;
   --angle: 0deg;
   --edge: 1;
-  position: relative;
+  position: sticky;
+  top: var(--act-top, 0px);
   z-index: 1;
   isolation: isolate;
   padding-top: calc(var(--space-xl) * 0.75);
+  /* bordo alto: più basso a sinistra; bordo basso: dove sta arrivando About (da main.js) */
+  clip-path: polygon(0 var(--slant), 100% 0, 100% var(--cut-r, 100%), 0 var(--cut-l, 100%));
 }
 /* rosso molto scuro con grana, un bagliore caldo in alto a sinistra e uno rosso in basso */
 .act::before {
@@ -1650,11 +1653,10 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
     radial-gradient(ellipse 60% 22% at 70% 18%, rgba(120, 14, 12, 0.35), transparent 70%),
     radial-gradient(ellipse 60% 25% at 20% 100%, rgba(var(--c-glow-warm), 0.18), transparent 70%),
     linear-gradient(175deg, #260706 0%, #170404 55%, #100303 100%);
-  /* bordo alto: più basso a sinistra; bordo basso: diagonale fissa verso About */
-  clip-path: polygon(0 var(--slant), 100% 0, 100% calc(100% - 7vh), 0 100%);
 }
-/* filo di luce lungo il taglio */
-.act::after {
+/* filo di luce lungo il taglio (in entrata sul pannello, in uscita su About) */
+.act::after,
+.about::before {
   content: "";
   position: absolute;
   left: 0;
@@ -1668,6 +1670,12 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   opacity: var(--edge);
   pointer-events: none;
 }
+.about {
+  --slant: 0px;
+  --angle: 0deg;
+  --edge: 0;
+  position: relative;
+}
 @media (prefers-reduced-motion: reduce) {
-  .act::after { display: none; }
+  .act::after, .about::before { display: none; }
 }
