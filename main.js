@@ -72,6 +72,27 @@
   navdrop.addEventListener("mouseleave", () => { navdrop.classList.remove("is-chosen"); setDrop(false); });
   document.addEventListener("click", (e) => { if (!navdrop.contains(e.target)) setDrop(false); });
 
+  /* --- Link interni: scorrono alla posizione vera della sezione ------------ */
+  // Lavori e pannello rosso restano fermi (sticky) durante le transizioni: il browser
+  // calcolerebbe la destinazione dalla loro posizione del momento. Qui la misuro senza sticky.
+  function sectionY(el) {
+    const root = document.documentElement;
+    root.classList.add("is-measuring");
+    const y = el.getBoundingClientRect().top + window.scrollY;
+    root.classList.remove("is-measuring");
+    return y - (parseFloat(getComputedStyle(el).scrollMarginTop) || 0);
+  }
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a || e.defaultPrevented) return;
+    const id = a.getAttribute("href").slice(1);
+    const target = id === "top" ? document.body : document.getElementById(id);
+    if (!target || (data && data.categories.some((c) => c.id === id))) return; // i filtri usano l'hash
+    e.preventDefault();
+    const y = id === "top" ? 0 : sectionY(target);
+    window.scrollTo({ top: y, behavior: reducedMotion ? "auto" : "smooth" });
+  });
+
   /* --- Link attivo in base alla sezione visibile ------------------------- */
   const links = [...document.querySelectorAll(".site-nav__links a")];
   const sections = links.map((a) => document.querySelector(a.getAttribute("href"))).filter(Boolean);
@@ -983,10 +1004,7 @@
       const outSlant = slantFor(aboutTop, vh);
       setEdge(act, inSlant, actTop, vh);
       setEdge(about, outSlant, aboutTop, vh);
-      // il pannello viene tagliato dove arriva About (stessa diagonale, più bassa a sinistra)
-      const cut = aboutTop - actTop;
-      act.style.setProperty("--cut-r", cut.toFixed(1) + "px");
-      act.style.setProperty("--cut-l", (cut + outSlant).toFixed(1) + "px");
+      act.classList.toggle("is-covered", aboutTop <= 0);
     };
     window.addEventListener("scroll", () => {
       if (!actTicking) { actTicking = true; requestAnimationFrame(updateAct); }
