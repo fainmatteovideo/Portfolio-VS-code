@@ -428,6 +428,10 @@
   /* --- Form "Send brief": compone l'email nell'app di posta ------------- */
   // Nessun servizio esterno: i dati non lasciano il browser finché il visitatore
   // non invia l'email dalla propria posta.
+  // Invio diretto con Web3Forms: incollare qui la chiave gratuita ricevuta da web3forms.com.
+  // Finché è vuota, il form apre l'app di posta del visitatore con il messaggio già scritto.
+  const WEB3FORMS_KEY = "";
+
   const brief = document.getElementById("brief-form");
   if (brief) {
     const status = document.getElementById("brief-status");
@@ -458,8 +462,46 @@
         "",
         v("message"),
       ].filter((line) => line !== null).join("\n");
-      window.location.href = `mailto:fainmatteo.video@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      status.textContent = "Your email app should open with the brief ready to send. If nothing happens, write to fainmatteo.video@gmail.com.";
+      const mailto = () => {
+        window.location.href = `mailto:fainmatteo.video@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        status.textContent = "Your email app should open with the brief ready to send. If nothing happens, write to fainmatteo.video@gmail.com.";
+      };
+      if (!WEB3FORMS_KEY) { mailto(); return; }
+
+      // invio diretto
+      const button = brief.querySelector(".brief__submit");
+      button.disabled = true;
+      button.textContent = "Sending…";
+      status.textContent = "";
+      fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          subject,
+          from_name: v("name"),
+          email: v("email"),
+          company: v("company"),
+          service: v("service"),
+          message: v("message"),
+          botcheck: f.botcheck.checked,
+        }),
+      })
+        .then((r) => r.json())
+        .then((res) => {
+          if (!res.success) throw new Error(res.message);
+          brief.reset();
+          markEmpty();
+          status.textContent = "Thanks! Your brief has been sent. I'll get back to you soon.";
+        })
+        .catch(() => {
+          status.textContent = "Sending failed. Your email app will open instead.";
+          mailto();
+        })
+        .finally(() => {
+          button.disabled = false;
+          button.textContent = "Send brief";
+        });
     });
     const service = brief.elements.service;
     const markEmpty = () => service.classList.toggle("is-empty", service.value === "");

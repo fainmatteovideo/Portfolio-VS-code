@@ -368,6 +368,8 @@
           <input type="checkbox" name="consent" required>
           <span>I have read the <a href="privacy.html">Privacy Policy</a> and agree that Matteo Fain may process my data to respond to this inquiry.</span>
         </label>
+        <!-- campo trappola contro lo spam: invisibile alle persone -->
+        <input type="checkbox" name="botcheck" class="visually-hidden" tabindex="-1" autocomplete="off" aria-hidden="true">
         <button class="brief__submit" type="submit">Send brief</button>
         <p class="brief__status" id="brief-status" role="status" aria-live="polite"></p>
       </form>
