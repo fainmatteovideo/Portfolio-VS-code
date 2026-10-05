@@ -891,6 +891,8 @@ h3 {
 
 /* --- Collaborazioni ------------------------------------------------------ */
 .partners {
+  /* dal menu "Collaborators" si arriva con il titolo subito sotto la barra */
+  scroll-margin-top: calc(var(--nav-h) - var(--space-l) + 2rem);
   margin-top: var(--space-xl);
   padding-top: var(--space-l);
   border-top: 1px solid var(--c-line);
