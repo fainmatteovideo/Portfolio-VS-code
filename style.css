@@ -325,8 +325,6 @@ h3 {
   gap: clamp(0.75rem, 1.5vh, 1.25rem);
   text-align: center;
 }
-/* "difference": il logo bianco inverte i colori del video che passa sotto */
-.hero__logo { mix-blend-mode: difference; }
 .hero__logo img {
   height: clamp(120px, 22.4vh, 208px);
   width: auto;
@@ -1036,3 +1034,104 @@ h3 {
 }
 .legal__text p + p { margin-top: 1rem; }
 .legal__text a { text-decoration: underline; text-underline-offset: 3px; }
+
+/* --- Form "Send brief" -------------------------------------------------- */
+.brief {
+  max-width: 880px;
+  margin: 0 auto var(--space-l);
+  padding: clamp(1.25rem, 1rem + 2vw, 2.75rem);
+  text-align: left;
+  border: 1px solid var(--c-line);
+  border-radius: 18px;
+  background: linear-gradient(160deg, rgba(38, 39, 45, 0.55), rgba(10, 10, 12, 0.75));
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.brief__grid {
+  display: grid;
+  gap: 0.9rem;
+}
+@media (min-width: 700px) {
+  .brief__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .brief__field--full { grid-column: 1 / -1; }
+}
+.brief input[type="text"],
+.brief input[type="email"],
+.brief select,
+.brief textarea {
+  width: 100%;
+  padding: 1rem 1.1rem;
+  font: inherit;
+  color: var(--c-text);
+  background-color: rgba(243, 242, 239, 0.04);
+  border: 1px solid rgba(243, 242, 239, 0.18);
+  border-radius: 12px;
+  transition: border-color var(--dur-fast) ease, background-color var(--dur-fast) ease;
+}
+.brief textarea { resize: vertical; min-height: 9rem; }
+.brief select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  /* freccina */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%23f3f2ef' stroke-opacity='.6' stroke-width='1.4'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1.1rem center;
+  padding-right: 2.75rem;
+}
+/* "What do you need?" grigio come gli altri campi vuoti, finché non si sceglie */
+.brief select.is-empty { color: var(--c-text-faint); }
+.brief option { color: #111; }
+.brief ::placeholder { color: var(--c-text-faint); opacity: 1; }
+.brief input:focus,
+.brief select:focus,
+.brief textarea:focus {
+  outline: none;
+  border-color: rgba(243, 242, 239, 0.7);
+  background-color: rgba(243, 242, 239, 0.07);
+}
+.brief .is-invalid { border-color: #e0816f !important; }
+
+.brief__consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  margin-top: 1.4rem;
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+  cursor: pointer;
+}
+.brief__consent input {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  accent-color: var(--c-text);
+  cursor: pointer;
+}
+.brief__consent a { color: var(--c-text); text-decoration: underline; text-underline-offset: 3px; }
+.brief__consent.is-invalid span { color: #e0816f; }
+
+.brief__submit {
+  display: block;
+  width: 100%;
+  margin-top: 1.4rem;
+  padding: 1.05rem 1.5rem;
+  border-radius: 999px;
+  background: var(--c-text);
+  color: var(--c-black);
+  font-weight: 700;
+  font-size: 1.05rem;
+  transition: transform var(--dur-fast) ease, background-color var(--dur-fast) ease;
+}
+.brief__submit:hover { background: #ffffff; transform: translateY(-1px); }
+
+.brief__status {
+  margin-top: 1rem;
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+  text-align: center;
+}
+.brief__status:empty { display: none; }
+
+.contact__or { margin-bottom: 0.5rem; font-size: var(--fs-small); }

@@ -335,11 +335,23 @@
     const logoBase = window.matchMedia("(min-width: 768px)").matches ? 70 : 50;
     // fascia sottile: anche i loghi verticali non superano ~1,1 volte la base
     track.querySelectorAll("img").forEach((img) => sizeLogo(img, logoBase, 1.1));
-    // seconda fila: stessi loghi, scorre nel verso opposto (da sinistra a destra)
-    const reverse = track.cloneNode(true);
-    reverse.classList.add("clients__track--reverse");
+    // seconda fila: stessi loghi in un ordine mescolato (fisso, così nessuna coppia di vicini
+    // si ripete rispetto alla prima fila) e scorre nel verso opposto
+    const originals = [...track.children].filter((li) => !li.hasAttribute("aria-hidden"));
+    const SHUFFLE = [7, 2, 12, 0, 10, 5, 14, 3, 9, 1, 13, 6, 11, 4, 8];
+    const order = SHUFFLE.filter((i) => i < originals.length);
+    originals.forEach((_, i) => { if (!order.includes(i)) order.push(i); });
+    const reverse = document.createElement("ul");
+    reverse.className = "clients__track clients__track--reverse";
     reverse.setAttribute("aria-hidden", "true");
-    reverse.querySelectorAll("img").forEach((img) => { img.alt = ""; sizeLogo(img, logoBase, 1.1); });
+    [...order, ...order].forEach((i) => {
+      const li = originals[i].cloneNode(true);
+      const img = li.querySelector("img");
+      img.alt = "";
+      img.style.height = "";
+      sizeLogo(img, logoBase, 1.1);
+      reverse.appendChild(li);
+    });
     track.after(reverse);
     const tracks = [track, reverse];
     // velocità costante (~35 px/s) qualunque sia la larghezza dei loghi
@@ -347,6 +359,51 @@
     window.addEventListener("load", setSpeed);
     // fuori dallo schermo l'animazione si ferma
     new IntersectionObserver(([e]) => tracks.forEach((t) => t.classList.toggle("is-paused", !e.isIntersecting))).observe(track);
+  }
+
+  /* --- Form "Send brief": compone l'email nell'app di posta ------------- */
+  // Nessun servizio esterno: i dati non lasciano il browser finché il visitatore
+  // non invia l'email dalla propria posta.
+  const brief = document.getElementById("brief-form");
+  if (brief) {
+    const status = document.getElementById("brief-status");
+    brief.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const f = brief.elements;
+      const checks = [
+        [f.name, f.name.value.trim() !== ""],
+        [f.email, /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.value.trim())],
+        [f.message, f.message.value.trim() !== ""],
+        [f.consent.closest("label"), f.consent.checked],
+      ];
+      checks.forEach(([el, ok]) => el.classList.toggle("is-invalid", !ok));
+      const firstBad = checks.find(([, ok]) => !ok);
+      if (firstBad) {
+        status.textContent = "Please fill in your name, a valid email, your project and accept the privacy policy.";
+        (firstBad[0].matches("label") ? f.consent : firstBad[0]).focus();
+        return;
+      }
+      const v = (k) => f[k].value.trim();
+      const subject = `Project brief${v("company") ? " – " + v("company") : ""}${v("service") ? " (" + v("service") + ")" : ""}`;
+      // le righe facoltative vuote vengono saltate; la riga vuota separa i dati dal messaggio
+      const body = [
+        `Name: ${v("name")}`,
+        `Email: ${v("email")}`,
+        v("company") ? `Company / brand: ${v("company")}` : null,
+        v("service") ? `What I need: ${v("service")}` : null,
+        "",
+        v("message"),
+      ].filter((line) => line !== null).join("\n");
+      window.location.href = `mailto:fainmatteo.video@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      status.textContent = "Your email app should open with the brief ready to send. If nothing happens, write to fainmatteo.video@gmail.com.";
+    });
+    const service = brief.elements.service;
+    const markEmpty = () => service.classList.toggle("is-empty", service.value === "");
+    service.addEventListener("change", markEmpty);
+    markEmpty();
+    // l'errore sparisce appena il campo viene corretto
+    brief.addEventListener("input", (e) => e.target.classList.remove("is-invalid"));
+    brief.addEventListener("change", (e) => { if (e.target.name === "consent") e.target.closest("label").classList.remove("is-invalid"); });
   }
 
   fetch("projects.json")
