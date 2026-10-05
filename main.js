@@ -506,7 +506,8 @@
     // il cerchio è sempre esattamente sotto il puntatore (nessun ritardo, nessuno "spostamento")
     let x = 0, y = 0, current = null;
     const label = () => { if (current) cursor.textContent = current.classList.contains("is-unmuted") ? "Mute" : "Sound"; };
-    const place = () => { cursor.style.transform = `translate(${x}px, ${y}px)`; };
+    // "translate" (e non "transform"): così l'ingrandimento con "scale" non sposta il cerchio
+    const place = () => { cursor.style.translate = `${x}px ${y}px`; };
     document.addEventListener("mousemove", (e) => {
       x = e.clientX; y = e.clientY;
       place();
