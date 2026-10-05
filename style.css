@@ -1326,3 +1326,27 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   transition: color var(--dur-fast) ease;
 }
 .player-modal__close:hover { color: var(--c-text); }
+
+/* ==========================================================================
+   Pagina 404
+   ========================================================================== */
+.notfound {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 1.25rem;
+  padding: var(--space-l) var(--gutter);
+  text-align: center;
+}
+.notfound__logo { height: clamp(90px, 14vh, 140px); width: auto; margin-bottom: var(--space-s); }
+.notfound h1 { font-size: var(--fs-h2); max-width: 18ch; }
+.notfound__back {
+  margin-top: var(--space-s);
+  padding: 0.95rem 1.6rem;
+  border: 1px solid rgba(243, 242, 239, 0.3);
+  border-radius: 999px;
+  transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+.notfound__back:hover { background: var(--c-text); color: var(--c-black); }
