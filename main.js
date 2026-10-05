@@ -114,7 +114,7 @@
     const stills = p.stills.map((s, i) =>
       `<div class="stills__item"><img data-src="${esc(s)}" alt="${esc(p.title)} – still ${i + 1}" decoding="async" draggable="false"></div>`).join("");
 
-    return `<article class="project reveal" data-category="${esc(p.category)}" id="project-${esc(p.id)}">
+    return `<article class="project" data-category="${esc(p.category)}" id="project-${esc(p.id)}">
       ${videoHTML(p.vimeo, "", p.title, p.thumbnail)}
       ${p.stills.length ? `<div class="stills">
         <button class="stills__arrow stills__arrow--prev" aria-label="Previous stills" disabled>${ARROW("M15 5l-7 7 7 7")}</button>
@@ -159,6 +159,11 @@
   }
 
   /* --- Video: caricamento pigro, play/pausa allo scroll, audio al click --- */
+  // Nello showcase dei lavori i progetti sono sovrapposti: vale solo quello attivo
+  const inShowcase = (el) => !!el.closest(".showcase__stage");
+  const isActiveProject = (el) => !!el.closest(".project")?.classList.contains("is-active");
+  const allowed = (el) => !inShowcase(el) || isActiveProject(el);
+  let showcaseInView = false;
   const videos = new Map(); // elemento .video -> { player, visible }
 
   // I video dei progetti non partono finché la pagina (e lo showreel) non ha finito di
@@ -182,7 +187,7 @@
     iframe.tabIndex = -1;
     el.prepend(iframe);
 
-    const state = { player: new Vimeo.Player(iframe), visible: false };
+    const state = { player: new Vimeo.Player(iframe), visible: inShowcase(el) ? isActiveProject(el) && showcaseInView : false };
     videos.set(el, state);
     state.player.on("timeupdate", function reveal(d) {
       if (d.seconds > 0.1) { el.classList.add("is-playing"); state.player.off("timeupdate", reveal); }
@@ -264,23 +269,26 @@
   // Video: si caricano quando mancano circa mezza schermata
   const videoNearObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
+      if (!entry.isIntersecting || !allowed(entry.target)) return;
       loadVideo(entry.target);
       videoNearObserver.unobserve(entry.target);
     });
   }, { rootMargin: "50% 0px 50% 0px" });
 
-  // Stills (leggere): si caricano con una schermata di anticipo
+  function loadImages(root) {
+    root.querySelectorAll("img[data-src]").forEach((img) => {
+      img.addEventListener("load", () => img.classList.add("is-loaded"), { once: true });
+      img.src = img.dataset.src;
+      img.removeAttribute("data-src");
+    });
+  }
+
+  // Stills e loghi (leggeri): si caricano con una schermata di anticipo
   const nearObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      const el = entry.target;
-      el.querySelectorAll("img[data-src]").forEach((img) => {
-        img.addEventListener("load", () => img.classList.add("is-loaded"), { once: true });
-        img.src = img.dataset.src;
-        img.removeAttribute("data-src");
-      });
-      nearObserver.unobserve(el);
+      if (!entry.isIntersecting || !allowed(entry.target)) return;
+      loadImages(entry.target);
+      nearObserver.unobserve(entry.target);
     });
   }, { rootMargin: "100% 0px 100% 0px" });
 
@@ -310,10 +318,11 @@
   const playObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       const el = entry.target;
-      if (entry.isIntersecting) loadVideo(el);
+      const visible = entry.isIntersecting && allowed(el) && (!inShowcase(el) || showcaseInView);
+      if (visible) loadVideo(el);
       const s = videos.get(el);
       if (!s) return;
-      s.visible = entry.isIntersecting;
+      s.visible = visible;
       if (s.visible && modal.hidden) {
         s.player.play().catch(() => {});
       } else {
@@ -381,6 +390,120 @@
     track.addEventListener("pointercancel", end);
   }
 
+  /* --- Showcase dei lavori ----------------------------------------------- */
+  // Desktop (da 1024 px): la sezione resta ferma e scorrendo la pagina cambia il progetto,
+  // con i pallini verticali a sinistra. Telefono e tablet: i progetti scorrono in orizzontale
+  // con lo swipe, pallini in orizzontale.
+  const desktopMQ = window.matchMedia("(min-width: 1024px)");
+  const STEP = 0.8; // scorrimento per progetto, in altezze di schermo
+  let showcase = null, stage = null, dotsNav = null, items = [], activeIndex = -1;
+  let stageTop = 0, stageH = 0;
+
+  function setupShowcase() {
+    showcase = list.querySelector(".showcase");
+    stage = list.querySelector(".showcase__stage");
+    dotsNav = list.querySelector(".showcase__dots");
+
+    dotsNav.addEventListener("click", (e) => {
+      const dot = e.target.closest(".showcase__dot");
+      if (dot) goToProject(Number(dot.dataset.index));
+    });
+    stage.addEventListener("scroll", () => {
+      if (desktopMQ.matches) return;
+      setActive(Math.round(stage.scrollLeft / stage.clientWidth));
+    }, { passive: true });
+
+    let ticking = false;
+    window.addEventListener("scroll", () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; updateFromScroll(); }); }
+    }, { passive: true });
+    window.addEventListener("resize", () => { layoutShowcase(); updateFromScroll(); });
+    desktopMQ.addEventListener("change", () => { layoutShowcase(); activeIndex = -1; setActive(0); updateFromScroll(); });
+
+    // video in pausa quando lo showcase non è sullo schermo
+    new IntersectionObserver(([e]) => { showcaseInView = e.isIntersecting; syncPlayback(); }, { threshold: 0.2 }).observe(showcase);
+  }
+
+  function buildShowcase() {
+    items = [...stage.querySelectorAll(".project:not([hidden])")];
+    list.hidden = items.length === 0; // Social: solo la griglia dei reel
+    const n = items.length;
+    dotsNav.innerHTML = items.map((p, i) =>
+      `<button class="showcase__dot" type="button" data-index="${i}" aria-label="${esc(p.querySelector(".project__title").textContent)} (${i + 1} of ${n})"></button>`).join("");
+    items.forEach((p, i) => { p.querySelector(".project__num").textContent = `${String(i + 1).padStart(2, "0")} / ${String(n).padStart(2, "0")}`; });
+    stage.scrollLeft = 0;
+    layoutShowcase();
+    activeIndex = -1;
+    setActive(0);
+  }
+
+  function layoutShowcase() {
+    if (!showcase) return;
+    if (desktopMQ.matches && items.length) {
+      const navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--nav-h")) || 90;
+      stageTop = navH - 1 + document.getElementById("filters").offsetHeight;
+      stageH = window.innerHeight - stageTop;
+      work.style.setProperty("--stage-top", stageTop + "px");
+      work.style.setProperty("--stage-h", stageH + "px");
+      list.style.height = stageH + (items.length - 1) * window.innerHeight * STEP + "px";
+      // la colonna delle stills è alta esattamente quanto il video
+      requestAnimationFrame(() => {
+        const v = items[0] && items[0].querySelector(".video");
+        if (v) work.style.setProperty("--video-h", v.offsetHeight + "px");
+      });
+    } else {
+      list.style.height = "";
+    }
+  }
+
+  function updateFromScroll() {
+    if (!desktopMQ.matches || !items.length) return;
+    const total = list.offsetHeight - stageH;
+    if (total <= 0) { setActive(0); return; }
+    const p = Math.min(0.9999, Math.max(0, (stageTop - list.getBoundingClientRect().top) / total));
+    setActive(Math.floor(p * items.length));
+  }
+
+  function goToProject(i) {
+    const behavior = reducedMotion ? "auto" : "smooth";
+    if (desktopMQ.matches) {
+      const total = list.offsetHeight - stageH;
+      const listTop = list.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: listTop - stageTop + ((i + 0.5) / items.length) * total, behavior });
+    } else {
+      stage.scrollTo({ left: i * stage.clientWidth, behavior });
+    }
+  }
+
+  function setActive(i) {
+    i = Math.max(0, Math.min(items.length - 1, i));
+    if (i === activeIndex || !items.length) return;
+    activeIndex = i;
+    items.forEach((p, j) => p.classList.toggle("is-active", j === i));
+    dotsNav.querySelectorAll(".showcase__dot").forEach((d, j) => d.setAttribute("aria-current", String(j === i)));
+    // immagini del progetto attivo e del successivo
+    loadImages(items[i]);
+    if (items[i + 1]) loadImages(items[i + 1]);
+    syncPlayback();
+  }
+
+  // solo il video del progetto attivo è in riproduzione; il successivo si prepara
+  function syncPlayback() {
+    items.forEach((p, j) => {
+      const v = p.querySelector(".video");
+      const play = j === activeIndex && showcaseInView && modal.hidden;
+      if (play || j === activeIndex + 1) loadVideo(v);
+      const s = videos.get(v);
+      if (!s) return;
+      s.visible = play;
+      if (play) s.player.play().catch(() => {});
+      else {
+        s.player.pause().catch(() => {});
+        if (v.classList.contains("is-unmuted")) setSound(v, false);
+      }
+    });
+  }
+
   /* --- Filtri ------------------------------------------------------------ */
   // la linea sotto il filtro attivo scivola fino al nuovo filtro
   function moveIndicator() {
@@ -405,6 +528,7 @@
         p.hidden = !show;
         if (show) p.querySelector(".project__num").textContent = String(++n).padStart(2, "0");
       });
+      buildShowcase();
       const category = data.categories.find((c) => c.id === cat);
       intro.textContent = category ? category.intro : "";
       reelsBox.innerHTML = reelsHTML(data.reels, cat);
@@ -583,9 +707,13 @@
         }
       });
 
-      list.innerHTML = data.projects.map(projectHTML).join("");
+      list.innerHTML = `<div class="showcase">
+          <nav class="showcase__dots" aria-label="Projects"></nav>
+          <div class="showcase__stage">${data.projects.map(projectHTML).join("")}</div>
+        </div>`;
+      setupShowcase();
       list.querySelectorAll(".stills").forEach(setupStills);
-      const projectLogoBase = window.matchMedia("(min-width: 768px)").matches ? 84 : 60;
+      const projectLogoBase = window.matchMedia("(min-width: 768px)").matches ? 60 : 56;
       list.querySelectorAll(".project__logos img").forEach((img) => sizeLogo(img, projectLogoBase));
       // un indirizzo come fainmatteo.com/#documentary apre i lavori con quel filtro attivo
       const isCategory = (id) => data.categories.some((c) => c.id === id);
