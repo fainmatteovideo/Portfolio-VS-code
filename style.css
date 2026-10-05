@@ -224,25 +224,123 @@ h3 {
 }
 .site-nav__logo img { height: 34px; width: auto; }
 
-.site-nav__links { display: none; gap: clamp(1.5rem, 3vw, 3rem); }
-.site-nav__links a,
-.site-nav__toggle {
-  color: var(--c-text-muted);
-  transition: color var(--dur-fast) ease;
-}
-.site-nav__links a:hover,
-.site-nav__links a.is-active,
-.site-nav__toggle:hover { color: var(--c-text); }
-
-.site-nav__toggle { padding: 8px 0 8px 16px; }
-
 @media (min-width: 768px) {
   .site-nav { padding-block: 28px; }
 }
-/* il menu esteso (6 voci) compare solo quando c'è spazio accanto al logo */
-@media (min-width: 1024px) {
-  .site-nav__links { display: flex; }
-  .site-nav__toggle { display: none; }
+
+/* --- Pillola con la sezione corrente + tendina ---------------------------- */
+.navdrop { position: relative; }
+.navdrop__trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 18px 11px 15px;
+  border: 1px solid rgba(243, 242, 239, 0.18);
+  border-radius: 999px;
+  color: var(--c-text);
+  background-color: rgba(9, 11, 10, 0.35);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: border-color var(--dur-fast) ease, background-color var(--dur-fast) ease;
+}
+.navdrop:hover .navdrop__trigger,
+.navdrop.is-open .navdrop__trigger,
+.navdrop__trigger:focus-visible { border-color: rgba(243, 242, 239, 0.45); background-color: rgba(9, 11, 10, 0.6); }
+
+/* due linee di lunghezza diversa: si allineano quando la tendina è aperta, diventano una X col menu a tutto schermo */
+.navdrop__icon { display: grid; gap: 5px; width: 18px; }
+.navdrop__icon i {
+  display: block;
+  height: 1.5px;
+  border-radius: 1px;
+  background: currentColor;
+  transition: width 0.4s var(--ease), transform 0.4s var(--ease);
+}
+.navdrop__icon i:first-child { width: 18px; }
+.navdrop__icon i:last-child  { width: 11px; }
+.navdrop:hover .navdrop__icon i:last-child,
+.navdrop.is-open .navdrop__icon i:last-child { width: 18px; }
+.is-menu-open .navdrop__icon i:first-child { transform: translateY(3.25px) rotate(45deg); }
+.is-menu-open .navdrop__icon i:last-child  { width: 18px; transform: translateY(-3.25px) rotate(-45deg); }
+
+/* il nome della sezione cambia con un piccolo movimento verticale */
+.navdrop__current { display: block; overflow: hidden; line-height: 1.2; white-space: nowrap; }
+.navdrop__label { display: block; }
+.navdrop__label.is-rolling { animation: label-roll 0.55s var(--ease) both; }
+@keyframes label-roll {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+
+/* tendina verticale */
+.navdrop__panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  display: grid;
+  min-width: 250px;
+  padding: 8px;
+  border: 1px solid var(--c-line);
+  border-radius: 16px;
+  background: rgba(14, 17, 15, 0.82);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transform-origin: top right;
+  transition: opacity 0.35s var(--ease), transform 0.45s var(--ease), visibility 0s linear 0.45s;
+}
+/* ponte invisibile: il mouse passa dalla pillola alla tendina senza chiuderla */
+.navdrop__panel::before { content: ""; position: absolute; left: 0; right: 0; top: -12px; height: 12px; }
+.navdrop:hover:not(.is-chosen) .navdrop__panel,
+.navdrop.is-open .navdrop__panel {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.35s var(--ease), transform 0.45s var(--ease), visibility 0s;
+}
+.navdrop__panel a {
+  display: grid;
+  grid-template-columns: 2.4rem 1fr auto;
+  align-items: baseline;
+  padding: 11px 14px;
+  border-radius: 10px;
+  color: var(--c-text-muted);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease, opacity 0.35s var(--ease), transform 0.4s var(--ease);
+}
+.navdrop:hover:not(.is-chosen) .navdrop__panel a,
+.navdrop.is-open .navdrop__panel a { opacity: 1; transform: none; }
+/* le voci entrano una dopo l'altra */
+.navdrop__panel a:nth-child(2) { transition-delay: 0s, 0s, 0.03s, 0.03s; }
+.navdrop__panel a:nth-child(3) { transition-delay: 0s, 0s, 0.06s, 0.06s; }
+.navdrop__panel a:nth-child(4) { transition-delay: 0s, 0s, 0.09s, 0.09s; }
+.navdrop__panel a:nth-child(5) { transition-delay: 0s, 0s, 0.12s, 0.12s; }
+.navdrop__panel a:nth-child(6) { transition-delay: 0s, 0s, 0.15s, 0.15s; }
+.navdrop__panel a:nth-child(7) { transition-delay: 0s, 0s, 0.18s, 0.18s; }
+.navdrop__panel a:hover,
+.navdrop__panel a:focus-visible { color: var(--c-text); background-color: rgba(243, 242, 239, 0.06); }
+.navdrop__panel a.is-active { color: var(--c-text); }
+.navdrop__panel a.is-active::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--c-text);
+  align-self: center;
+}
+/* senza mouse (o schermo stretto) la pillola apre il menu a tutto schermo */
+@media (hover: none), (pointer: coarse), (max-width: 767px) {
+  .navdrop__panel { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .navdrop__label.is-rolling { animation: none; }
 }
 
 /* Menu mobile a tutto schermo */
@@ -1619,7 +1717,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
    e il pannello rosso scuro ci sale sopra con un taglio diagonale
    (--slant e --angle da main.js: taglio ripido quando entra, dritto quando arriva in cima)
    ========================================================================== */
-.scene { position: relative; }
+.scene { position: relative; overflow-x: clip; }   /* clip (non hidden): lo sticky continua a funzionare */
 .work {
   position: sticky;
   top: var(--work-top, 0px);
@@ -1661,7 +1759,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   position: absolute;
   left: 0;
   top: var(--slant);
-  width: 110%;
+  width: 101%;   /* il filo è appena inclinato: basta poco più della larghezza */
   height: 1px;
   transform-origin: 0 0;
   transform: rotate(var(--angle));

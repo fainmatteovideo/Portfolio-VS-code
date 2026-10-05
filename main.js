@@ -18,9 +18,30 @@
   const toggle = document.getElementById("menu-toggle");
   const menu = document.getElementById("mobile-menu");
 
+  const navdrop = document.getElementById("navdrop");
+  const navLabel = navdrop.querySelector(".navdrop__label");
+  // con mouse e schermo largo: tendina; altrimenti menu a tutto schermo
+  const dropMQ = window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 768px)");
+  let currentLabel = "Menu";
+
+  function setLabel(text) {
+    if (text === navLabel.textContent) return;
+    navLabel.classList.remove("is-rolling");
+    void navLabel.offsetWidth; // riavvia l'animazione
+    navLabel.textContent = text;
+    navLabel.classList.add("is-rolling");
+  }
+
+  function setDrop(open) {
+    navdrop.classList.toggle("is-open", open);
+    toggle.setAttribute("aria-expanded", String(open));
+  }
+
   function setMenu(open) {
     toggle.setAttribute("aria-expanded", String(open));
-    toggle.textContent = open ? "Close" : "Menu";
+    toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    nav.classList.toggle("is-menu-open", open);
+    setLabel(open ? "Close" : currentLabel);
     document.body.style.overflow = open ? "hidden" : "";
     if (open) {
       menu.hidden = false;
@@ -31,9 +52,25 @@
     }
   }
 
-  toggle.addEventListener("click", () => setMenu(menu.hidden));
+  toggle.addEventListener("click", () => {
+    if (dropMQ.matches) setDrop(!navdrop.classList.contains("is-open"));
+    else setMenu(menu.hidden);
+  });
   menu.addEventListener("click", (e) => { if (e.target.closest("a")) setMenu(false); });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !menu.hidden) setMenu(false); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    if (!menu.hidden) setMenu(false);
+    if (navdrop.classList.contains("is-open")) { setDrop(false); toggle.focus(); }
+  });
+  // la tendina si chiude dopo la scelta (e resta chiusa finché il mouse non esce)
+  navdrop.addEventListener("click", (e) => {
+    if (!e.target.closest(".navdrop__panel a")) return;
+    setDrop(false);
+    navdrop.classList.add("is-chosen");
+    document.activeElement.blur();
+  });
+  navdrop.addEventListener("mouseleave", () => { navdrop.classList.remove("is-chosen"); setDrop(false); });
+  document.addEventListener("click", (e) => { if (!navdrop.contains(e.target)) setDrop(false); });
 
   /* --- Link attivo in base alla sezione visibile ------------------------- */
   const links = [...document.querySelectorAll(".site-nav__links a")];
@@ -50,6 +87,10 @@
     // in fondo alla pagina l'ultima sezione (Contact) non arriva in alto: la attivo comunque
     if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) current = sections[sections.length - 1];
     links.forEach((a) => a.classList.toggle("is-active", !!current && a.getAttribute("href") === "#" + current.id));
+    // nella pillola: numero e nome della sezione corrente
+    const link = current && links.find((a) => a.getAttribute("href") === "#" + current.id);
+    currentLabel = link ? `${link.firstElementChild.textContent} — ${link.lastElementChild.textContent}` : "Menu";
+    if (menu.hidden) setLabel(currentLabel);
   }
   window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(updateActive); } }, { passive: true });
   updateActive();
