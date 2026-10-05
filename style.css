@@ -861,6 +861,30 @@ h3 {
   .services__list li { padding-block: 1.5rem; }
 }
 
+/* passando col mouse: la linea sotto si allunga da sinistra, il titolo scivola appena */
+@media (hover: hover) and (pointer: fine) {
+  .services__list li { position: relative; }
+  .services__list li::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 1px;
+    background: var(--c-text);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.7s var(--ease);
+  }
+  .services__list h3,
+  .services__list p { transition: transform 0.6s var(--ease), color 0.4s ease; }
+  .services__list .label { transition: color 0.4s ease; }
+  .services__list li:hover::after { transform: scaleX(1); }
+  .services__list li:hover h3 { transform: translateX(8px); }
+  .services__list li:hover p { transform: translateX(8px); color: var(--c-text); transition-delay: 0.04s; }
+  .services__list li:hover .label { color: var(--c-text); }
+}
+
 /* ==========================================================================
    3. Come lavoro – step numerati (riferimento: amazeproduction.ch)
    ========================================================================== */
@@ -927,6 +951,8 @@ h3 {
   gap: var(--space-l);
 }
 .about__photo {
+  --py: 0%;
+  position: relative;
   aspect-ratio: 4 / 5;
   overflow: hidden;
   background-color: #0c0c0e;
@@ -937,7 +963,38 @@ h3 {
 @media (min-width: 900px) {
   .about__photo { max-width: 340px; }
 }
-.about__photo img { width: 100%; height: 100%; object-fit: cover; object-position: 42% center; }
+/* l'immagine è un po' più grande della cornice e scorre piano con la pagina (--py da main.js) */
+.about__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 42% center;
+  transform: translate3d(0, var(--py), 0) scale(1.14);
+  will-change: transform;
+}
+/* angolini da mirino: si stringono verso la foto quando entra nello schermo */
+.about__photo::after {
+  --c: rgba(243, 242, 239, 0.9);
+  --l: 22px;
+  content: "";
+  position: absolute;
+  inset: 28px;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    linear-gradient(var(--c), var(--c)) top left / var(--l) 1.5px,
+    linear-gradient(var(--c), var(--c)) top left / 1.5px var(--l),
+    linear-gradient(var(--c), var(--c)) top right / var(--l) 1.5px,
+    linear-gradient(var(--c), var(--c)) top right / 1.5px var(--l),
+    linear-gradient(var(--c), var(--c)) bottom left / var(--l) 1.5px,
+    linear-gradient(var(--c), var(--c)) bottom left / 1.5px var(--l),
+    linear-gradient(var(--c), var(--c)) bottom right / var(--l) 1.5px,
+    linear-gradient(var(--c), var(--c)) bottom right / 1.5px var(--l);
+  background-repeat: no-repeat;
+  transition: inset 1.2s var(--ease) 0.35s, opacity 0.8s ease 0.35s;
+}
+.about__photo.is-visible::after { inset: 12px; opacity: 1; }
 
 .about__text { display: grid; gap: 1.25rem; max-width: 58ch; color: var(--c-text-muted); }
 .about__lead {

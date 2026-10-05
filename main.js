@@ -1013,6 +1013,25 @@
     updateAct();
   }
 
+  /* 6. Foto About: parallasse leggero dell'immagine dentro la cornice */
+  const aboutPhoto = document.querySelector(".about__photo");
+  if (aboutPhoto && !reducedMotion) {
+    let photoTicking = false, photoInView = false;
+    const updatePhoto = () => {
+      photoTicking = false;
+      const r = aboutPhoto.getBoundingClientRect();
+      const vh = window.innerHeight;
+      // da -1 (foto in basso) a 1 (foto in alto): l'immagine si sposta di ±5%
+      const p = Math.min(1, Math.max(-1, ((r.top + r.height / 2) - vh / 2) / (vh / 2 + r.height / 2)));
+      aboutPhoto.style.setProperty("--py", (p * 5).toFixed(2) + "%");
+    };
+    new IntersectionObserver(([e]) => { photoInView = e.isIntersecting; if (photoInView) updatePhoto(); }).observe(aboutPhoto);
+    window.addEventListener("scroll", () => {
+      if (photoInView && !photoTicking) { photoTicking = true; requestAnimationFrame(updatePhoto); }
+    }, { passive: true });
+    updatePhoto();
+  }
+
   /* 4. Titoli delle sezioni che salgono da una maschera */
   const titleObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
