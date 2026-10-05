@@ -205,16 +205,42 @@
   const modalFrame = modal.querySelector(".player-modal__frame");
   let lastFocus = null;
 
+  // Animazione "FLIP": il riquadro del player parte esattamente da dove sta il video
+  // nella pagina e si allarga fino alla sua posizione finale (o il contrario in chiusura)
+  let openedFrom = null;
+  function flip(el, opening) {
+    if (reducedMotion) return;
+    const from = el.getBoundingClientRect();
+    modalFrame.style.transition = "none";
+    modalFrame.style.transform = "";
+    const to = modalFrame.getBoundingClientRect();
+    const t = `translate(${from.left - to.left}px, ${from.top - to.top}px) scale(${from.width / to.width}, ${from.height / to.height})`;
+    if (opening) {
+      modalFrame.style.transform = t;
+      modalFrame.getBoundingClientRect(); // applica subito la posizione di partenza
+      modalFrame.style.transition = "";
+      modalFrame.style.transform = "";
+    } else {
+      modalFrame.style.transition = "";
+      modalFrame.style.transform = t;
+    }
+  }
+
   function openPlayer(el) {
     const hash = el.dataset.hash ? `h=${el.dataset.hash}&` : "";
     const title = el.dataset.title;
     modalFrame.classList.toggle("is-vertical", !!el.closest(".reels__grid--vertical"));
+    // la miniatura fa da sfondo al riquadro mentre il player si carica (continuità visiva)
+    const poster = el.querySelector(".video__poster");
+    modalFrame.style.backgroundImage = poster ? `url("${poster.currentSrc || poster.src}")` : "";
+    openedFrom = el;
     modalFrame.innerHTML = `<iframe src="https://player.vimeo.com/video/${el.dataset.vimeo}?${hash}autoplay=1&title=0&byline=0&portrait=0&playsinline=1&dnt=1"
       allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="${esc(title)}"></iframe>`;
     // i video di sfondo si fermano mentre il player è aperto
     videos.forEach((state, v) => { state.player.pause().catch(() => {}); setSound(v, false); });
     lastFocus = document.activeElement;
     modal.hidden = false;
+    flip(el, true);
     requestAnimationFrame(() => modal.classList.add("is-open"));
     document.body.style.overflow = "hidden";
     modal.querySelector(".player-modal__close").focus();
@@ -224,7 +250,8 @@
     if (modal.hidden) return;
     modal.classList.remove("is-open");
     document.body.style.overflow = "";
-    setTimeout(() => { modal.hidden = true; modalFrame.innerHTML = ""; }, 400);
+    if (openedFrom && document.body.contains(openedFrom)) flip(openedFrom, false);
+    setTimeout(() => { modal.hidden = true; modalFrame.innerHTML = ""; modalFrame.style.transform = ""; }, 550);
     videos.forEach((state) => { if (state.visible) state.player.play().catch(() => {}); });
     if (lastFocus) lastFocus.focus({ preventScroll: true });
   }
@@ -596,36 +623,23 @@
     updateHero();
   }
 
-  /* 3. Cursore "Sound" che segue il mouse sopra i video (solo con mouse) */
-  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-    const cursor = document.createElement("div");
-    cursor.className = "sound-cursor";
-    cursor.setAttribute("aria-hidden", "true");
-    document.body.appendChild(cursor);
-    document.body.classList.add("has-sound-cursor");
-
-    // il cerchio è sempre esattamente sotto il puntatore (nessun ritardo, nessuno "spostamento")
-    let x = 0, y = 0, current = null;
-    cursor.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v9.6L12.6 8z"/></svg>';
-    const label = () => {};
-    // "translate" (e non "transform"): così l'ingrandimento con "scale" non sposta il cerchio
-    const place = () => { cursor.style.translate = `${x}px ${y}px`; };
-    document.addEventListener("mousemove", (e) => {
-      x = e.clientX; y = e.clientY;
-      place();
-      const v = e.target.closest(".video__sound") ? null : e.target.closest(".video");
-      if (v !== current) {
-        current = v;
-        cursor.classList.toggle("is-visible", !!v);
-      }
-    }, { passive: true });
-    document.addEventListener("mouseleave", () => { current = null; cursor.classList.remove("is-visible"); });
-    // scorrendo con la rotella il video sotto il puntatore cambia anche senza muovere il mouse
+  /* 3. Bagliore caldo (lens flare) che scende lungo il bordo sinistro mentre si scorre */
+  const flare = document.querySelector(".flare");
+  if (flare && !reducedMotion) {
+    let flareTicking = false;
+    const updateFlare = () => {
+      flareTicking = false;
+      const max = document.documentElement.scrollHeight - window.innerHeight || 1;
+      const p = Math.min(1, Math.max(0, window.scrollY / max));
+      // scende con la pagina e ondeggia piano verso l'interno e di nuovo verso il bordo
+      flare.style.setProperty("--flare-y", (p * 45).toFixed(2) + "vh");
+      flare.style.setProperty("--flare-x", (Math.sin(p * Math.PI * 3) * 9).toFixed(2) + "vw");
+      flare.style.setProperty("--flare-r", (p * 40 - 10).toFixed(1) + "deg");
+    };
     window.addEventListener("scroll", () => {
-      const under = document.elementFromPoint(x, y);
-      const v = under && under.closest(".video");
-      if (v !== current) { current = v; cursor.classList.toggle("is-visible", !!v); label(); }
+      if (!flareTicking) { flareTicking = true; requestAnimationFrame(updateFlare); }
     }, { passive: true });
+    updateFlare();
   }
 
   /* 4. Titoli delle sezioni che salgono da una maschera */
