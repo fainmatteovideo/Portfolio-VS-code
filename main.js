@@ -574,12 +574,15 @@
 
   /* --- Filtri ------------------------------------------------------------ */
   // la linea sotto il filtro attivo scivola fino al nuovo filtro
-  function moveIndicator() {
+  // center = true solo quando si sceglie un filtro: la barra scorre per mostrarlo al centro.
+  // Al ridimensionamento (anche la barra degli indirizzi del telefono che compare/scompare
+  // mentre si scorre) si sposta solo la linea, senza far saltare la barra sotto il dito.
+  function moveIndicator(center) {
     const bar = filterList.querySelector(".filters__indicator");
     const active = filterList.querySelector('.filter[aria-pressed="true"]');
     if (!bar || !active) return;
     bar.style.transform = `translateX(${active.offsetLeft}px) scaleX(${active.offsetWidth})`;
-    // su mobile la barra scorre in modo che il filtro scelto sia tutto visibile
+    if (center !== true) return;
     const left = active.offsetLeft - (filterList.clientWidth - active.offsetWidth) / 2;
     filterList.scrollTo({ left: Math.max(0, left), behavior: reducedMotion ? "auto" : "smooth" });
   }
@@ -587,7 +590,7 @@
 
   function applyFilter(cat, animate) {
     filterList.querySelectorAll(".filter").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.filter === cat)));
-    moveIndicator();
+    moveIndicator(true);
 
     const swap = () => {
       list.querySelectorAll(".slide").forEach((p) => { p.hidden = p.dataset.category !== cat; });
@@ -883,8 +886,14 @@
       indicator.setAttribute("aria-hidden", "true");
       filterList.appendChild(indicator);
       filterList.classList.add("has-indicator");
-      window.addEventListener("resize", moveIndicator);
-      if (document.fonts) document.fonts.ready.then(moveIndicator);
+      // solo i cambi di larghezza contano (la barra degli indirizzi cambia solo l'altezza)
+      let lastWidth = window.innerWidth;
+      window.addEventListener("resize", () => {
+        if (window.innerWidth === lastWidth) return;
+        lastWidth = window.innerWidth;
+        moveIndicator();
+      });
+      if (document.fonts) document.fonts.ready.then(() => moveIndicator());
       filterList.addEventListener("click", (e) => {
         const b = e.target.closest(".filter");
         if (b && b.getAttribute("aria-pressed") !== "true") {

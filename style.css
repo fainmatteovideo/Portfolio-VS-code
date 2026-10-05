@@ -529,6 +529,10 @@ h3 {
 .filters__list { position: relative; }
 .filters__list .filter:first-of-type { margin-left: auto; }
 .filters__list .filter:last-of-type { margin-right: auto; }
+/* spazio finale: Safari ignora il padding destro dei contenitori che scorrono */
+@media (max-width: 767px) {
+  .filters__list::after { content: ""; flex: 0 0 1px; }
+}
 .filters__indicator {
   position: absolute;
   left: 0;
