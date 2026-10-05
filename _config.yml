@@ -1,0 +1,4 @@
+# Configurazione di GitHub Pages
+# File presenti nel repository ma da NON pubblicare sul sito
+exclude:
+  - CLAUDE.md
