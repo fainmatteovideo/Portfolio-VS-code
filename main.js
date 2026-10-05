@@ -87,9 +87,9 @@
     // in fondo alla pagina l'ultima sezione (Contact) non arriva in alto: la attivo comunque
     if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) current = sections[sections.length - 1];
     links.forEach((a) => a.classList.toggle("is-active", !!current && a.getAttribute("href") === "#" + current.id));
-    // nella pillola: numero e nome della sezione corrente
+    // nella pillola: il nome della sezione corrente
     const link = current && links.find((a) => a.getAttribute("href") === "#" + current.id);
-    currentLabel = link ? `${link.firstElementChild.textContent} — ${link.lastElementChild.textContent}` : "Menu";
+    currentLabel = link ? link.textContent.trim() : "Menu";
     if (menu.hidden) setLabel(currentLabel);
   }
   window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(updateActive); } }, { passive: true });
