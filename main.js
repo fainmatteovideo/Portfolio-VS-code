@@ -94,7 +94,9 @@
   function videoHTML(id, hash, title, poster) {
     return `<div class="video" data-vimeo="${esc(id)}" data-hash="${esc(hash || "")}" role="button" tabindex="0"
               aria-label="${esc(title)}: play with sound">
-              ${poster ? `<img class="video__poster" src="${esc(poster)}" alt="" loading="lazy" decoding="async">` : ""}
+              ${poster ? `<img class="video__poster" src="${esc(poster)}"${poster.startsWith("assets/posters/")
+                ? ` srcset="${esc(poster.replace(".webp", "-800.webp"))} 800w, ${esc(poster)} 1600w" sizes="(max-width: 900px) 100vw, 1120px"` : ""}
+                alt="" loading="lazy" decoding="async">` : ""}
               ${SOUND}
             </div>`;
   }
@@ -484,14 +486,28 @@
       if (document.fonts) document.fonts.ready.then(moveIndicator);
       filterList.addEventListener("click", (e) => {
         const b = e.target.closest(".filter");
-        if (b && b.getAttribute("aria-pressed") !== "true") applyFilter(b.dataset.filter, true);
+        if (b && b.getAttribute("aria-pressed") !== "true") {
+          applyFilter(b.dataset.filter, true);
+          history.replaceState(null, "", "#" + b.dataset.filter);
+        }
       });
 
       list.innerHTML = data.projects.map(projectHTML).join("");
       list.querySelectorAll(".stills").forEach(setupStills);
       const projectLogoBase = window.matchMedia("(min-width: 768px)").matches ? 84 : 60;
       list.querySelectorAll(".project__logos img").forEach((img) => sizeLogo(img, projectLogoBase));
-      applyFilter(data.categories[0].id, false);
+      // un indirizzo come fainmatteo.com/#documentary apre i lavori con quel filtro attivo
+      const isCategory = (id) => data.categories.some((c) => c.id === id);
+      const goToWork = () => requestAnimationFrame(() => work.scrollIntoView({ behavior: "auto" }));
+      const fromHash = location.hash.slice(1);
+      applyFilter(isCategory(fromHash) ? fromHash : data.categories[0].id, false);
+      if (isCategory(fromHash)) goToWork();
+      window.addEventListener("hashchange", () => {
+        const id = location.hash.slice(1);
+        if (!isCategory(id)) return;
+        applyFilter(id, true);
+        goToWork();
+      });
       observe(list);
     })
     .catch(() => {
