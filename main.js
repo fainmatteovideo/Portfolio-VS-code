@@ -325,7 +325,7 @@
       copy.querySelector("img").alt = "";
       track.appendChild(copy);
     });
-    const logoBase = window.matchMedia("(min-width: 768px)").matches ? 60 : 44;
+    const logoBase = window.matchMedia("(min-width: 768px)").matches ? 70 : 50;
     // fascia sottile: anche i loghi verticali non superano ~1,1 volte la base
     track.querySelectorAll("img").forEach((img) => sizeLogo(img, logoBase, 1.1));
     // velocità costante (~35 px/s) qualunque sia la larghezza dei loghi
