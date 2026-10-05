@@ -238,6 +238,9 @@ h3 {
 
 @media (min-width: 768px) {
   .site-nav { padding-block: 28px; }
+}
+/* il menu esteso (6 voci) compare solo quando c'è spazio accanto al logo */
+@media (min-width: 1024px) {
   .site-nav__links { display: flex; }
   .site-nav__toggle { display: none; }
 }
@@ -687,6 +690,11 @@ h3 {
 /* ==========================================================================
    Carosello loghi clienti
    ========================================================================== */
+.clients {
+  /* più respiro dopo l'ultimo video dei lavori */
+  padding-top: var(--space-l);
+  scroll-margin-top: calc(var(--nav-h) - var(--space-l) + 1.5rem);
+}
 .clients .label { margin-bottom: 0.9rem; text-align: center; }
 
 .clients__marquee {
@@ -718,6 +726,10 @@ h3 {
   transition: opacity var(--dur-fast) ease;
 }
 .clients__track img:hover { opacity: 1; }
+.clients__track--reverse {
+  animation-direction: reverse;
+  margin-top: clamp(0.25rem, 0.8vw, 0.75rem);
+}
 .clients__marquee:hover .clients__track { animation-play-state: paused; }
 .clients__track.is-paused { animation-play-state: paused; }
 
@@ -736,7 +748,8 @@ h3 {
     animation: none;
     padding-inline: var(--gutter);
   }
-  .clients__track li[aria-hidden] { display: none; }
+  .clients__track li[aria-hidden],
+  .clients__track--reverse { display: none; }
 }
 
 /* Pallino separatore (es. "Video production • Zurich") */

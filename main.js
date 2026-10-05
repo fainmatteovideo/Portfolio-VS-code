@@ -39,13 +39,20 @@
   const links = [...document.querySelectorAll(".site-nav__links a")];
   const sections = links.map((a) => document.querySelector(a.getAttribute("href"))).filter(Boolean);
 
-  const sectionObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      links.forEach((a) => a.classList.toggle("is-active", a.getAttribute("href") === "#" + entry.target.id));
-    });
-  }, { rootMargin: "-45% 0px -50% 0px" });
-  sections.forEach((s) => sectionObserver.observe(s));
+  // attiva l'ultima sezione il cui inizio ha superato il terzo superiore dello schermo
+  // (funziona anche per sezioni basse come la fascia dei loghi)
+  let ticking = false;
+  function updateActive() {
+    ticking = false;
+    const line = window.innerHeight * 0.35;
+    let current = null;
+    sections.forEach((s) => { if (s.getBoundingClientRect().top <= line) current = s; });
+    // in fondo alla pagina l'ultima sezione (Contact) non arriva in alto: la attivo comunque
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) current = sections[sections.length - 1];
+    links.forEach((a) => a.classList.toggle("is-active", !!current && a.getAttribute("href") === "#" + current.id));
+  }
+  window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(updateActive); } }, { passive: true });
+  updateActive();
 
   /* --- Showreel: compare in dissolvenza quando parte davvero -------------- */
   const heroVideo = document.querySelector(".hero__video");
@@ -328,11 +335,18 @@
     const logoBase = window.matchMedia("(min-width: 768px)").matches ? 70 : 50;
     // fascia sottile: anche i loghi verticali non superano ~1,1 volte la base
     track.querySelectorAll("img").forEach((img) => sizeLogo(img, logoBase, 1.1));
+    // seconda fila: stessi loghi, scorre nel verso opposto (da sinistra a destra)
+    const reverse = track.cloneNode(true);
+    reverse.classList.add("clients__track--reverse");
+    reverse.setAttribute("aria-hidden", "true");
+    reverse.querySelectorAll("img").forEach((img) => { img.alt = ""; sizeLogo(img, logoBase, 1.1); });
+    track.after(reverse);
+    const tracks = [track, reverse];
     // velocità costante (~35 px/s) qualunque sia la larghezza dei loghi
-    const setSpeed = () => track.style.setProperty("--marquee-duration", (track.scrollWidth / 2 / 35) + "s");
+    const setSpeed = () => tracks.forEach((t) => t.style.setProperty("--marquee-duration", (t.scrollWidth / 2 / 35) + "s"));
     window.addEventListener("load", setSpeed);
     // fuori dallo schermo l'animazione si ferma
-    new IntersectionObserver(([e]) => track.classList.toggle("is-paused", !e.isIntersecting)).observe(track);
+    new IntersectionObserver(([e]) => tracks.forEach((t) => t.classList.toggle("is-paused", !e.isIntersecting))).observe(track);
   }
 
   fetch("projects.json")
