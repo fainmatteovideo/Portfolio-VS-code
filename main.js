@@ -88,12 +88,12 @@
 
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-  const SOUND = '<span class="video__sound label"><i><b></b></i><em>Sound off</em></span>';
+  const SOUND = '<span class="video__sound label"><i><b></b></i><em>Sound</em></span>';
   const ARROW = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="${d}"/></svg>`;
 
   function videoHTML(id, hash, title, poster) {
     return `<div class="video" data-vimeo="${esc(id)}" data-hash="${esc(hash || "")}" role="button" tabindex="0"
-              aria-label="${esc(title)}: turn sound on" aria-pressed="false">
+              aria-label="${esc(title)}: play with sound">
               ${poster ? `<img class="video__poster" src="${esc(poster)}" alt="" loading="lazy" decoding="async">` : ""}
               ${SOUND}
             </div>`;
@@ -175,7 +175,7 @@
     const iframe = document.createElement("iframe");
     iframe.src = `https://player.vimeo.com/video/${el.dataset.vimeo}?${hash}background=1&autoplay=1&loop=1&muted=1&autopause=0&playsinline=1&dnt=1`;
     iframe.allow = "autoplay; fullscreen; picture-in-picture";
-    iframe.title = el.getAttribute("aria-label").replace(": turn sound on", "");
+    iframe.title = el.getAttribute("aria-label").replace(": play with sound", "");
     iframe.tabIndex = -1;
     el.prepend(iframe);
 
@@ -188,26 +188,48 @@
     state.player.on("play", () => { if (!state.visible) state.player.pause().catch(() => {}); });
   }
 
-  function setSound(el, on) {
-    const state = videos.get(el);
-    el.classList.toggle("is-unmuted", on);
-    el.setAttribute("aria-pressed", String(on));
-    el.setAttribute("aria-label", el.getAttribute("aria-label").replace(/turn sound (on|off)$/, on ? "turn sound off" : "turn sound on"));
-    const label = el.querySelector(".video__sound em");
-    if (label) label.textContent = on ? "Sound on" : "Sound off";
-    if (!state) return;
-    state.player.setVolume(on ? 1 : 0).catch(() => {});
-    state.player.setMuted(!on).catch(() => {});
+  /* --- Player completo: al click il video si apre con audio e controlli ---- */
+  const modal = document.createElement("div");
+  modal.className = "player-modal";
+  modal.hidden = true;
+  modal.setAttribute("role", "dialog");
+  modal.setAttribute("aria-modal", "true");
+  modal.setAttribute("aria-label", "Video player");
+  modal.innerHTML = `<button class="player-modal__close label" type="button">Close
+      <svg class="arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 3l6 6M9 3l-6 6"/></svg></button>
+    <div class="player-modal__frame"></div>`;
+  document.body.appendChild(modal);
+  const modalFrame = modal.querySelector(".player-modal__frame");
+  let lastFocus = null;
+
+  function openPlayer(el) {
+    const hash = el.dataset.hash ? `h=${el.dataset.hash}&` : "";
+    const title = el.getAttribute("aria-label").replace(": play with sound", "");
+    modalFrame.classList.toggle("is-vertical", !!el.closest(".reels__grid--vertical"));
+    modalFrame.innerHTML = `<iframe src="https://player.vimeo.com/video/${el.dataset.vimeo}?${hash}autoplay=1&title=0&byline=0&portrait=0&playsinline=1&dnt=1"
+      allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="${esc(title)}"></iframe>`;
+    // i video di sfondo si fermano mentre il player è aperto
+    videos.forEach((state) => state.player.pause().catch(() => {}));
+    lastFocus = document.activeElement;
+    modal.hidden = false;
+    requestAnimationFrame(() => modal.classList.add("is-open"));
+    document.body.style.overflow = "hidden";
+    modal.querySelector(".player-modal__close").focus();
   }
 
-  function toggleSound(el) {
-    loadVideo(el, true);
-    const on = !el.classList.contains("is-unmuted");
-    // un solo video con l'audio alla volta
-    if (on) videos.forEach((_, other) => { if (other !== el && other.classList.contains("is-unmuted")) setSound(other, false); });
-    setSound(el, on);
-    if (on) videos.get(el)?.player.play().catch(() => {});
+  function closePlayer() {
+    if (modal.hidden) return;
+    modal.classList.remove("is-open");
+    document.body.style.overflow = "";
+    setTimeout(() => { modal.hidden = true; modalFrame.innerHTML = ""; }, 400);
+    videos.forEach((state) => { if (state.visible) state.player.play().catch(() => {}); });
+    if (lastFocus) lastFocus.focus({ preventScroll: true });
   }
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal || e.target.closest(".player-modal__close")) closePlayer();
+  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closePlayer(); });
 
   // Video: si caricano quando mancano circa mezza schermata
   const videoNearObserver = new IntersectionObserver((entries) => {
@@ -240,11 +262,10 @@
       const s = videos.get(el);
       if (!s) return;
       s.visible = entry.isIntersecting;
-      if (s.visible) {
+      if (s.visible && modal.hidden) {
         s.player.play().catch(() => {});
       } else {
         s.player.pause().catch(() => {});
-        if (el.classList.contains("is-unmuted")) setSound(el, false);
       }
     });
   }, { threshold: 0.25 });
@@ -267,14 +288,14 @@
   // Comparsa morbida anche per gli elementi già presenti nella pagina (servizi, step, about)
   document.querySelectorAll(".reveal").forEach((el) => reducedMotion ? el.classList.add("is-visible") : revealObserver.observe(el));
 
-  // Click / tastiera sul video = audio
+  // Click / tastiera sul video = player completo con audio
   work.addEventListener("click", (e) => {
     const v = e.target.closest(".video");
-    if (v) toggleSound(v);
+    if (v) openPlayer(v);
   });
   work.addEventListener("keydown", (e) => {
     const v = e.target.closest(".video");
-    if (v && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); toggleSound(v); }
+    if (v && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openPlayer(v); }
   });
 
   /* --- Stills: trascinamento col mouse e frecce --------------------------- */
@@ -505,7 +526,7 @@
 
     // il cerchio è sempre esattamente sotto il puntatore (nessun ritardo, nessuno "spostamento")
     let x = 0, y = 0, current = null;
-    const label = () => { if (current) cursor.textContent = current.classList.contains("is-unmuted") ? "Mute" : "Sound"; };
+    const label = () => { if (current) cursor.textContent = "Sound"; };
     // "translate" (e non "transform"): così l'ingrandimento con "scale" non sposta il cerchio
     const place = () => { cursor.style.translate = `${x}px ${y}px`; };
     document.addEventListener("mousemove", (e) => {
@@ -525,8 +546,6 @@
       const v = under && under.closest(".video");
       if (v !== current) { current = v; cursor.classList.toggle("is-visible", !!v); label(); }
     }, { passive: true });
-    // dopo il click l'etichetta passa da "Sound" a "Mute" (e viceversa)
-    work.addEventListener("click", () => setTimeout(label, 0));
   }
 
   /* 4. Titoli delle sezioni che salgono da una maschera */

@@ -543,8 +543,7 @@ h3 {
   pointer-events: none;
   transition: opacity var(--dur-fast) ease;
 }
-.video:hover .video__sound,
-.video.is-unmuted .video__sound { opacity: 1; }
+.video:hover .video__sound { opacity: 1; }
 /* piccolo equalizzatore: fermo con audio spento, si muove con audio acceso */
 .video__sound em { font-style: normal; }
 .video__sound i {
@@ -561,9 +560,6 @@ h3 {
   height: 3px;
   background: currentColor;
 }
-.video.is-unmuted .video__sound i::before { animation: eq 0.9s ease-in-out infinite; }
-.video.is-unmuted .video__sound b         { animation: eq 0.9s ease-in-out 0.3s infinite; }
-.video.is-unmuted .video__sound i::after  { animation: eq 0.9s ease-in-out 0.6s infinite; }
 @keyframes eq {
   0%, 100% { height: 3px; }
   50%      { height: 10px; }
@@ -1255,8 +1251,8 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 .sound-cursor.is-visible { opacity: 1; scale: 1; }
 @media (hover: hover) and (pointer: fine) {
   .has-sound-cursor .video { cursor: none; }
-  /* l'etichetta nel video diventa superflua: resta solo quando l'audio è acceso */
-  .has-sound-cursor .video:not(.is-unmuted) .video__sound { opacity: 0; }
+  /* con il cursore "Sound" l'etichetta nel video è superflua */
+  .has-sound-cursor .video .video__sound { opacity: 0; }
 }
 
 /* 4. Titoli delle sezioni che salgono da una maschera, come titoli di testa */
@@ -1281,3 +1277,47 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   .hero__video::before { display: none; }
   .title-mask > span { transform: none; }
 }
+
+/* ==========================================================================
+   Player completo (si apre al click su un video, con audio e controlli)
+   ========================================================================== */
+.player-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  padding: clamp(56px, 8vh, 96px) var(--gutter);
+  background: rgba(7, 7, 8, 0.94);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+.player-modal[hidden] { display: none; }
+.player-modal.is-open { opacity: 1; }
+
+.player-modal__frame {
+  width: min(100%, calc((100vh - 2 * clamp(56px, 8vh, 96px)) * 16 / 9), 1400px);
+  aspect-ratio: 16 / 9;
+  background: #000;
+  transform: scale(0.98);
+  transition: transform 0.5s var(--ease);
+}
+.player-modal.is-open .player-modal__frame { transform: none; }
+/* reel verticali */
+.player-modal__frame.is-vertical {
+  width: min(100%, calc((100vh - 2 * clamp(56px, 8vh, 96px)) * 9 / 16));
+  aspect-ratio: 9 / 16;
+}
+.player-modal__frame iframe { width: 100%; height: 100%; border: 0; }
+
+.player-modal__close {
+  position: absolute;
+  top: clamp(14px, 2.5vh, 28px);
+  right: var(--gutter);
+  padding: 10px 0 10px 16px;
+  color: var(--c-text-muted);
+  transition: color var(--dur-fast) ease;
+}
+.player-modal__close:hover { color: var(--c-text); }
