@@ -183,6 +183,7 @@
   const isActiveProject = (el) => !!el.closest(".slide")?.classList.contains("is-active");
   const allowed = (el) => !inShowcase(el) || isActiveProject(el);
   let showcaseInView = false;
+  let workCovered = false; // il pannello di Services copre del tutto i lavori
   const videos = new Map(); // elemento .video -> { player, visible }
 
   // I video dei progetti non partono finché la pagina (e lo showreel) non ha finito di
@@ -496,7 +497,7 @@
   // solo il video del progetto attivo è in riproduzione; il successivo si prepara
   function syncPlayback() {
     items.forEach((p, j) => p.querySelectorAll(".video").forEach((v) => {
-      const play = j === activeIndex && showcaseInView && modal.hidden;
+      const play = j === activeIndex && showcaseInView && !workCovered && modal.hidden;
       if (play || j === activeIndex + 1) loadVideo(v);
       const s = videos.get(v);
       if (!s) return;
@@ -893,8 +894,26 @@
     updateFlare();
   }
 
-  /* 5. Pannello di Services/How I work: il bordo diagonale si raddrizza mentre sale */
+  /* 5. Pannello di Services/How I work: i lavori restano fermi e il pannello ci sale sopra;
+        il bordo diagonale si raddrizza mentre sale */
   const act = document.getElementById("act");
+  // i lavori si fermano quando il loro fondo tocca il fondo dello schermo
+  const pinWork = () => work.style.setProperty("--work-top", Math.min(0, window.innerHeight - work.offsetHeight) + "px");
+  if ("ResizeObserver" in window) new ResizeObserver(pinWork).observe(work);
+  window.addEventListener("resize", pinWork);
+  pinWork();
+  if (act) {
+    // quando il pannello copre tutto, i lavori sotto si nascondono e i video si fermano
+    const updateCover = () => {
+      const covered = act.getBoundingClientRect().top <= 0;
+      if (covered === workCovered) return;
+      workCovered = covered;
+      work.classList.toggle("is-covered", covered);
+      syncPlayback();
+    };
+    window.addEventListener("scroll", updateCover, { passive: true });
+    updateCover();
+  }
   if (act && !reducedMotion) {
     let actTicking = false;
     const updateAct = () => {

@@ -1614,28 +1614,42 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 }
 
 /* ==========================================================================
-   Pannello Services + How I work: entra sopra i lavori con un taglio diagonale
-   (--slant e --angle da main.js: taglio ripido quando il pannello entra, dritto in cima)
+   Scena lavori + pannello Services/How I work
+   I lavori restano fermi (sticky) quando il loro fondo tocca il fondo dello schermo,
+   e il pannello rosso scuro ci sale sopra con un taglio diagonale
+   (--slant e --angle da main.js: taglio ripido quando entra, dritto quando arriva in cima)
    ========================================================================== */
+.scene { position: relative; }
+.work {
+  position: sticky;
+  top: var(--work-top, 0px);
+}
+.work.is-covered { visibility: hidden; }
+
 .act {
   --slant: 0px;
   --angle: 0deg;
   --edge: 1;
   position: relative;
+  z-index: 1;
   isolation: isolate;
-  margin-top: calc(var(--space-xl) * -0.5);
-  padding-top: calc(var(--space-xl) * 0.5);
+  padding-top: calc(var(--space-xl) * 0.75);
 }
-/* fondo nero con la stessa grana e un riflesso verde appena accennato in basso */
+/* rosso molto scuro con grana, un bagliore caldo in alto a sinistra e uno rosso in basso */
 .act::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
-  background-color: #030404;
+  background-color: #1a0404;
   background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
-    radial-gradient(ellipse 70% 40% at 85% 100%, rgba(var(--c-glow-green), 0.14), transparent 70%);
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse 22% 26% at 4% 6%, rgba(255, 186, 92, 0.22), transparent 70%),
+    radial-gradient(ellipse 45% 32% at 0% 10%, rgba(var(--c-glow-warm), 0.38), transparent 72%),
+    radial-gradient(ellipse 55% 30% at 100% 62%, rgba(160, 22, 16, 0.45), transparent 70%),
+    radial-gradient(ellipse 60% 22% at 70% 18%, rgba(120, 14, 12, 0.35), transparent 70%),
+    radial-gradient(ellipse 60% 25% at 20% 100%, rgba(var(--c-glow-warm), 0.18), transparent 70%),
+    linear-gradient(175deg, #260706 0%, #170404 55%, #100303 100%);
   /* bordo alto: più basso a sinistra; bordo basso: diagonale fissa verso About */
   clip-path: polygon(0 var(--slant), 100% 0, 100% calc(100% - 7vh), 0 100%);
 }
@@ -1649,8 +1663,8 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   height: 1px;
   transform-origin: 0 0;
   transform: rotate(var(--angle));
-  background: linear-gradient(90deg, rgba(176, 112, 52, 0.7), rgba(243, 242, 239, 0.45) 35%, rgba(243, 242, 239, 0.12) 75%, transparent);
-  box-shadow: 0 0 14px rgba(176, 112, 52, 0.35);
+  background: linear-gradient(90deg, rgba(255, 170, 90, 0.8), rgba(243, 242, 239, 0.45) 35%, rgba(243, 242, 239, 0.12) 75%, transparent);
+  box-shadow: 0 0 16px rgba(220, 90, 40, 0.45);
   opacity: var(--edge);
   pointer-events: none;
 }
