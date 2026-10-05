@@ -910,7 +910,7 @@ h3 {
 .partners__list {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 62%;
+  grid-auto-columns: 70%;
   gap: var(--space-s);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -925,7 +925,7 @@ h3 {
   .partners__list {
     grid-auto-flow: row;
     /* foto più piccole, come quella dell'About: colonne fisse e centrate */
-    grid-template-columns: repeat(3, minmax(0, 260px));
+    grid-template-columns: repeat(3, minmax(0, 320px));
     justify-content: center;
     gap: var(--space-l) var(--space-m);
     overflow: visible;
