@@ -503,25 +503,19 @@
     document.body.appendChild(cursor);
     document.body.classList.add("has-sound-cursor");
 
-    let x = 0, y = 0, cx = 0, cy = 0, current = null, raf = 0;
+    // il cerchio è sempre esattamente sotto il puntatore (nessun ritardo, nessuno "spostamento")
+    let x = 0, y = 0, current = null;
     const label = () => { if (current) cursor.textContent = current.classList.contains("is-unmuted") ? "Mute" : "Sound"; };
-    const follow = () => {
-      // segue il mouse con un leggero ritardo (più morbido)
-      cx += (x - cx) * (reducedMotion ? 1 : 0.22);
-      cy += (y - cy) * (reducedMotion ? 1 : 0.22);
-      cursor.style.transform = `translate(${cx}px, ${cy}px)`;
-      raf = Math.abs(x - cx) + Math.abs(y - cy) > 0.3 ? requestAnimationFrame(follow) : 0;
-    };
+    const place = () => { cursor.style.transform = `translate(${x}px, ${y}px)`; };
     document.addEventListener("mousemove", (e) => {
       x = e.clientX; y = e.clientY;
+      place();
       const v = e.target.closest(".video");
       if (v !== current) {
         current = v;
-        if (v && !cursor.classList.contains("is-visible")) { cx = x; cy = y; }
         cursor.classList.toggle("is-visible", !!v);
         label();
       }
-      if (!raf) raf = requestAnimationFrame(follow);
     }, { passive: true });
     document.addEventListener("mouseleave", () => { current = null; cursor.classList.remove("is-visible"); });
     // scorrendo con la rotella il video sotto il puntatore cambia anche senza muovere il mouse
