@@ -1343,16 +1343,18 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 .showcase__stage .slide__num { white-space: nowrap; }
 .slide__num.label { display: block; margin-bottom: 0.75rem; color: var(--c-text-faint); }
 
-/* pagine di reel: tutti gli orizzontali insieme, i verticali in due metà */
+/* pagine di reel: tutti gli orizzontali insieme, tutti i verticali insieme.
+   Colonne (--cm telefono, --cd desktop) e file (--rd) arrivano da main.js */
 .slide__grid {
   --gap: 6px;
+  --cols: var(--cm, 3);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: var(--gap);
 }
-.slide__grid--h { --cols: 3; --rows: 5; --ar: 1.7778; }
-.slide__grid--v { --cols: 4; --rows: 2; --ar: 0.5625; }
+.slide__grid--h { --ar: 1.7778; }
+.slide__grid--v { --ar: 0.5625; }
 .slide__grid .video {
   flex: 0 0 calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols));
   aspect-ratio: 16 / 9;
@@ -1362,7 +1364,6 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 .slide__grid .video__sound i { transform: scale(0.8); }
 @media (min-width: 640px) {
   .slide__grid { --gap: 10px; }
-  .slide__grid--h { --cols: 4; --rows: 4; }
 }
 
 @media (min-width: 1024px) {
@@ -1457,9 +1458,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
     justify-content: center;
   }
   .slide--reels .slide__num { align-self: stretch; text-align: center; }
-  .slide__grid { --gap: 12px; }
-  .slide__grid--h { --cols: 5; --rows: 3; }
-  .slide__grid--v { --cols: 8; --rows: 1; }
+  .slide__grid { --gap: 12px; --cols: var(--cd, 5); --rows: var(--rd, 1); }
   .slide__grid .video__sound { width: 32px; height: 32px; right: 8px; bottom: 8px; }
   .slide__grid .video__sound i { transform: none; }
   /* la griglia è larga quanto serve perché tutte le file stiano nell'altezza della scena */
@@ -1612,4 +1611,49 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   .lightbox__nav svg { width: 20px; height: 20px; }
   .lightbox__nav--prev { justify-self: start; margin-left: 8px; }
   .lightbox__nav--next { justify-self: end; margin-right: 8px; }
+}
+
+/* ==========================================================================
+   Pannello Services + How I work: entra sopra i lavori con un taglio diagonale
+   (--slant e --angle da main.js: taglio ripido quando il pannello entra, dritto in cima)
+   ========================================================================== */
+.act {
+  --slant: 0px;
+  --angle: 0deg;
+  --edge: 1;
+  position: relative;
+  isolation: isolate;
+  margin-top: calc(var(--space-xl) * -0.5);
+  padding-top: calc(var(--space-xl) * 0.5);
+}
+/* fondo nero con la stessa grana e un riflesso verde appena accennato in basso */
+.act::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: #030404;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse 70% 40% at 85% 100%, rgba(var(--c-glow-green), 0.14), transparent 70%);
+  /* bordo alto: più basso a sinistra; bordo basso: diagonale fissa verso About */
+  clip-path: polygon(0 var(--slant), 100% 0, 100% calc(100% - 7vh), 0 100%);
+}
+/* filo di luce lungo il taglio */
+.act::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: var(--slant);
+  width: 110%;
+  height: 1px;
+  transform-origin: 0 0;
+  transform: rotate(var(--angle));
+  background: linear-gradient(90deg, rgba(176, 112, 52, 0.7), rgba(243, 242, 239, 0.45) 35%, rgba(243, 242, 239, 0.12) 75%, transparent);
+  box-shadow: 0 0 14px rgba(176, 112, 52, 0.35);
+  opacity: var(--edge);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .act::after { display: none; }
 }

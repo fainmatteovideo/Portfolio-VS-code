@@ -92,7 +92,7 @@
   const SOUND = '<button class="video__sound" type="button" aria-label="Turn sound on" aria-pressed="false"><i><b></b><b></b><b></b><b></b></i></button>';
   const ARROW = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="${d}"/></svg>`;
   // categorie i cui reel stanno nello showcase (con i pallini) invece che nella griglia
-  const REEL_SLIDES = ["social"];
+  const REEL_SLIDES = ["social", "motion-graphic"];
 
   function videoHTML(id, hash, title, poster) {
     return `<div class="video" data-vimeo="${esc(id)}" data-hash="${esc(hash || "")}" data-title="${esc(title)}">
@@ -128,22 +128,26 @@
     </article>`;
   }
 
-  // Reel come slide dello showcase: una pagina con tutti gli orizzontali,
-  // poi i verticali divisi in due pagine
+  // Reel come slide dello showcase: una pagina con tutti gli orizzontali e una con tutti
+  // i verticali. Colonne e file dipendono da quanti sono (telefono / desktop).
   function reelSlidesHTML(reels) {
-    const slide = (category, group, name, items, kind) =>
-      `<article class="slide slide--reels" data-category="${esc(category)}" data-group="${group}" data-name="${name}">
+    const slide = (category, group, name, items, kind) => {
+      const n = items.length;
+      const many = kind === "h" ? n > 8 : n > 6;
+      const cols = kind === "h" ? [many ? 3 : 2, many ? 5 : 4] : [many ? 4 : 3, many ? 8 : 5];
+      return `<article class="slide slide--reels" data-category="${esc(category)}" data-group="${group}" data-name="${name}">
         <p class="slide__num label"></p>
-        <div class="slide__grid slide__grid--${kind}">${items.map((r) => videoHTML(r.vimeo, r.hash, r.label, r.poster)).join("")}</div>
+        <div class="slide__grid slide__grid--${kind}" style="--cm:${cols[0]};--cd:${cols[1]};--rd:${Math.ceil(n / cols[1])}">
+          ${items.map((r) => videoHTML(r.vimeo, r.hash, r.label, r.poster)).join("")}
+        </div>
       </article>`;
+    };
     return REEL_SLIDES.map((category) => {
       const of = (o) => reels.filter((r) => r.category === category && r.orientation === o);
       const h = of("horizontal");
       const v = of("vertical");
-      const half = Math.ceil(v.length / 2);
       return (h.length ? slide(category, "16:9", "Horizontal reels", h, "h") : "") +
-        [v.slice(0, half), v.slice(half)].filter((g) => g.length)
-          .map((g, i) => slide(category, "9:16", `Vertical reels ${i + 1}`, g, "v")).join("");
+        (v.length ? slide(category, "9:16", "Vertical reels", v, "v") : "");
     }).join("");
   }
 
@@ -471,6 +475,8 @@
     if (desktopMQ.matches || !items[activeIndex]) return;
     stage.style.height = items[activeIndex].offsetHeight + "px";
   }
+  // la slide cambia altezza quando arrivano loghi e font: lo stage la segue
+  const slideResize = "ResizeObserver" in window ? new ResizeObserver(() => fitStage()) : null;
 
   function setActive(i) {
     i = Math.max(0, Math.min(items.length - 1, i));
@@ -478,6 +484,7 @@
     activeIndex = i;
     // anche le slide nascoste (altre categorie) perdono lo stato attivo: niente schede sovrapposte
     stage.querySelectorAll(".slide").forEach((p) => p.classList.toggle("is-active", p === items[i]));
+    if (slideResize) { slideResize.disconnect(); slideResize.observe(items[i]); }
     fitStage();
     dotsNav.querySelectorAll(".showcase__dot").forEach((d, j) => d.setAttribute("aria-current", String(j === i)));
     // immagini del progetto attivo e del successivo
@@ -884,6 +891,28 @@
       if (!flareTicking) { flareTicking = true; requestAnimationFrame(updateFlare); }
     }, { passive: true });
     updateFlare();
+  }
+
+  /* 5. Pannello di Services/How I work: il bordo diagonale si raddrizza mentre sale */
+  const act = document.getElementById("act");
+  if (act && !reducedMotion) {
+    let actTicking = false;
+    const updateAct = () => {
+      actTicking = false;
+      const vh = window.innerHeight;
+      const top = act.getBoundingClientRect().top;
+      const p = Math.min(1, Math.max(0, 1 - top / vh));
+      const max = vh * (window.innerWidth >= 768 ? 0.24 : 0.12);
+      const slant = (1 - p) * max;
+      act.style.setProperty("--slant", slant.toFixed(1) + "px");
+      act.style.setProperty("--angle", (-Math.atan2(slant, act.offsetWidth) * 180 / Math.PI).toFixed(3) + "deg");
+      act.style.setProperty("--edge", (1 - p * 0.7).toFixed(2));
+    };
+    window.addEventListener("scroll", () => {
+      if (!actTicking) { actTicking = true; requestAnimationFrame(updateAct); }
+    }, { passive: true });
+    window.addEventListener("resize", updateAct);
+    updateAct();
   }
 
   /* 4. Titoli delle sezioni che salgono da una maschera */
