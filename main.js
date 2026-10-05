@@ -310,10 +310,21 @@
   }
 
   /* --- Filtri ------------------------------------------------------------ */
+  // la linea sotto il filtro attivo scivola fino al nuovo filtro
+  function moveIndicator() {
+    const bar = filterList.querySelector(".filters__indicator");
+    const active = filterList.querySelector('.filter[aria-pressed="true"]');
+    if (!bar || !active) return;
+    bar.style.transform = `translateX(${active.offsetLeft}px) scaleX(${active.offsetWidth})`;
+    // su mobile la barra scorre in modo che il filtro scelto sia tutto visibile
+    const left = active.offsetLeft - (filterList.clientWidth - active.offsetWidth) / 2;
+    filterList.scrollTo({ left: Math.max(0, left), behavior: reducedMotion ? "auto" : "smooth" });
+  }
   let data = null;
 
   function applyFilter(cat, animate) {
     filterList.querySelectorAll(".filter").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.filter === cat)));
+    moveIndicator();
 
     const swap = () => {
       let n = 0;
@@ -443,6 +454,13 @@
       filterList.innerHTML =
         data.categories.map((c) =>
           `<button class="filter label" data-filter="${esc(c.id)}" aria-pressed="false">${esc(c.label)}</button>`).join("");
+      const indicator = document.createElement("span");
+      indicator.className = "filters__indicator";
+      indicator.setAttribute("aria-hidden", "true");
+      filterList.appendChild(indicator);
+      filterList.classList.add("has-indicator");
+      window.addEventListener("resize", moveIndicator);
+      if (document.fonts) document.fonts.ready.then(moveIndicator);
       filterList.addEventListener("click", (e) => {
         const b = e.target.closest(".filter");
         if (b && b.getAttribute("aria-pressed") !== "true") applyFilter(b.dataset.filter, true);
@@ -458,4 +476,74 @@
     .catch(() => {
       list.innerHTML = '<p class="muted">Projects could not be loaded. Please reload the page.</p>';
     });
+
+  /* ======================================================================
+     Effetti
+     ====================================================================== */
+
+  /* 2. Scorrendo, logo e frase dell'apertura si allontanano e il video si scurisce */
+  if (!reducedMotion && hero) {
+    let heroTicking = false;
+    const updateHero = () => {
+      heroTicking = false;
+      const p = Math.min(1, Math.max(0, window.scrollY / (hero.offsetHeight * 0.8)));
+      hero.style.setProperty("--hero-p", p.toFixed(3));
+    };
+    window.addEventListener("scroll", () => {
+      if (!heroTicking) { heroTicking = true; requestAnimationFrame(updateHero); }
+    }, { passive: true });
+    updateHero();
+  }
+
+  /* 3. Cursore "Sound" che segue il mouse sopra i video (solo con mouse) */
+  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    const cursor = document.createElement("div");
+    cursor.className = "sound-cursor";
+    cursor.setAttribute("aria-hidden", "true");
+    document.body.appendChild(cursor);
+    document.body.classList.add("has-sound-cursor");
+
+    let x = 0, y = 0, cx = 0, cy = 0, current = null, raf = 0;
+    const label = () => { if (current) cursor.textContent = current.classList.contains("is-unmuted") ? "Mute" : "Sound"; };
+    const follow = () => {
+      // segue il mouse con un leggero ritardo (più morbido)
+      cx += (x - cx) * (reducedMotion ? 1 : 0.22);
+      cy += (y - cy) * (reducedMotion ? 1 : 0.22);
+      cursor.style.transform = `translate(${cx}px, ${cy}px)`;
+      raf = Math.abs(x - cx) + Math.abs(y - cy) > 0.3 ? requestAnimationFrame(follow) : 0;
+    };
+    document.addEventListener("mousemove", (e) => {
+      x = e.clientX; y = e.clientY;
+      const v = e.target.closest(".video");
+      if (v !== current) {
+        current = v;
+        if (v && !cursor.classList.contains("is-visible")) { cx = x; cy = y; }
+        cursor.classList.toggle("is-visible", !!v);
+        label();
+      }
+      if (!raf) raf = requestAnimationFrame(follow);
+    }, { passive: true });
+    document.addEventListener("mouseleave", () => { current = null; cursor.classList.remove("is-visible"); });
+    // scorrendo con la rotella il video sotto il puntatore cambia anche senza muovere il mouse
+    window.addEventListener("scroll", () => {
+      const under = document.elementFromPoint(x, y);
+      const v = under && under.closest(".video");
+      if (v !== current) { current = v; cursor.classList.toggle("is-visible", !!v); label(); }
+    }, { passive: true });
+    // dopo il click l'etichetta passa da "Sound" a "Mute" (e viceversa)
+    work.addEventListener("click", () => setTimeout(label, 0));
+  }
+
+  /* 4. Titoli delle sezioni che salgono da una maschera */
+  const titleObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("is-title-in");
+      titleObserver.unobserve(entry.target);
+    });
+  }, { rootMargin: "0px 0px -12% 0px" });
+  document.querySelectorAll(".section-head h2, .partners__title").forEach((title) => {
+    title.innerHTML = `<span class="title-mask"><span>${title.innerHTML}</span></span>`;
+    titleObserver.observe(title);
+  });
 })();
