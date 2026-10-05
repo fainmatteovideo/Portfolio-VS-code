@@ -52,17 +52,7 @@
           "alt": "Stories"
         }
       ],
-      "thumbnail": "assets/posters/security-office.webp",
-      "stills": [
-        "assets/stills/security-office/11.webp",
-        "assets/stills/security-office/09.webp",
-        "assets/stills/security-office/06.webp",
-        "assets/stills/security-office/04.webp",
-        "assets/stills/security-office/01.webp",
-        "assets/stills/security-office/07.webp",
-        "assets/stills/security-office/10.webp",
-        "assets/stills/security-office/02.webp"
-      ]
+      "thumbnail": "assets/posters/security-office.webp"
     },
     {
       "id": "ost-wing",
@@ -90,16 +80,7 @@
           "alt": "OST"
         }
       ],
-      "thumbnail": "assets/posters/ost-wing.webp",
-      "stills": [
-        "assets/stills/ost-wing/01.webp",
-        "assets/stills/ost-wing/02.webp",
-        "assets/stills/ost-wing/03.webp",
-        "assets/stills/ost-wing/04.webp",
-        "assets/stills/ost-wing/05.webp",
-        "assets/stills/ost-wing/06.webp",
-        "assets/stills/ost-wing/07.webp"
-      ]
+      "thumbnail": "assets/posters/ost-wing.webp"
     },
     {
       "id": "security-cafe",
@@ -126,17 +107,7 @@
           "alt": "Stories"
         }
       ],
-      "thumbnail": "assets/posters/security-cafe.webp",
-      "stills": [
-        "assets/stills/security-cafe/01.webp",
-        "assets/stills/security-cafe/03.webp",
-        "assets/stills/security-cafe/05.webp",
-        "assets/stills/security-cafe/10.webp",
-        "assets/stills/security-cafe/06.webp",
-        "assets/stills/security-cafe/02.webp",
-        "assets/stills/security-cafe/07.webp",
-        "assets/stills/security-cafe/09.webp"
-      ]
+      "thumbnail": "assets/posters/security-cafe.webp"
     },
     {
       "id": "btry",
@@ -155,17 +126,7 @@
           "alt": "BTRY"
         }
       ],
-      "thumbnail": "assets/posters/btry.webp",
-      "stills": [
-        "assets/stills/btry/03.webp",
-        "assets/stills/btry/08.webp",
-        "assets/stills/btry/09.webp",
-        "assets/stills/btry/10.webp",
-        "assets/stills/btry/12.webp",
-        "assets/stills/btry/11.webp",
-        "assets/stills/btry/07.webp",
-        "assets/stills/btry/05.webp"
-      ]
+      "thumbnail": "assets/posters/btry.webp"
     },
     {
       "id": "raiffeisen-bank",
@@ -184,17 +145,7 @@
           "alt": "Raiffeisenbank"
         }
       ],
-      "thumbnail": "assets/posters/raiffeisen-bank.webp",
-      "stills": [
-        "assets/stills/raiffeisen/01.webp",
-        "assets/stills/raiffeisen/02.webp",
-        "assets/stills/raiffeisen/03.webp",
-        "assets/stills/raiffeisen/04.webp",
-        "assets/stills/raiffeisen/05.webp",
-        "assets/stills/raiffeisen/06.webp",
-        "assets/stills/raiffeisen/07.webp",
-        "assets/stills/raiffeisen/08.webp"
-      ]
+      "thumbnail": "assets/posters/raiffeisen-bank.webp"
     },
     {
       "id": "gs1-exd-2026",
@@ -218,19 +169,7 @@
           "alt": "GS1"
         }
       ],
-      "thumbnail": "assets/posters/gs1-exd-2026.webp",
-      "stills": [
-        "assets/stills/gs1-exd-2026/01.webp",
-        "assets/stills/gs1-exd-2026/02.webp",
-        "assets/stills/gs1-exd-2026/03.webp",
-        "assets/stills/gs1-exd-2026/04.webp",
-        "assets/stills/gs1-exd-2026/05.webp",
-        "assets/stills/gs1-exd-2026/06.webp",
-        "assets/stills/gs1-exd-2026/07.webp",
-        "assets/stills/gs1-exd-2026/08.webp",
-        "assets/stills/gs1-exd-2026/09.webp",
-        "assets/stills/gs1-exd-2026/10.webp"
-      ]
+      "thumbnail": "assets/posters/gs1-exd-2026.webp"
     },
     {
       "id": "sgaim-ssmig-ssgim",
@@ -254,18 +193,7 @@
           "alt": "SGAIM"
         }
       ],
-      "thumbnail": "assets/posters/sgaim-ssmig-ssgim.webp",
-      "stills": [
-        "assets/stills/sgaim/01.webp",
-        "assets/stills/sgaim/02.webp",
-        "assets/stills/sgaim/03.webp",
-        "assets/stills/sgaim/04.webp",
-        "assets/stills/sgaim/05.webp",
-        "assets/stills/sgaim/06.webp",
-        "assets/stills/sgaim/07.webp",
-        "assets/stills/sgaim/08.webp",
-        "assets/stills/sgaim/09.webp"
-      ]
+      "thumbnail": "assets/posters/sgaim-ssmig-ssgim.webp"
     },
     {
       "id": "gs1-logistic",
@@ -289,20 +217,7 @@
           "alt": "GS1"
         }
       ],
-      "thumbnail": "assets/posters/gs1-logistic.webp",
-      "stills": [
-        "assets/stills/gs1-logistic/01.webp",
-        "assets/stills/gs1-logistic/02.webp",
-        "assets/stills/gs1-logistic/03.webp",
-        "assets/stills/gs1-logistic/04.webp",
-        "assets/stills/gs1-logistic/05.webp",
-        "assets/stills/gs1-logistic/06.webp",
-        "assets/stills/gs1-logistic/07.webp",
-        "assets/stills/gs1-logistic/08.webp",
-        "assets/stills/gs1-logistic/09.webp",
-        "assets/stills/gs1-logistic/10.webp",
-        "assets/stills/gs1-logistic/11.webp"
-      ]
+      "thumbnail": "assets/posters/gs1-logistic.webp"
     },
     {
       "id": "chris",
@@ -321,19 +236,7 @@
           "alt": "Hope Group"
         }
       ],
-      "thumbnail": "assets/posters/chris.webp",
-      "stills": [
-        "assets/stills/chris/01.webp",
-        "assets/stills/chris/02.webp",
-        "assets/stills/chris/03.webp",
-        "assets/stills/chris/04.webp",
-        "assets/stills/chris/05.webp",
-        "assets/stills/chris/06.webp",
-        "assets/stills/chris/07.webp",
-        "assets/stills/chris/08.webp",
-        "assets/stills/chris/09.webp",
-        "assets/stills/chris/10.webp"
-      ]
+      "thumbnail": "assets/posters/chris.webp"
     },
     {
       "id": "trees-for-the-future",
@@ -352,18 +255,7 @@
           "alt": "Trees for the Future"
         }
       ],
-      "thumbnail": "assets/posters/trees-for-the-future.webp",
-      "stills": [
-        "assets/stills/trees/01.webp",
-        "assets/stills/trees/03.webp",
-        "assets/stills/trees/04.webp",
-        "assets/stills/trees/05.webp",
-        "assets/stills/trees/06.webp",
-        "assets/stills/trees/07.webp",
-        "assets/stills/trees/08.webp",
-        "assets/stills/trees/09.webp",
-        "assets/stills/trees/02.webp"
-      ]
+      "thumbnail": "assets/posters/trees-for-the-future.webp"
     },
     {
       "id": "tcb",
@@ -382,25 +274,7 @@
           "alt": "Aceli Africa"
         }
       ],
-      "thumbnail": "assets/posters/tcb.webp",
-      "stills": [
-        "assets/stills/tcb/01.webp",
-        "assets/stills/tcb/02.webp",
-        "assets/stills/tcb/03.webp",
-        "assets/stills/tcb/04.webp",
-        "assets/stills/tcb/05.webp",
-        "assets/stills/tcb/06.webp",
-        "assets/stills/tcb/07.webp",
-        "assets/stills/tcb/08.webp",
-        "assets/stills/tcb/09.webp",
-        "assets/stills/tcb/10.webp",
-        "assets/stills/tcb/11.webp",
-        "assets/stills/tcb/12.webp",
-        "assets/stills/tcb/13.webp",
-        "assets/stills/tcb/14.webp",
-        "assets/stills/tcb/15.webp",
-        "assets/stills/tcb/16.webp"
-      ]
+      "thumbnail": "assets/posters/tcb.webp"
     },
     {
       "id": "filippo-leroy",
@@ -415,20 +289,7 @@
         "Platform: YouTube"
       ],
       "logos": [],
-      "thumbnail": "assets/posters/filippo-leroy.webp",
-      "stills": [
-        "assets/stills/filippo-leroy/01.webp",
-        "assets/stills/filippo-leroy/02.webp",
-        "assets/stills/filippo-leroy/03.webp",
-        "assets/stills/filippo-leroy/04.webp",
-        "assets/stills/filippo-leroy/05.webp",
-        "assets/stills/filippo-leroy/06.webp",
-        "assets/stills/filippo-leroy/07.webp",
-        "assets/stills/filippo-leroy/08.webp",
-        "assets/stills/filippo-leroy/09.webp",
-        "assets/stills/filippo-leroy/10.webp",
-        "assets/stills/filippo-leroy/11.webp"
-      ]
+      "thumbnail": "assets/posters/filippo-leroy.webp"
     },
     {
       "id": "challenge",
@@ -443,17 +304,7 @@
         "Platform: YouTube"
       ],
       "logos": [],
-      "thumbnail": "assets/posters/challenge.webp",
-      "stills": [
-        "assets/stills/challenge/01.webp",
-        "assets/stills/challenge/02.webp",
-        "assets/stills/challenge/03.webp",
-        "assets/stills/challenge/04.webp",
-        "assets/stills/challenge/05.webp",
-        "assets/stills/challenge/06.webp",
-        "assets/stills/challenge/07.webp",
-        "assets/stills/challenge/08.webp"
-      ]
+      "thumbnail": "assets/posters/challenge.webp"
     },
     {
       "id": "gelato",
@@ -468,14 +319,7 @@
         "Platform: YouTube"
       ],
       "logos": [],
-      "thumbnail": "assets/posters/gelato.webp",
-      "stills": [
-        "assets/stills/gelato/01.webp",
-        "assets/stills/gelato/02.webp",
-        "assets/stills/gelato/03.webp",
-        "assets/stills/gelato/04.webp",
-        "assets/stills/gelato/05.webp"
-      ]
+      "thumbnail": "assets/posters/gelato.webp"
     }
   ],
   "reels": [
@@ -822,6 +666,296 @@
       "orientation": "vertical",
       "label": "REEL1-pubquiz (Moved to vertical grid)",
       "poster": "assets/reels/1196037864.webp"
+    }
+  ],
+  "photos": [
+    {
+      "src": "assets/stills/ost-wing/01.webp",
+      "project": "OST Wing",
+      "size": [
+        800,
+        451
+      ]
+    },
+    {
+      "src": "assets/stills/btry/03.webp",
+      "project": "BTRY",
+      "size": [
+        800,
+        450
+      ]
+    },
+    {
+      "src": "assets/stills/raiffeisen/01.webp",
+      "project": "Raiffeisen Bank",
+      "size": [
+        800,
+        452
+      ]
+    },
+    {
+      "src": "assets/stills/gs1-exd-2026/01.webp",
+      "project": "GS1 EXD 2026",
+      "size": [
+        752,
+        424
+      ]
+    },
+    {
+      "src": "assets/stills/sgaim/01.webp",
+      "project": "SGAIM SSMIG SSGIM",
+      "size": [
+        752,
+        424
+      ]
+    },
+    {
+      "src": "assets/stills/gs1-logistic/01.webp",
+      "project": "GS1 Logistic",
+      "size": [
+        752,
+        424
+      ]
+    },
+    {
+      "src": "assets/stills/chris/01.webp",
+      "project": "Chris",
+      "size": [
+        800,
+        336
+      ]
+    },
+    {
+      "src": "assets/stills/trees/01.webp",
+      "project": "Trees for the Future",
+      "size": [
+        800,
+        401
+      ]
+    },
+    {
+      "src": "assets/stills/tcb/01.webp",
+      "project": "TCB",
+      "size": [
+        800,
+        450
+      ]
+    },
+    {
+      "src": "assets/stills/filippo-leroy/01.webp",
+      "project": "Filippo Leroy",
+      "size": [
+        800,
+        450
+      ]
+    },
+    {
+      "src": "assets/stills/challenge/01.webp",
+      "project": "Challenge",
+      "size": [
+        800,
+        450
+      ]
+    },
+    {
+      "src": "assets/stills/gelato/01.webp",
+      "project": "Gelato",
+      "size": [
+        800,
+        450
+      ]
+    },
+    {
+      "src": "assets/stills/ost-wing/04.webp",
+      "project": "OST Wing",
+      "size": [
+        800,
+        451
+      ]
+    },
+    {
+      "src": "assets/stills/btry/12.webp",
+      "project": "BTRY",
+      "size": [
+        800,
+        450
+      ]
+    },
+    {
+      "src": "assets/stills/raiffeisen/05.webp",
+      "project": "Raiffeisen Bank",
+      "size": [
+        800,
+        452
+      ]
+    },
+    {
+      "src": "assets/stills/gs1-exd-2026/05.webp",
+      "project": "GS1 EXD 2026",
+      "size": [
+        752,
+        424
+      ]
+    },
+    {
+      "src": "assets/stills/sgaim/05.webp",
+      "project": "SGAIM SSMIG SSGIM",
+      "size": [
+        752,
+        424
+      ]
+    },
+    {
+      "src": "assets/stills/gs1-logistic/06.webp",
+      "project": "GS1 Logistic",
+      "size": [
+        752,
+        424
+      ]
+    },
+    {
+      "src": "assets/stills/chris/05.webp",
+      "project": "Chris",
+      "size": [
+        800,
+        336
+      ]
+    },
+    {
+      "src": "assets/stills/trees/06.webp",
+      "project": "Trees for the Future",
+      "size": [
+        800,
+        401
+      ]
+    },
+    {
+      "src": "assets/stills/tcb/09.webp",
+      "project": "TCB",
+      "size": [
+        800,
+        450
+      ]
+    },
+    {
+      "src": "assets/stills/filippo-leroy/06.webp",
+      "project": "Filippo Leroy",
+      "size": [
+        800,
+        450
+      ]
+    },
+    {
+      "src": "assets/stills/challenge/05.webp",
+      "project": "Challenge",
+      "size": [
+        800,
+        450
+      ]
+    },
+    {
+      "src": "assets/stills/gelato/03.webp",
+      "project": "Gelato",
+      "size": [
+        800,
+        450
+      ]
+    },
+    {
+      "src": "assets/stills/ost-wing/07.webp",
+      "project": "OST Wing",
+      "size": [
+        800,
+        451
+      ]
+    },
+    {
+      "src": "assets/stills/btry/05.webp",
+      "project": "BTRY",
+      "size": [
+        800,
+        450
+      ]
+    },
+    {
+      "src": "assets/stills/raiffeisen/08.webp",
+      "project": "Raiffeisen Bank",
+      "size": [
+        800,
+        452
+      ]
+    },
+    {
+      "src": "assets/stills/gs1-exd-2026/10.webp",
+      "project": "GS1 EXD 2026",
+      "size": [
+        752,
+        424
+      ]
+    },
+    {
+      "src": "assets/stills/sgaim/09.webp",
+      "project": "SGAIM SSMIG SSGIM",
+      "size": [
+        752,
+        424
+      ]
+    },
+    {
+      "src": "assets/stills/gs1-logistic/11.webp",
+      "project": "GS1 Logistic",
+      "size": [
+        752,
+        424
+      ]
+    },
+    {
+      "src": "assets/stills/chris/10.webp",
+      "project": "Chris",
+      "size": [
+        800,
+        336
+      ]
+    },
+    {
+      "src": "assets/stills/trees/02.webp",
+      "project": "Trees for the Future",
+      "size": [
+        800,
+        401
+      ]
+    },
+    {
+      "src": "assets/stills/tcb/16.webp",
+      "project": "TCB",
+      "size": [
+        800,
+        450
+      ]
+    },
+    {
+      "src": "assets/stills/filippo-leroy/11.webp",
+      "project": "Filippo Leroy",
+      "size": [
+        800,
+        450
+      ]
+    },
+    {
+      "src": "assets/stills/challenge/08.webp",
+      "project": "Challenge",
+      "size": [
+        800,
+        450
+      ]
+    },
+    {
+      "src": "assets/stills/gelato/05.webp",
+      "project": "Gelato",
+      "size": [
+        800,
+        450
+      ]
     }
   ]
 }

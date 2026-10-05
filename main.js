@@ -91,6 +91,9 @@
   // pulsante audio: 4 barre ferme con audio spento, in movimento con audio acceso
   const SOUND = '<button class="video__sound" type="button" aria-label="Turn sound on" aria-pressed="false"><i><b></b><b></b><b></b><b></b></i></button>';
   const ARROW = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="${d}"/></svg>`;
+  // categorie i cui reel stanno nello showcase (con i pallini) invece che nella griglia
+  const REEL_SLIDES = ["social"];
+  const VERTICALS_PER_SLIDE = 5;
 
   function videoHTML(id, hash, title, poster) {
     return `<div class="video" data-vimeo="${esc(id)}" data-hash="${esc(hash || "")}" data-title="${esc(title)}">
@@ -111,19 +114,12 @@
     }).join("");
     const logos = p.logos.map((l) =>
       `<img data-src="${esc(l.src)}" alt="${esc(l.alt)}" decoding="async">`).join("");
-    const stills = p.stills.map((s, i) =>
-      `<div class="stills__item"><img data-src="${esc(s)}" alt="${esc(p.title)} – still ${i + 1}" decoding="async" draggable="false"></div>`).join("");
 
-    return `<article class="project" data-category="${esc(p.category)}" id="project-${esc(p.id)}">
+    return `<article class="project slide" data-category="${esc(p.category)}" data-name="${esc(p.title)}" id="project-${esc(p.id)}">
       ${videoHTML(p.vimeo, "", p.title, p.thumbnail)}
-      ${p.stills.length ? `<div class="stills">
-        <button class="stills__arrow stills__arrow--prev" aria-label="Previous stills" disabled>${ARROW("M15 5l-7 7 7 7")}</button>
-        <div class="stills__track">${stills}</div>
-        <button class="stills__arrow stills__arrow--next" aria-label="Next stills">${ARROW("M9 5l7 7-7 7")}</button>
-      </div>` : ""}
       <div class="project__meta">
         <div class="project__head">
-          <span class="project__num label"></span>
+          <span class="project__num slide__num label"></span>
           <h3 class="project__title">${esc(p.title)}</h3>
           ${p.subtitle ? `<p class="project__subtitle">${esc(p.subtitle)}</p>` : ""}
           ${logos ? `<div class="project__logos">${logos}</div>` : ""}
@@ -133,7 +129,30 @@
     </article>`;
   }
 
+  // Reel come slide dello showcase: prima gli orizzontali uno per uno,
+  // poi i verticali a gruppi (una fila per pallino)
+  function reelSlidesHTML(reels) {
+    return REEL_SLIDES.map((category) => {
+      const of = (o) => reels.filter((r) => r.category === category && r.orientation === o);
+      const h = of("horizontal").map((r, i) =>
+        `<article class="slide slide--reel" data-category="${esc(category)}" data-group="16:9" data-name="Reel ${i + 1}">
+          <p class="slide__num label"></p>
+          ${videoHTML(r.vimeo, r.hash, r.label, r.poster)}
+        </article>`);
+      const vertical = of("vertical");
+      const v = [];
+      for (let i = 0; i < vertical.length; i += VERTICALS_PER_SLIDE) {
+        v.push(`<article class="slide slide--verticals" data-category="${esc(category)}" data-group="9:16" data-name="Vertical reels ${v.length + 1}">
+          <p class="slide__num label"></p>
+          <div class="slide__grid">${vertical.slice(i, i + VERTICALS_PER_SLIDE).map((r) => videoHTML(r.vimeo, r.hash, r.label, r.poster)).join("")}</div>
+        </article>`);
+      }
+      return h.join("") + v.join("");
+    }).join("");
+  }
+
   function reelsHTML(reels, category) {
+    if (REEL_SLIDES.includes(category)) return "";
     const group = (orientation, title) => {
       const items = reels.filter((r) => r.category === category && r.orientation === orientation);
       if (!items.length) return "";
@@ -161,7 +180,7 @@
   /* --- Video: caricamento pigro, play/pausa allo scroll, audio al click --- */
   // Nello showcase dei lavori i progetti sono sovrapposti: vale solo quello attivo
   const inShowcase = (el) => !!el.closest(".showcase__stage");
-  const isActiveProject = (el) => !!el.closest(".project")?.classList.contains("is-active");
+  const isActiveProject = (el) => !!el.closest(".slide")?.classList.contains("is-active");
   const allowed = (el) => !inShowcase(el) || isActiveProject(el);
   let showcaseInView = false;
   const videos = new Map(); // elemento .video -> { player, visible }
@@ -234,7 +253,7 @@
   function openPlayer(el) {
     const hash = el.dataset.hash ? `h=${el.dataset.hash}&` : "";
     const title = el.dataset.title;
-    modalFrame.classList.toggle("is-vertical", !!el.closest(".reels__grid--vertical"));
+    modalFrame.classList.toggle("is-vertical", !!el.closest(".reels__grid--vertical, .slide__grid"));
     // la miniatura fa da sfondo al riquadro mentre il player si carica (continuità visiva)
     const poster = el.querySelector(".video__poster");
     modalFrame.style.backgroundImage = poster ? `url("${poster.currentSrc || poster.src}")` : "";
@@ -283,7 +302,7 @@
     });
   }
 
-  // Stills e loghi (leggeri): si caricano con una schermata di anticipo
+  // Loghi (leggeri): si caricano con una schermata di anticipo
   const nearObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting || !allowed(entry.target)) return;
@@ -358,44 +377,13 @@
     else openPlayer(v);
   });
 
-  /* --- Stills: trascinamento col mouse e frecce --------------------------- */
-  function setupStills(box) {
-    const track = box.querySelector(".stills__track");
-    const prev = box.querySelector(".stills__arrow--prev");
-    const next = box.querySelector(".stills__arrow--next");
-    const update = () => {
-      prev.disabled = track.scrollLeft <= 2;
-      next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
-    };
-    const step = (dir) => track.scrollBy({ left: dir * track.clientWidth * 0.8, behavior: reducedMotion ? "auto" : "smooth" });
-    prev.addEventListener("click", () => step(-1));
-    next.addEventListener("click", () => step(1));
-    track.addEventListener("scroll", update, { passive: true });
-    update();
-
-    let startX = 0, startScroll = 0, dragging = false;
-    track.addEventListener("pointerdown", (e) => {
-      if (e.pointerType !== "mouse") return;   // su touch basta lo swipe nativo
-      dragging = true; startX = e.clientX; startScroll = track.scrollLeft;
-      track.setPointerCapture(e.pointerId);
-    });
-    track.addEventListener("pointermove", (e) => {
-      if (!dragging) return;
-      const dx = e.clientX - startX;
-      if (Math.abs(dx) > 3) track.classList.add("is-dragging");
-      track.scrollLeft = startScroll - dx;
-    });
-    const end = () => { dragging = false; track.classList.remove("is-dragging"); };
-    track.addEventListener("pointerup", end);
-    track.addEventListener("pointercancel", end);
-  }
-
   /* --- Showcase dei lavori ----------------------------------------------- */
   // Desktop (da 1024 px): la sezione resta ferma e scorrendo la pagina cambia il progetto,
   // con i pallini verticali a sinistra. Telefono e tablet: i progetti scorrono in orizzontale
   // con lo swipe, pallini in orizzontale.
   const desktopMQ = window.matchMedia("(min-width: 1024px)");
-  const STEP = 0.8; // scorrimento per progetto, in altezze di schermo
+  // scorrimento per slide, in altezze di schermo (più corto quando le slide sono tante)
+  const stepFor = (n) => (n > 8 ? 0.5 : 0.8);
   let showcase = null, stage = null, dotsNav = null, items = [], activeIndex = -1;
   let stageTop = 0, stageH = 0;
 
@@ -410,7 +398,8 @@
     });
     stage.addEventListener("scroll", () => {
       if (desktopMQ.matches) return;
-      setActive(Math.round(stage.scrollLeft / stage.clientWidth));
+      const i = items.findIndex((p) => Math.abs(p.offsetLeft - stage.scrollLeft) < stage.clientWidth / 2);
+      setActive(i);
     }, { passive: true });
 
     let ticking = false;
@@ -425,12 +414,20 @@
   }
 
   function buildShowcase() {
-    items = [...stage.querySelectorAll(".project:not([hidden])")];
-    list.hidden = items.length === 0; // Social: solo la griglia dei reel
-    const n = items.length;
-    dotsNav.innerHTML = items.map((p, i) =>
-      `<button class="showcase__dot" type="button" data-index="${i}" aria-label="${esc(p.querySelector(".project__title").textContent)} (${i + 1} of ${n})"></button>`).join("");
-    items.forEach((p, i) => { p.querySelector(".project__num").textContent = `${String(i + 1).padStart(2, "0")} / ${String(n).padStart(2, "0")}`; });
+    items = [...stage.querySelectorAll(".slide:not([hidden])")];
+    list.hidden = items.length === 0;
+    // numerazione e pallini per gruppo (progetti, reel 16:9, reel 9:16)
+    const groups = {};
+    items.forEach((p) => { const g = p.dataset.group || ""; (groups[g] = groups[g] || []).push(p); });
+    const pad = (x) => String(x).padStart(2, "0");
+    dotsNav.innerHTML = items.map((p, i) => {
+      const g = p.dataset.group || "";
+      const k = groups[g].indexOf(p);
+      p.querySelector(".slide__num").textContent = `${g ? g + " — " : ""}${pad(k + 1)} / ${pad(groups[g].length)}`;
+      const cls = g === "9:16" ? " showcase__dot--tall" : "";
+      const first = k === 0 && i > 0 ? " is-group-start" : "";
+      return `<button class="showcase__dot${cls}${first}" type="button" data-index="${i}" aria-label="${esc(p.dataset.name)} (${i + 1} of ${items.length})"></button>`;
+    }).join("");
     stage.scrollLeft = 0;
     layoutShowcase();
     activeIndex = -1;
@@ -445,14 +442,11 @@
       stageH = window.innerHeight - stageTop;
       work.style.setProperty("--stage-top", stageTop + "px");
       work.style.setProperty("--stage-h", stageH + "px");
-      list.style.height = stageH + (items.length - 1) * window.innerHeight * STEP + "px";
-      // la colonna delle stills è alta esattamente quanto il video
-      requestAnimationFrame(() => {
-        const v = items[0] && items[0].querySelector(".video");
-        if (v) work.style.setProperty("--video-h", v.offsetHeight + "px");
-      });
+      list.style.height = stageH + (items.length - 1) * window.innerHeight * stepFor(items.length) + "px";
+      stage.style.height = "";
     } else {
       list.style.height = "";
+      fitStage();
     }
   }
 
@@ -471,15 +465,23 @@
       const listTop = list.getBoundingClientRect().top + window.scrollY;
       window.scrollTo({ top: listTop - stageTop + ((i + 0.5) / items.length) * total, behavior });
     } else {
-      stage.scrollTo({ left: i * stage.clientWidth, behavior });
+      stage.scrollTo({ left: items[i].offsetLeft, behavior });
     }
+  }
+
+  // telefono: lo stage prende l'altezza della slide attiva (le slide dei reel verticali sono più alte)
+  function fitStage() {
+    if (desktopMQ.matches || !items[activeIndex]) return;
+    stage.style.height = items[activeIndex].offsetHeight + "px";
   }
 
   function setActive(i) {
     i = Math.max(0, Math.min(items.length - 1, i));
     if (i === activeIndex || !items.length) return;
     activeIndex = i;
-    items.forEach((p, j) => p.classList.toggle("is-active", j === i));
+    // anche le slide nascoste (altre categorie) perdono lo stato attivo: niente schede sovrapposte
+    stage.querySelectorAll(".slide").forEach((p) => p.classList.toggle("is-active", p === items[i]));
+    fitStage();
     dotsNav.querySelectorAll(".showcase__dot").forEach((d, j) => d.setAttribute("aria-current", String(j === i)));
     // immagini del progetto attivo e del successivo
     loadImages(items[i]);
@@ -489,8 +491,7 @@
 
   // solo il video del progetto attivo è in riproduzione; il successivo si prepara
   function syncPlayback() {
-    items.forEach((p, j) => {
-      const v = p.querySelector(".video");
+    items.forEach((p, j) => p.querySelectorAll(".video").forEach((v) => {
       const play = j === activeIndex && showcaseInView && modal.hidden;
       if (play || j === activeIndex + 1) loadVideo(v);
       const s = videos.get(v);
@@ -501,7 +502,7 @@
         s.player.pause().catch(() => {});
         if (v.classList.contains("is-unmuted")) setSound(v, false);
       }
-    });
+    }));
   }
 
   /* --- Filtri ------------------------------------------------------------ */
@@ -522,12 +523,7 @@
     moveIndicator();
 
     const swap = () => {
-      let n = 0;
-      list.querySelectorAll(".project").forEach((p) => {
-        const show = p.dataset.category === cat;
-        p.hidden = !show;
-        if (show) p.querySelector(".project__num").textContent = String(++n).padStart(2, "0");
-      });
+      list.querySelectorAll(".slide").forEach((p) => { p.hidden = p.dataset.category !== cat; });
       buildShowcase();
       const category = data.categories.find((c) => c.id === cat);
       intro.textContent = category ? category.intro : "";
@@ -546,6 +542,127 @@
       requestAnimationFrame(() => work.classList.remove("is-filtering"));
     }, 450);
   }
+
+  /* --- Foto e stills: tre file che scorrono in orizzontale con la pagina -- */
+  const photoWall = document.getElementById("photo-wall");
+  const ROWS = 3;
+
+  function buildPhotoWall(photos) {
+    if (!photoWall || !photos.length) return;
+    const rows = Array.from({ length: ROWS }, () => []);
+    photos.forEach((ph, i) => rows[i % ROWS].push(
+      `<button class="photo__item" type="button" data-index="${i}" aria-label="${esc(ph.project)}: view larger">
+        <img data-src="${esc(ph.src)}" width="${ph.size[0]}" height="${ph.size[1]}" alt="${esc(ph.project)} – still" decoding="async" draggable="false">
+        <span class="photo__caption label">${esc(ph.project)}</span>
+      </button>`));
+    photoWall.innerHTML = rows.map((r) => `<div class="photo__row">${r.join("")}</div>`).join("");
+    if (reducedMotion) photoWall.classList.add("is-static");
+
+    // le immagini si scaricano quando la sezione si avvicina
+    const near = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      near.disconnect();
+      loadImages(photoWall);
+    }, { rootMargin: "100% 0px 100% 0px" });
+    near.observe(photoWall);
+
+    // file alterne: una verso sinistra, una verso destra, a velocità più bassa dello scroll
+    const rowEls = [...photoWall.querySelectorAll(".photo__row")];
+    let wallTicking = false, wallInView = false;
+    const drift = () => {
+      wallTicking = false;
+      const r = photoWall.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
+      rowEls.forEach((row, i) => {
+        const travel = Math.min(Math.max(0, row.scrollWidth - photoWall.clientWidth), (vh + r.height) * 0.45);
+        const x = i % 2 ? -travel * (1 - p) : -travel * p;
+        row.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0)`;
+      });
+    };
+    if (!reducedMotion) {
+      new IntersectionObserver(([e]) => { wallInView = e.isIntersecting; if (wallInView) drift(); }).observe(photoWall);
+      window.addEventListener("scroll", () => {
+        if (wallInView && !wallTicking) { wallTicking = true; requestAnimationFrame(drift); }
+      }, { passive: true });
+      window.addEventListener("resize", drift);
+      drift();
+    }
+
+    photoWall.addEventListener("click", (e) => {
+      const item = e.target.closest(".photo__item");
+      if (item) openLightbox(photos, Number(item.dataset.index));
+    });
+  }
+
+  /* --- Visualizzatore foto (lightbox) ------------------------------------ */
+  const lightbox = document.createElement("div");
+  lightbox.className = "lightbox";
+  lightbox.hidden = true;
+  lightbox.setAttribute("role", "dialog");
+  lightbox.setAttribute("aria-modal", "true");
+  lightbox.setAttribute("aria-label", "Photo viewer");
+  lightbox.innerHTML = `<button class="lightbox__close label" type="button">Close
+      <svg class="arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 3l6 6M9 3l-6 6"/></svg></button>
+    <button class="lightbox__nav lightbox__nav--prev" type="button" aria-label="Previous photo">${ARROW("M15 5l-7 7 7 7")}</button>
+    <figure class="lightbox__figure"><img alt=""><figcaption class="lightbox__caption label"></figcaption></figure>
+    <button class="lightbox__nav lightbox__nav--next" type="button" aria-label="Next photo">${ARROW("M9 5l7 7-7 7")}</button>`;
+  document.body.appendChild(lightbox);
+  const lbImg = lightbox.querySelector("img");
+  const lbCaption = lightbox.querySelector(".lightbox__caption");
+  let lbPhotos = [], lbIndex = 0, lbFocus = null;
+
+  function showPhoto(i) {
+    const n = lbPhotos.length;
+    lbIndex = (i + n) % n;
+    const ph = lbPhotos[lbIndex];
+    lbImg.classList.remove("is-loaded");
+    lbImg.onload = () => lbImg.classList.add("is-loaded");
+    lbImg.src = ph.src;
+    lbImg.alt = `${ph.project} – still`;
+    lbCaption.textContent = `${ph.project} — ${String(lbIndex + 1).padStart(2, "0")} / ${String(n).padStart(2, "0")}`;
+    // la foto successiva è già pronta
+    new Image().src = lbPhotos[(lbIndex + 1) % n].src;
+  }
+
+  function openLightbox(photos, i) {
+    lbPhotos = photos;
+    lbFocus = document.activeElement;
+    showPhoto(i);
+    lightbox.hidden = false;
+    requestAnimationFrame(() => lightbox.classList.add("is-open"));
+    document.body.style.overflow = "hidden";
+    lightbox.querySelector(".lightbox__close").focus();
+  }
+
+  function closeLightbox() {
+    if (lightbox.hidden) return;
+    lightbox.classList.remove("is-open");
+    document.body.style.overflow = "";
+    setTimeout(() => { lightbox.hidden = true; }, 400);
+    if (lbFocus) lbFocus.focus({ preventScroll: true });
+  }
+
+  lightbox.addEventListener("click", (e) => {
+    if (e.target.closest(".lightbox__nav--prev")) showPhoto(lbIndex - 1);
+    else if (e.target.closest(".lightbox__nav--next")) showPhoto(lbIndex + 1);
+    else if (!e.target.closest(".lightbox__figure img")) closeLightbox();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (lightbox.hidden) return;
+    if (e.key === "Escape") closeLightbox();
+    if (e.key === "ArrowLeft") showPhoto(lbIndex - 1);
+    if (e.key === "ArrowRight") showPhoto(lbIndex + 1);
+  });
+  // swipe sul telefono
+  let swipeX = null;
+  lightbox.addEventListener("pointerdown", (e) => { swipeX = e.clientX; });
+  lightbox.addEventListener("pointerup", (e) => {
+    if (swipeX === null) return;
+    const dx = e.clientX - swipeX;
+    swipeX = null;
+    if (Math.abs(dx) > 50) showPhoto(lbIndex + (dx < 0 ? 1 : -1));
+  });
 
   /* --- Carosello loghi clienti ------------------------------------------ */
   const track = document.querySelector(".clients__track");
@@ -709,10 +826,10 @@
 
       list.innerHTML = `<div class="showcase">
           <nav class="showcase__dots" aria-label="Projects"></nav>
-          <div class="showcase__stage">${data.projects.map(projectHTML).join("")}</div>
+          <div class="showcase__stage">${data.projects.map(projectHTML).join("")}${reelSlidesHTML(data.reels)}</div>
         </div>`;
       setupShowcase();
-      list.querySelectorAll(".stills").forEach(setupStills);
+      buildPhotoWall(data.photos || []);
       const projectLogoBase = window.matchMedia("(min-width: 768px)").matches ? 60 : 56;
       list.querySelectorAll(".project__logos img").forEach((img) => sizeLogo(img, projectLogoBase));
       // un indirizzo come fainmatteo.com/#documentary apre i lavori con quel filtro attivo
@@ -751,7 +868,7 @@
     updateHero();
   }
 
-  /* 3. Bagliore caldo (lens flare) che scende lungo il bordo sinistro mentre si scorre */
+  /* 3. Bagliore caldo (lens flare) che si sposta appena lungo il bordo sinistro mentre si scorre */
   const flare = document.querySelector(".flare");
   if (flare && !reducedMotion) {
     let flareTicking = false;
@@ -759,10 +876,10 @@
       flareTicking = false;
       const max = document.documentElement.scrollHeight - window.innerHeight || 1;
       const p = Math.min(1, Math.max(0, window.scrollY / max));
-      // scende con la pagina e ondeggia piano verso l'interno e di nuovo verso il bordo
-      flare.style.setProperty("--flare-y", (p * 45).toFixed(2) + "vh");
-      flare.style.setProperty("--flare-x", (Math.sin(p * Math.PI * 3) * 9).toFixed(2) + "vw");
-      flare.style.setProperty("--flare-r", (p * 40 - 10).toFixed(1) + "deg");
+      // scende appena con la pagina e ondeggia di pochissimo, restando vicino al bordo
+      flare.style.setProperty("--flare-y", (p * 18).toFixed(2) + "vh");
+      flare.style.setProperty("--flare-x", (Math.sin(p * Math.PI * 2) * 2.5 - 1.5).toFixed(2) + "vw");
+      flare.style.setProperty("--flare-r", (p * 12 - 8).toFixed(1) + "deg");
     };
     window.addEventListener("scroll", () => {
       if (!flareTicking) { flareTicking = true; requestAnimationFrame(updateFlare); }

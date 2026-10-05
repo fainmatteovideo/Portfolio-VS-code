@@ -579,69 +579,6 @@ h3 {
 }
 .reels .video__sound { width: 36px; height: 36px; right: 8px; bottom: 8px; }
 
-/* --- Carosello stills ---------------------------------------------------- */
-.stills {
-  position: relative;
-  margin-top: 8px;
-}
-.stills__track {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  scroll-snap-type: x proximity;
-  overscroll-behavior-x: contain;
-  cursor: grab;
-}
-.stills__track::-webkit-scrollbar { display: none; }
-.stills__track.is-dragging { cursor: grabbing; scroll-snap-type: none; }
-.stills__track.is-dragging img { pointer-events: none; }
-
-/* 4 stills per larghezza del video (2 e mezzo su mobile, così si capisce che scorre) */
-.stills__item {
-  flex: 0 0 calc((100% - 8px * 1.4) / 2.4);
-  aspect-ratio: 16 / 9;
-  scroll-snap-align: start;
-  background-color: #0c0c0e;
-  overflow: hidden;
-}
-@media (min-width: 768px) {
-  .stills__item { flex-basis: calc((100% - 8px * 3) / 4); }
-}
-.stills__item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transition: opacity var(--dur-med) var(--ease);
-  -webkit-user-drag: none;
-  user-select: none;
-}
-.stills__item img.is-loaded { opacity: 1; }
-
-/* Frecce: solo su dispositivi con mouse */
-.stills__arrow {
-  display: none;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 64px;
-  z-index: 1;
-  align-items: center;
-  justify-content: center;
-  color: var(--c-text);
-  opacity: 0;
-  transition: opacity var(--dur-fast) ease;
-}
-.stills__arrow--prev { left: 0;  background: linear-gradient(to right, rgba(9, 11, 10, 0.8), transparent); }
-.stills__arrow--next { right: 0; background: linear-gradient(to left, rgba(9, 11, 10, 0.8), transparent); }
-.stills__arrow svg { width: 22px; height: 22px; }
-.stills__arrow:disabled { visibility: hidden; }
-@media (hover: hover) and (pointer: fine) {
-  .stills__arrow { display: flex; }
-  .stills:hover .stills__arrow { opacity: 1; }
-}
-
 /* --- Testi del progetto -------------------------------------------------- */
 .project__meta {
   display: grid;
@@ -1243,7 +1180,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 }
 .hero__video::after { z-index: 1; }
 
-/* 3. Bagliore caldo (lens flare) che scende lungo il bordo sinistro allo scroll */
+/* 3. Bagliore caldo (lens flare) che si sposta appena lungo il bordo sinistro allo scroll */
 .flare {
   --flare-x: 0vw;
   --flare-y: 0vh;
@@ -1259,6 +1196,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
     radial-gradient(ellipse 30% 22% at 62% 46%, rgba(255, 196, 92, 0.22), transparent 70%),
     radial-gradient(ellipse 50% 50% at 50% 50%, rgba(var(--c-glow-warm), 0.5), transparent 70%);
   transform: translate3d(var(--flare-x), var(--flare-y), 0) rotate(var(--flare-r));
+  transition: transform 1.6s cubic-bezier(0.22, 0.6, 0.2, 1);   /* segue lo scroll con calma */
   will-change: transform;
 }
 
@@ -1270,12 +1208,6 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   transition: transform 1.1s var(--ease);
 }
 .is-title-in .title-mask > span { transform: none; }
-
-/* 6. Stills: zoom lentissimo al passaggio del mouse */
-@media (hover: hover) and (pointer: fine) {
-  .stills__item img { transition: opacity var(--dur-med) var(--ease), transform 6s cubic-bezier(0.2, 0.6, 0.2, 1); }
-  .stills__item:hover img { transform: scale(1.08); }
-}
 
 /* Movimento ridotto: niente sipario, niente parallasse, titoli già visibili */
 @media (prefers-reduced-motion: reduce) {
@@ -1354,11 +1286,12 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 
 /* ==========================================================================
    Showcase dei lavori
-   Telefono/tablet: progetti in orizzontale con lo swipe, pallini in orizzontale.
-   Desktop (da 1024 px): sezione ferma, scorrendo cambia il progetto (pallini verticali,
-   scheda a sinistra, video al centro, stills in colonna a destra).
+   Telefono/tablet: slide in orizzontale con lo swipe, pallini in orizzontale.
+   Desktop (da 1024 px): sezione ferma, scorrendo cambia la slide (pallini verticali,
+   scheda a sinistra e video grande a destra; i reel Social occupano tutto lo spazio).
    ========================================================================== */
 .work__list[hidden] { display: none; }
+.showcase__stage .slide[hidden] { display: none; }
 .showcase__stage .project {
   width: 100%;
   max-width: none;
@@ -1384,21 +1317,49 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 }
 .showcase__dot:hover { background: rgba(243, 242, 239, 0.6); }
 .showcase__dot[aria-current="true"] { width: 26px; background: var(--c-text); }
+/* reel verticali: pallini "in piedi" (9:16), staccati dal gruppo precedente */
+.showcase__dot--tall { width: 6px; height: 11px; border-radius: 2px; }
+.showcase__dot--tall[aria-current="true"] { width: 22px; height: 11px; }
+.showcase__dot.is-group-start { margin-left: 10px; }
 
 .showcase__stage {
+  position: relative;
   display: flex;
+  align-items: flex-start;
   gap: var(--gutter);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
+  transition: height 0.5s var(--ease);
 }
 .showcase__stage::-webkit-scrollbar { display: none; }
-.showcase__stage .project {
+.showcase__stage .slide {
   flex: 0 0 100%;
   scroll-snap-align: start;
 }
-.showcase__stage .project__num { white-space: nowrap; }
+.showcase__stage .slide__num { white-space: nowrap; }
+.slide__num.label { display: block; margin-bottom: 0.75rem; color: var(--c-text-faint); }
+
+/* reel verticali: 3 + 2 su telefono, tutti in fila da tablet */
+.slide__grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+.slide__grid .video {
+  flex: 0 0 calc((100% - 16px) / 3);
+  aspect-ratio: 9 / 16;
+}
+.slide__grid .video__sound { width: 30px; height: 30px; right: 6px; bottom: 6px; }
+@media (min-width: 1024px) {
+  .slide__grid .video__sound { width: 36px; height: 36px; right: 8px; bottom: 8px; }
+}
+@media (min-width: 640px) {
+  .slide__grid { flex-wrap: nowrap; gap: 12px; }
+  .slide__grid .video { flex: 1 1 0; min-width: 0; }
+}
 
 @media (min-width: 1024px) {
   .work__list { position: relative; }
@@ -1413,58 +1374,44 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   }
   .showcase__dots { flex-direction: column; margin: 0; }
   .showcase__dot[aria-current="true"] { width: 8px; height: 26px; }
+  .showcase__dot--tall { width: 8px; height: 8px; border-radius: 2px; }
+  .showcase__dot--tall[aria-current="true"] { width: 8px; height: 26px; }
+  .showcase__dot.is-group-start { margin: 10px 0 0; }
 
   .showcase__stage {
-    position: relative;
     height: 100%;
     display: block;
     overflow: visible;
   }
-  .showcase__stage .project {
+  .showcase__stage .slide {
     position: absolute;
     inset: 0;
-    display: grid;
-    grid-template-columns: minmax(250px, 300px) minmax(0, 1fr) clamp(120px, 11vw, 170px);
-    grid-template-areas: "meta video stills";
-    column-gap: clamp(1.25rem, 2.5vw, 2.5rem);
-    align-items: center;
     padding-block: clamp(16px, 3vh, 32px);
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.7s var(--ease), visibility 0s linear 0.7s;
   }
-  .showcase__stage .project.is-active {
+  .showcase__stage .slide.is-active {
     opacity: 1;
     visibility: visible;
     transition: opacity 0.7s var(--ease), visibility 0s;
   }
 
-  /* video al centro: 16:9 entro l'altezza disponibile */
+  /* progetto: scheda a sinistra, video grande a destra */
+  .showcase__stage .project {
+    display: grid;
+    grid-template-columns: minmax(240px, 290px) minmax(0, 1fr);
+    grid-template-areas: "meta video";
+    column-gap: clamp(1.5rem, 3vw, 3rem);
+    align-items: center;
+  }
   .showcase__stage .project > .video {
     grid-area: video;
     width: min(100%, calc((var(--stage-h, 760px) - 64px) * 16 / 9));
     justify-self: center;
   }
 
-  /* stills in colonna verticale a destra */
-  .showcase__stage .project > .stills {
-    grid-area: stills;
-    align-self: center;
-    height: var(--video-h, 420px);
-    margin: 0;
-  }
-  .showcase__stage .stills__track {
-    flex-direction: column;
-    height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-    scroll-snap-type: y proximity;
-    cursor: default;
-  }
-  .showcase__stage .stills__item { flex: 0 0 auto; width: 100%; }
-  .showcase__stage .stills__arrow { display: none !important; }
-
-  /* scheda del progetto a sinistra */
+  /* scheda del progetto */
   .showcase__stage .project__meta {
     grid-area: meta;
     display: block;
@@ -1481,7 +1428,6 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   }
   .showcase__stage .project__meta::-webkit-scrollbar { display: none; }
   .showcase__stage .project__head { display: block; }
-  .showcase__stage .project__num { display: block; margin-bottom: 0.75rem; }
   .showcase__stage .project__title { font-size: clamp(1.4rem, 1rem + 1vw, 2rem); }
   .showcase__stage .project__subtitle { margin-top: 0.4rem; font-size: var(--fs-small); }
   .showcase__stage .project__logos { margin-top: 1.25rem; gap: 1rem 1.5rem; }
@@ -1498,4 +1444,164 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
     from { opacity: 0; transform: translateY(18px); }
     to   { opacity: 1; transform: none; }
   }
+
+  /* reel Social: occupano tutta la scena, numero sopra a sinistra */
+  .showcase__stage .slide--reel,
+  .showcase__stage .slide--verticals {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .slide--reel .slide__num,
+  .slide--verticals .slide__num { align-self: stretch; text-align: center; }
+  .slide--reel > .video { width: min(100%, calc((var(--stage-h, 760px) - 110px) * 16 / 9)); }
+  .slide--verticals .slide__grid {
+    width: min(100%, calc((var(--stage-h, 760px) - 110px) * 9 / 16 * 5 + 48px));
+  }
+}
+
+/* ==========================================================================
+   Foto e stills: tre file che scorrono in orizzontale
+   ========================================================================== */
+.photo { overflow: hidden; }
+.photo__wall {
+  display: grid;
+  gap: 10px;
+  margin-top: var(--space-m);
+  /* i bordi sfumano nel fondo, come una pellicola che entra ed esce dall'inquadratura */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+.photo__row {
+  display: flex;
+  gap: 10px;
+  width: max-content;
+  will-change: transform;
+}
+.photo__item {
+  position: relative;
+  flex: 0 0 auto;
+  height: clamp(110px, 22vw, 250px);
+  overflow: hidden;
+  background-color: #0c0c0e;
+  cursor: zoom-in;
+}
+.photo__item img {
+  height: 100%;
+  width: auto;
+  opacity: 0;
+  transition: opacity var(--dur-med) var(--ease), transform 1.2s var(--ease), filter 0.6s ease;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+.photo__item img.is-loaded { opacity: 1; }
+.photo__caption {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  color: var(--c-text);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.4s ease, transform 0.4s var(--ease);
+  pointer-events: none;
+}
+.photo__item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(9, 11, 10, 0.6), transparent 45%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.photo__caption { z-index: 1; }
+@media (hover: hover) and (pointer: fine) {
+  /* passando sopra la parete le altre foto si abbassano, quella sotto il mouse si avvicina */
+  .photo__wall:hover .photo__item img.is-loaded { filter: brightness(0.55) saturate(0.8); }
+  .photo__wall .photo__item:hover img.is-loaded { filter: none; transform: scale(1.04); }
+  .photo__item:hover::after,
+  .photo__item:hover .photo__caption { opacity: 1; transform: none; }
+}
+.photo__item:focus-visible { outline: 1px solid var(--c-text); outline-offset: 2px; }
+.photo__hint { margin-top: var(--space-s); text-align: center; }
+
+/* movimento ridotto: le file si scorrono a mano */
+.photo__wall.is-static { -webkit-mask-image: none; mask-image: none; }
+.photo__wall.is-static .photo__row { width: auto; overflow-x: auto; scrollbar-width: none; }
+
+/* Visualizzatore */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  padding: clamp(52px, 7vh, 72px) clamp(4px, 2vw, 24px) clamp(16px, 4vh, 40px);
+  background: rgba(9, 11, 10, 0.95);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+  touch-action: pan-y;
+}
+.lightbox[hidden] { display: none; }
+.lightbox.is-open { opacity: 1; }
+.lightbox__figure {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+.lightbox__figure img {
+  max-width: min(100%, 1100px);
+  max-height: calc(100vh - clamp(52px, 7vh, 72px) - clamp(16px, 4vh, 40px) - 3rem);
+  width: auto;
+  height: auto;
+  opacity: 0;
+  transform: scale(0.985);
+  transition: opacity 0.5s var(--ease), transform 0.6s var(--ease);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.lightbox__figure img.is-loaded { opacity: 1; transform: none; }
+.lightbox__caption { color: var(--c-text-muted); }
+.lightbox__nav {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  color: var(--c-text-muted);
+  transition: color var(--dur-fast) ease;
+}
+.lightbox__nav:hover { color: var(--c-text); }
+.lightbox__nav svg { width: 26px; height: 26px; }
+.lightbox__close {
+  position: absolute;
+  top: clamp(14px, 2.5vh, 28px);
+  right: var(--gutter);
+  padding: 10px 0 10px 16px;
+  color: var(--c-text-muted);
+  transition: color var(--dur-fast) ease;
+}
+.lightbox__close:hover { color: var(--c-text); }
+/* telefono: la foto prende tutta la larghezza, le frecce restano sopra ai lati (e c'è lo swipe) */
+@media (max-width: 699px) {
+  .lightbox { grid-template-columns: 1fr; padding-inline: 0; }
+  .lightbox__figure { grid-row: 1; grid-column: 1; }
+  .lightbox__figure img { max-width: 100%; }
+  .lightbox__nav {
+    grid-row: 1;
+    grid-column: 1;
+    z-index: 1;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 2.5rem;   /* centrate sulla foto, non sulla didascalia */
+    border-radius: 50%;
+    color: var(--c-text);
+    background: rgba(9, 11, 10, 0.45);
+  }
+  .lightbox__nav svg { width: 20px; height: 20px; }
+  .lightbox__nav--prev { justify-self: start; margin-left: 8px; }
+  .lightbox__nav--next { justify-self: end; margin-right: 8px; }
 }
