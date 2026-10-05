@@ -24,6 +24,11 @@
       "id": "events",
       "label": "Events",
       "intro": "I help capture the energy of tech and IT conferences, working seamlessly as a solo freelancer or as part of a larger team to deliver high-impact event coverage."
+    },
+    {
+      "id": "photo",
+      "label": "Photo",
+      "intro": "Stills from the set, events and portraits. Next to video, I also take photographs and pull high-quality stills straight from the footage: frames ready for websites, press and social media."
     }
   ],
   "projects": [
@@ -742,30 +747,6 @@
       ]
     },
     {
-      "src": "assets/stills/filippo-leroy/01.webp",
-      "project": "Filippo Leroy",
-      "size": [
-        800,
-        450
-      ]
-    },
-    {
-      "src": "assets/stills/challenge/01.webp",
-      "project": "Challenge",
-      "size": [
-        800,
-        450
-      ]
-    },
-    {
-      "src": "assets/stills/gelato/01.webp",
-      "project": "Gelato",
-      "size": [
-        800,
-        450
-      ]
-    },
-    {
       "src": "assets/stills/ost-wing/04.webp",
       "project": "OST Wing",
       "size": [
@@ -838,30 +819,6 @@
       ]
     },
     {
-      "src": "assets/stills/filippo-leroy/06.webp",
-      "project": "Filippo Leroy",
-      "size": [
-        800,
-        450
-      ]
-    },
-    {
-      "src": "assets/stills/challenge/05.webp",
-      "project": "Challenge",
-      "size": [
-        800,
-        450
-      ]
-    },
-    {
-      "src": "assets/stills/gelato/03.webp",
-      "project": "Gelato",
-      "size": [
-        800,
-        450
-      ]
-    },
-    {
       "src": "assets/stills/ost-wing/07.webp",
       "project": "OST Wing",
       "size": [
@@ -928,30 +885,6 @@
     {
       "src": "assets/stills/tcb/16.webp",
       "project": "TCB",
-      "size": [
-        800,
-        450
-      ]
-    },
-    {
-      "src": "assets/stills/filippo-leroy/11.webp",
-      "project": "Filippo Leroy",
-      "size": [
-        800,
-        450
-      ]
-    },
-    {
-      "src": "assets/stills/challenge/08.webp",
-      "project": "Challenge",
-      "size": [
-        800,
-        450
-      ]
-    },
-    {
-      "src": "assets/stills/gelato/05.webp",
-      "project": "Gelato",
       "size": [
         800,
         450

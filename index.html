@@ -80,7 +80,6 @@
     </a>
     <nav class="site-nav__links" aria-label="Main">
       <a class="label" href="#work">Work</a>
-      <a class="label" href="#photo">Photo</a>
       <a class="label" href="#services">Services</a>
       <a class="label" href="#process">How I work</a>
       <a class="label" href="#about">About</a>
@@ -94,13 +93,12 @@
   <div class="mobile-menu" id="mobile-menu" hidden>
     <nav aria-label="Main mobile">
       <a href="#work"><span class="label faint">01</span>Work</a>
-      <a href="#photo"><span class="label faint">02</span>Photo</a>
-      <a href="#services"><span class="label faint">03</span>Services</a>
-      <a href="#process"><span class="label faint">04</span>How I work</a>
-      <a href="#about"><span class="label faint">05</span>About</a>
-      <a href="#collaborators"><span class="label faint">06</span>Collaborators</a>
-      <a href="#partners"><span class="label faint">07</span>Partners</a>
-      <a href="#contact"><span class="label faint">08</span>Contact</a>
+      <a href="#services"><span class="label faint">02</span>Services</a>
+      <a href="#process"><span class="label faint">03</span>How I work</a>
+      <a href="#about"><span class="label faint">04</span>About</a>
+      <a href="#collaborators"><span class="label faint">05</span>Collaborators</a>
+      <a href="#partners"><span class="label faint">06</span>Partners</a>
+      <a href="#contact"><span class="label faint">07</span>Contact</a>
     </nav>
   </div>
 
@@ -144,26 +142,18 @@
       <div class="work__list" id="work-list"></div>
       <div class="reels" id="reels"></div>
     </div>
-  </section>
-
-  <!-- Foto e stills -->
-  <section id="photo" class="section photo">
-    <div class="container">
-      <div class="section-head">
-        <p class="label faint">02 — Photo</p>
-        <h2>Stills &amp; photography</h2>
-        <p class="lead muted">Next to video, I also take photographs and pull high-quality stills straight from the footage: frames ready for websites, press and social media.</p>
-      </div>
+    <!-- categoria Photo: parete di stills che scorre con la pagina -->
+    <div class="photo" id="photo-box" hidden>
+      <div class="photo__wall" id="photo-wall" aria-label="Photos and stills"></div>
+      <p class="photo__hint label faint container">Open any frame to see it larger</p>
     </div>
-    <div class="photo__wall" id="photo-wall" aria-label="Photos and stills"></div>
-    <p class="photo__hint label faint container">Open any frame to see it larger</p>
   </section>
 
   <!-- Servizi -->
   <section id="services" class="section services">
     <div class="container">
       <div class="section-head">
-        <p class="label faint">03 — Services</p>
+        <p class="label faint">02 — Services</p>
         <h2>What I do</h2>
       </div>
       <ul class="services__list">
@@ -205,7 +195,7 @@
   <section id="process" class="section process">
     <div class="container">
       <div class="section-head">
-        <p class="label faint">04 — Process</p>
+        <p class="label faint">03 — Process</p>
         <h2>How I work</h2>
       </div>
       <ol class="process__list">
@@ -265,7 +255,7 @@
   <section id="about" class="section about">
     <div class="container">
       <div class="section-head">
-        <p class="label faint">05 — About</p>
+        <p class="label faint">04 — About</p>
         <h2>About</h2>
       </div>
 
@@ -343,7 +333,7 @@
   <section id="contact" class="section contact">
     <div class="container">
       <div class="section-head">
-        <p class="label faint">06 — Contact</p>
+        <p class="label faint">05 — Contact</p>
         <h2>Let's work together</h2>
         <p class="lead muted contact__intro">Tell me about your project.</p>
       </div>

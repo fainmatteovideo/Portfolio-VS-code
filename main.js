@@ -93,7 +93,6 @@
   const ARROW = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="${d}"/></svg>`;
   // categorie i cui reel stanno nello showcase (con i pallini) invece che nella griglia
   const REEL_SLIDES = ["social"];
-  const VERTICALS_PER_SLIDE = 5;
 
   function videoHTML(id, hash, title, poster) {
     return `<div class="video" data-vimeo="${esc(id)}" data-hash="${esc(hash || "")}" data-title="${esc(title)}">
@@ -129,25 +128,22 @@
     </article>`;
   }
 
-  // Reel come slide dello showcase: prima gli orizzontali uno per uno,
-  // poi i verticali a gruppi (una fila per pallino)
+  // Reel come slide dello showcase: una pagina con tutti gli orizzontali,
+  // poi i verticali divisi in due pagine
   function reelSlidesHTML(reels) {
+    const slide = (category, group, name, items, kind) =>
+      `<article class="slide slide--reels" data-category="${esc(category)}" data-group="${group}" data-name="${name}">
+        <p class="slide__num label"></p>
+        <div class="slide__grid slide__grid--${kind}">${items.map((r) => videoHTML(r.vimeo, r.hash, r.label, r.poster)).join("")}</div>
+      </article>`;
     return REEL_SLIDES.map((category) => {
       const of = (o) => reels.filter((r) => r.category === category && r.orientation === o);
-      const h = of("horizontal").map((r, i) =>
-        `<article class="slide slide--reel" data-category="${esc(category)}" data-group="16:9" data-name="Reel ${i + 1}">
-          <p class="slide__num label"></p>
-          ${videoHTML(r.vimeo, r.hash, r.label, r.poster)}
-        </article>`);
-      const vertical = of("vertical");
-      const v = [];
-      for (let i = 0; i < vertical.length; i += VERTICALS_PER_SLIDE) {
-        v.push(`<article class="slide slide--verticals" data-category="${esc(category)}" data-group="9:16" data-name="Vertical reels ${v.length + 1}">
-          <p class="slide__num label"></p>
-          <div class="slide__grid">${vertical.slice(i, i + VERTICALS_PER_SLIDE).map((r) => videoHTML(r.vimeo, r.hash, r.label, r.poster)).join("")}</div>
-        </article>`);
-      }
-      return h.join("") + v.join("");
+      const h = of("horizontal");
+      const v = of("vertical");
+      const half = Math.ceil(v.length / 2);
+      return (h.length ? slide(category, "16:9", "Horizontal reels", h, "h") : "") +
+        [v.slice(0, half), v.slice(half)].filter((g) => g.length)
+          .map((g, i) => slide(category, "9:16", `Vertical reels ${i + 1}`, g, "v")).join("");
     }).join("");
   }
 
@@ -253,7 +249,7 @@
   function openPlayer(el) {
     const hash = el.dataset.hash ? `h=${el.dataset.hash}&` : "";
     const title = el.dataset.title;
-    modalFrame.classList.toggle("is-vertical", !!el.closest(".reels__grid--vertical, .slide__grid"));
+    modalFrame.classList.toggle("is-vertical", !!el.closest(".reels__grid--vertical, .slide__grid--v"));
     // la miniatura fa da sfondo al riquadro mentre il player si carica (continuità visiva)
     const poster = el.querySelector(".video__poster");
     modalFrame.style.backgroundImage = poster ? `url("${poster.currentSrc || poster.src}")` : "";
@@ -423,7 +419,8 @@
     dotsNav.innerHTML = items.map((p, i) => {
       const g = p.dataset.group || "";
       const k = groups[g].indexOf(p);
-      p.querySelector(".slide__num").textContent = `${g ? g + " — " : ""}${pad(k + 1)} / ${pad(groups[g].length)}`;
+      const count = groups[g].length > 1 ? `${pad(k + 1)} / ${pad(groups[g].length)}` : "";
+      p.querySelector(".slide__num").textContent = [g, count].filter(Boolean).join(" — ");
       const cls = g === "9:16" ? " showcase__dot--tall" : "";
       const first = k === 0 && i > 0 ? " is-group-start" : "";
       return `<button class="showcase__dot${cls}${first}" type="button" data-index="${i}" aria-label="${esc(p.dataset.name)} (${i + 1} of ${items.length})"></button>`;
@@ -529,6 +526,7 @@
       intro.textContent = category ? category.intro : "";
       reelsBox.innerHTML = reelsHTML(data.reels, cat);
       observe(reelsBox);
+      if (photoBox) photoBox.hidden = cat !== "photo";
     };
 
     if (!animate || reducedMotion) { swap(); return; }
@@ -544,6 +542,7 @@
   }
 
   /* --- Foto e stills: tre file che scorrono in orizzontale con la pagina -- */
+  const photoBox = document.getElementById("photo-box");
   const photoWall = document.getElementById("photo-wall");
   const ROWS = 3;
 

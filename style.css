@@ -480,9 +480,11 @@ h3 {
 /* Transizione al cambio filtro */
 .work__list,
 .reels,
+.photo,
 .work__intro { transition: opacity 0.45s var(--ease), transform 0.45s var(--ease); }
 .work.is-filtering .work__list,
 .work.is-filtering .reels,
+.work.is-filtering .photo,
 .work.is-filtering .work__intro { opacity: 0; transform: translateY(12px); }
 
 /* --- Progetto ------------------------------------------------------------ */
@@ -1341,24 +1343,26 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 .showcase__stage .slide__num { white-space: nowrap; }
 .slide__num.label { display: block; margin-bottom: 0.75rem; color: var(--c-text-faint); }
 
-/* reel verticali: 3 + 2 su telefono, tutti in fila da tablet */
+/* pagine di reel: tutti gli orizzontali insieme, i verticali in due metà */
 .slide__grid {
+  --gap: 6px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
+  gap: var(--gap);
 }
+.slide__grid--h { --cols: 3; --rows: 5; --ar: 1.7778; }
+.slide__grid--v { --cols: 4; --rows: 2; --ar: 0.5625; }
 .slide__grid .video {
-  flex: 0 0 calc((100% - 16px) / 3);
-  aspect-ratio: 9 / 16;
+  flex: 0 0 calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols));
+  aspect-ratio: 16 / 9;
 }
-.slide__grid .video__sound { width: 30px; height: 30px; right: 6px; bottom: 6px; }
-@media (min-width: 1024px) {
-  .slide__grid .video__sound { width: 36px; height: 36px; right: 8px; bottom: 8px; }
-}
+.slide__grid--v .video { aspect-ratio: 9 / 16; }
+.slide__grid .video__sound { width: 26px; height: 26px; right: 5px; bottom: 5px; }
+.slide__grid .video__sound i { transform: scale(0.8); }
 @media (min-width: 640px) {
-  .slide__grid { flex-wrap: nowrap; gap: 12px; }
-  .slide__grid .video { flex: 1 1 0; min-width: 0; }
+  .slide__grid { --gap: 10px; }
+  .slide__grid--h { --cols: 4; --rows: 4; }
 }
 
 @media (min-width: 1024px) {
@@ -1446,25 +1450,29 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   }
 
   /* reel Social: occupano tutta la scena, numero sopra a sinistra */
-  .showcase__stage .slide--reel,
-  .showcase__stage .slide--verticals {
+  .showcase__stage .slide--reels {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
   }
-  .slide--reel .slide__num,
-  .slide--verticals .slide__num { align-self: stretch; text-align: center; }
-  .slide--reel > .video { width: min(100%, calc((var(--stage-h, 760px) - 110px) * 16 / 9)); }
-  .slide--verticals .slide__grid {
-    width: min(100%, calc((var(--stage-h, 760px) - 110px) * 9 / 16 * 5 + 48px));
+  .slide--reels .slide__num { align-self: stretch; text-align: center; }
+  .slide__grid { --gap: 12px; }
+  .slide__grid--h { --cols: 5; --rows: 3; }
+  .slide__grid--v { --cols: 8; --rows: 1; }
+  .slide__grid .video__sound { width: 32px; height: 32px; right: 8px; bottom: 8px; }
+  .slide__grid .video__sound i { transform: none; }
+  /* la griglia è larga quanto serve perché tutte le file stiano nell'altezza della scena */
+  .slide__grid {
+    width: min(100%, calc((var(--stage-h, 760px) - 110px - (var(--rows) - 1) * var(--gap)) / var(--rows) * var(--ar) * var(--cols) + (var(--cols) - 1) * var(--gap)));
   }
 }
 
 /* ==========================================================================
-   Foto e stills: tre file che scorrono in orizzontale
+   Categoria Photo: tre file di stills che scorrono in orizzontale
    ========================================================================== */
-.photo { overflow: hidden; }
+.photo { overflow: hidden; margin-top: var(--space-m); }
+.photo[hidden] { display: none; }
 .photo__wall {
   display: grid;
   gap: 10px;
