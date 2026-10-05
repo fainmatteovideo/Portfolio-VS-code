@@ -173,7 +173,7 @@
     if (!pageReady && !force) { pending.add(el); return; }
     const hash = el.dataset.hash ? `h=${el.dataset.hash}&` : "";
     const iframe = document.createElement("iframe");
-    iframe.src = `https://player.vimeo.com/video/${el.dataset.vimeo}?${hash}background=1&autoplay=1&loop=1&muted=1&autopause=0&dnt=1`;
+    iframe.src = `https://player.vimeo.com/video/${el.dataset.vimeo}?${hash}background=1&autoplay=1&loop=1&muted=1&autopause=0&playsinline=1&dnt=1`;
     iframe.allow = "autoplay; fullscreen; picture-in-picture";
     iframe.title = el.getAttribute("aria-label").replace(": turn sound on", "");
     iframe.tabIndex = -1;

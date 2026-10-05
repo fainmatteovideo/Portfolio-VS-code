@@ -12,6 +12,7 @@
   <link rel="preconnect" href="https://player.vimeo.com">
   <link rel="preconnect" href="https://f.vimeocdn.com">
   <link rel="preload" href="assets/logo/mf-logo-white.webp" as="image" type="image/webp">
+  <link rel="preload" href="assets/posters/showreel.webp" as="image" type="image/webp">
   <link rel="stylesheet" href="style.css">
   <script src="https://player.vimeo.com/api/player.js" defer></script>
   <script src="main.js" defer></script>
@@ -51,8 +52,10 @@
   <section id="top" class="hero">
     <!-- Showreel provvisorio: per sostituirlo basta cambiare l'ID Vimeo in data-vimeo -->
     <div class="hero__video" data-vimeo="1172567953">
-      <iframe src="https://player.vimeo.com/video/1172567953?background=1&amp;autoplay=1&amp;loop=1&amp;muted=1&amp;dnt=1"
-              title="Showreel" allow="autoplay; fullscreen" tabindex="-1" aria-hidden="true"></iframe>
+      <iframe src="https://player.vimeo.com/video/1172567953?background=1&amp;autoplay=1&amp;loop=1&amp;muted=1&amp;playsinline=1&amp;dnt=1"
+              title="Showreel" allow="autoplay; fullscreen; picture-in-picture" tabindex="-1" aria-hidden="true"></iframe>
+      <!-- fotogramma dello showreel: copre il player finché il video non parte (mai schermo nero) -->
+      <img class="hero__poster" src="assets/posters/showreel.webp" alt="" width="1600" height="900" fetchpriority="high" decoding="async">
     </div>
     <div class="hero__content">
       <h1 class="hero__logo">
@@ -319,20 +322,17 @@
       <p class="contact__or muted">Or write directly to</p>
       <a class="contact__email" href="mailto:fainmatteo.video@gmail.com">fainmatteo.video@gmail.com</a>
       <ul class="contact__links">
-        <li><a class="label" href="https://www.instagram.com/matte.fain/" target="_blank" rel="noopener">Instagram <span aria-hidden="true">↗</span></a></li>
-        <li><a class="label" href="https://www.linkedin.com/in/matteo-fain-b979541b1" target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">↗</span></a></li>
+        <li><a class="label" href="https://www.instagram.com/matte.fain/" target="_blank" rel="noopener">Instagram <svg class="arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9L9 3M4 3h5v5"/></svg></a></li>
+        <li><a class="label" href="https://www.linkedin.com/in/matteo-fain-b979541b1" target="_blank" rel="noopener">LinkedIn <svg class="arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9L9 3M4 3h5v5"/></svg></a></li>
       </ul>
     </div>
   </section>
 
   <footer class="site-footer">
     <div class="container site-footer__inner">
-      <p class="label">Matteo Fain</p>
-      <p class="label faint">Zurich, Switzerland</p>
-      <a class="label faint" href="mailto:fainmatteo.video@gmail.com">fainmatteo.video@gmail.com</a>
-      <p class="label faint">© <span id="year">2026</span></p>
+      <p class="label">Matteo Fain <span class="faint">© <span id="year">2026</span></span></p>
       <a class="label faint site-footer__privacy" href="privacy.html">Privacy</a>
-      <a class="label faint site-footer__top" href="#top">Back to top ↑</a>
+      <a class="label faint site-footer__top" href="#top">Back to top <svg class="arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 10V2M2.5 5.5L6 2l3.5 3.5"/></svg></a>
     </div>
   </footer>
 
