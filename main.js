@@ -107,7 +107,7 @@
         : `<li>${esc(c)}</li>`;
     }).join("");
     const logos = p.logos.map((l) =>
-      `<img src="${esc(l.src)}" alt="${esc(l.alt)}" loading="lazy" decoding="async">`).join("");
+      `<img data-src="${esc(l.src)}" alt="${esc(l.alt)}" decoding="async">`).join("");
     const stills = p.stills.map((s, i) =>
       `<div class="stills__item"><img data-src="${esc(s)}" alt="${esc(p.title)} – still ${i + 1}" decoding="async" draggable="false"></div>`).join("");
 
@@ -158,8 +158,19 @@
   /* --- Video: caricamento pigro, play/pausa allo scroll, audio al click --- */
   const videos = new Map(); // elemento .video -> { player, visible }
 
-  function loadVideo(el) {
+  // I video dei progetti non partono finché la pagina (e lo showreel) non ha finito di
+  // caricarsi: così non rubano banda all'apertura. Un click li carica comunque subito.
+  let pageReady = false;
+  const pending = new Set();
+  window.addEventListener("load", () => setTimeout(() => {
+    pageReady = true;
+    pending.forEach((el) => loadVideo(el));
+    pending.clear();
+  }, 1200));
+
+  function loadVideo(el, force = false) {
     if (videos.has(el) || !window.Vimeo) return;
+    if (!pageReady && !force) { pending.add(el); return; }
     const hash = el.dataset.hash ? `h=${el.dataset.hash}&` : "";
     const iframe = document.createElement("iframe");
     iframe.src = `https://player.vimeo.com/video/${el.dataset.vimeo}?${hash}background=1&autoplay=1&loop=1&muted=1&autopause=0&dnt=1`;
@@ -190,7 +201,7 @@
   }
 
   function toggleSound(el) {
-    loadVideo(el);
+    loadVideo(el, true);
     const on = !el.classList.contains("is-unmuted");
     // un solo video con l'audio alla volta
     if (on) videos.forEach((_, other) => { if (other !== el && other.classList.contains("is-unmuted")) setSound(other, false); });
@@ -198,13 +209,20 @@
     if (on) videos.get(el)?.player.play().catch(() => {});
   }
 
-  // Vicino allo schermo (1 schermata e mezza): carica video e stills
+  // Video: si caricano quando mancano circa mezza schermata
+  const videoNearObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      loadVideo(entry.target);
+      videoNearObserver.unobserve(entry.target);
+    });
+  }, { rootMargin: "50% 0px 50% 0px" });
+
+  // Stills (leggere): si caricano con una schermata di anticipo
   const nearObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
       const el = entry.target;
-      el.querySelectorAll(".video").forEach(loadVideo);
-      if (el.matches(".video")) loadVideo(el);
       el.querySelectorAll("img[data-src]").forEach((img) => {
         img.addEventListener("load", () => img.classList.add("is-loaded"), { once: true });
         img.src = img.dataset.src;
@@ -212,7 +230,7 @@
       });
       nearObserver.unobserve(el);
     });
-  }, { rootMargin: "150% 0px 150% 0px" });
+  }, { rootMargin: "100% 0px 100% 0px" });
 
   // Visibile: play muto. Fuori dallo schermo: pausa (e audio spento)
   const playObserver = new IntersectionObserver((entries) => {
@@ -241,8 +259,8 @@
   }, { rootMargin: "0px 0px -10% 0px" });
 
   function observe(root) {
-    root.querySelectorAll(".video").forEach((v) => playObserver.observe(v));
-    root.querySelectorAll(".project, .reels .video").forEach((el) => nearObserver.observe(el));
+    root.querySelectorAll(".video").forEach((v) => { playObserver.observe(v); videoNearObserver.observe(v); });
+    root.querySelectorAll(".project").forEach((el) => nearObserver.observe(el));
     root.querySelectorAll(".reveal").forEach((el) => reducedMotion ? el.classList.add("is-visible") : revealObserver.observe(el));
   }
 
@@ -356,7 +374,19 @@
     const tracks = [track, reverse];
     // velocità costante (~35 px/s) qualunque sia la larghezza dei loghi
     const setSpeed = () => tracks.forEach((t) => t.style.setProperty("--marquee-duration", (t.scrollWidth / 2 / 35) + "s"));
-    window.addEventListener("load", setSpeed);
+    // i loghi si scaricano solo quando la fascia si avvicina; poi si ricalcola la velocità
+    const logosObserver = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      logosObserver.disconnect();
+      const imgs = tracks.flatMap((t) => [...t.querySelectorAll("img[data-src]")]);
+      Promise.all(imgs.map((img) => new Promise((done) => {
+        img.addEventListener("load", done, { once: true });
+        img.addEventListener("error", done, { once: true });
+        img.src = img.dataset.src;
+        img.removeAttribute("data-src");
+      }))).then(setSpeed);
+    }, { rootMargin: "100% 0px 100% 0px" });
+    logosObserver.observe(track);
     // fuori dallo schermo l'animazione si ferma
     new IntersectionObserver(([e]) => tracks.forEach((t) => t.classList.toggle("is-paused", !e.isIntersecting))).observe(track);
   }

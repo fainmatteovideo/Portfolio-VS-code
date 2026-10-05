@@ -10,6 +10,8 @@
   <link rel="apple-touch-icon" href="assets/logo/apple-touch-icon.png">
   <link rel="preload" href="assets/fonts/figtree-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preconnect" href="https://player.vimeo.com">
+  <link rel="preconnect" href="https://f.vimeocdn.com">
+  <link rel="preload" href="assets/logo/mf-logo-white.webp" as="image" type="image/webp">
   <link rel="stylesheet" href="style.css">
   <script src="https://player.vimeo.com/api/player.js" defer></script>
   <script src="main.js" defer></script>
@@ -19,7 +21,7 @@
   <!-- Menu -->
   <header class="site-nav" id="site-nav">
     <a class="site-nav__logo" href="#top" aria-label="Matteo Fain – back to top">
-      <img src="assets/logo/mf-logo-white.png" alt="" width="717" height="1034">
+      <img src="assets/logo/mf-logo-white.webp" alt="" width="717" height="1034">
     </a>
     <nav class="site-nav__links" aria-label="Main">
       <a class="label" href="#work">Work</a>
@@ -54,7 +56,7 @@
     </div>
     <div class="hero__content">
       <h1 class="hero__logo">
-        <img src="assets/logo/mf-logo-white.png" alt="Matteo Fain" width="717" height="1034">
+        <img src="assets/logo/mf-logo-white.webp" alt="Matteo Fain" width="717" height="1034" fetchpriority="high">
       </h1>
       <p class="hero__tagline label">Video production <span class="dot" aria-hidden="true"></span> Zurich</p>
     </div>
@@ -246,21 +248,21 @@
     </div>
     <div class="clients__marquee">
       <ul class="clients__track">
-        <li><img src="assets/logos/swisscom.webp" alt="Swisscom"></li>
-        <li><img src="assets/logos/stories.webp" alt="Stories AG"></li>
-        <li><img src="assets/logos/trees.webp" alt="Trees for the Future"></li>
-        <li><img src="assets/logos/hope.webp" alt="Hope Group"></li>
-        <li><img src="assets/logos/byd.webp" alt="BYD"></li>
-        <li><img src="assets/logos/girts.webp" alt="Girts"></li>
-        <li><img src="assets/logos/mcqueen.webp" alt="McQueen"></li>
-        <li><img src="assets/logos/zt.webp" alt="Zurich Together"></li>
-        <li><img src="assets/logos/ost.webp" alt="OST"></li>
-        <li><img src="assets/logos/btry.webp" alt="BTRY"></li>
-        <li><img src="assets/logos/aceli.webp" alt="Aceli Africa"></li>
-        <li><img src="assets/logos/raiffeisen.webp" alt="Raiffeisen"></li>
-        <li><img src="assets/logos/kordial.webp" alt="Kordial"></li>
-        <li><img src="assets/logos/gs1.webp" alt="GS1"></li>
-        <li><img src="assets/logos/sgaim.webp" alt="SGAIM"></li>
+        <li><img data-src="assets/logos/swisscom.webp" alt="Swisscom" decoding="async"></li>
+        <li><img data-src="assets/logos/stories.webp" alt="Stories AG" decoding="async"></li>
+        <li><img data-src="assets/logos/trees.webp" alt="Trees for the Future" decoding="async"></li>
+        <li><img data-src="assets/logos/hope.webp" alt="Hope Group" decoding="async"></li>
+        <li><img data-src="assets/logos/byd.webp" alt="BYD" decoding="async"></li>
+        <li><img data-src="assets/logos/girts.webp" alt="Girts" decoding="async"></li>
+        <li><img data-src="assets/logos/mcqueen.webp" alt="McQueen" decoding="async"></li>
+        <li><img data-src="assets/logos/zt.webp" alt="Zurich Together" decoding="async"></li>
+        <li><img data-src="assets/logos/ost.webp" alt="OST" decoding="async"></li>
+        <li><img data-src="assets/logos/btry.webp" alt="BTRY" decoding="async"></li>
+        <li><img data-src="assets/logos/aceli.webp" alt="Aceli Africa" decoding="async"></li>
+        <li><img data-src="assets/logos/raiffeisen.webp" alt="Raiffeisen" decoding="async"></li>
+        <li><img data-src="assets/logos/kordial.webp" alt="Kordial" decoding="async"></li>
+        <li><img data-src="assets/logos/gs1.webp" alt="GS1" decoding="async"></li>
+        <li><img data-src="assets/logos/sgaim.webp" alt="SGAIM" decoding="async"></li>
       </ul>
     </div>
   </section>
