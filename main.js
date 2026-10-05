@@ -88,12 +88,13 @@
 
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-  const SOUND = '<span class="video__sound label"><i><b></b></i><em>Sound</em></span>';
+  // pulsante audio: 4 barre ferme con audio spento, in movimento con audio acceso
+  const SOUND = '<button class="video__sound" type="button" aria-label="Turn sound on" aria-pressed="false"><i><b></b><b></b><b></b><b></b></i></button>';
   const ARROW = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="${d}"/></svg>`;
 
   function videoHTML(id, hash, title, poster) {
-    return `<div class="video" data-vimeo="${esc(id)}" data-hash="${esc(hash || "")}" role="button" tabindex="0"
-              aria-label="${esc(title)}: play with sound">
+    return `<div class="video" data-vimeo="${esc(id)}" data-hash="${esc(hash || "")}" data-title="${esc(title)}">
+              <button class="video__open" type="button" aria-label="${esc(title)}: open the video with sound"></button>
               ${poster ? `<img class="video__poster" src="${esc(poster)}"${poster.startsWith("assets/posters/")
                 ? ` srcset="${esc(poster.replace(".webp", "-800.webp"))} 800w, ${esc(poster)} 1600w" sizes="(max-width: 900px) 100vw, 1120px"` : ""}
                 alt="" loading="lazy" decoding="async">` : ""}
@@ -177,7 +178,7 @@
     const iframe = document.createElement("iframe");
     iframe.src = `https://player.vimeo.com/video/${el.dataset.vimeo}?${hash}background=1&autoplay=1&loop=1&muted=1&autopause=0&playsinline=1&dnt=1`;
     iframe.allow = "autoplay; fullscreen; picture-in-picture";
-    iframe.title = el.getAttribute("aria-label").replace(": play with sound", "");
+    iframe.title = el.dataset.title;
     iframe.tabIndex = -1;
     el.prepend(iframe);
 
@@ -206,12 +207,12 @@
 
   function openPlayer(el) {
     const hash = el.dataset.hash ? `h=${el.dataset.hash}&` : "";
-    const title = el.getAttribute("aria-label").replace(": play with sound", "");
+    const title = el.dataset.title;
     modalFrame.classList.toggle("is-vertical", !!el.closest(".reels__grid--vertical"));
     modalFrame.innerHTML = `<iframe src="https://player.vimeo.com/video/${el.dataset.vimeo}?${hash}autoplay=1&title=0&byline=0&portrait=0&playsinline=1&dnt=1"
       allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="${esc(title)}"></iframe>`;
     // i video di sfondo si fermano mentre il player è aperto
-    videos.forEach((state) => state.player.pause().catch(() => {}));
+    videos.forEach((state, v) => { state.player.pause().catch(() => {}); setSound(v, false); });
     lastFocus = document.activeElement;
     modal.hidden = false;
     requestAnimationFrame(() => modal.classList.add("is-open"));
@@ -256,6 +257,28 @@
     });
   }, { rootMargin: "100% 0px 100% 0px" });
 
+  /* --- Audio sul posto: il pulsante con le barre accende/spegne l'audio ---- */
+  function setSound(el, on) {
+    el.classList.toggle("is-unmuted", on);
+    const btn = el.querySelector(".video__sound");
+    if (btn) {
+      btn.setAttribute("aria-pressed", String(on));
+      btn.setAttribute("aria-label", on ? "Turn sound off" : "Turn sound on");
+    }
+    const state = videos.get(el);
+    if (!state) return;
+    state.player.setVolume(on ? 1 : 0).catch(() => {});
+    state.player.setMuted(!on).catch(() => {});
+  }
+
+  function toggleSound(el) {
+    loadVideo(el, true);
+    const on = !el.classList.contains("is-unmuted");
+    if (on) videos.forEach((_, other) => { if (other !== el) setSound(other, false); });
+    setSound(el, on);
+    if (on) videos.get(el)?.player.play().catch(() => {});
+  }
+
   // Visibile: play muto. Fuori dallo schermo: pausa (e audio spento)
   const playObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -268,6 +291,7 @@
         s.player.play().catch(() => {});
       } else {
         s.player.pause().catch(() => {});
+        if (el.classList.contains("is-unmuted")) setSound(el, false);
       }
     });
   }, { threshold: 0.25 });
@@ -290,14 +314,12 @@
   // Comparsa morbida anche per gli elementi già presenti nella pagina (servizi, step, about)
   document.querySelectorAll(".reveal").forEach((el) => reducedMotion ? el.classList.add("is-visible") : revealObserver.observe(el));
 
-  // Click / tastiera sul video = player completo con audio
+  // Click sul pulsante con le barre = audio sul posto; click sul resto del video = player completo
   work.addEventListener("click", (e) => {
     const v = e.target.closest(".video");
-    if (v) openPlayer(v);
-  });
-  work.addEventListener("keydown", (e) => {
-    const v = e.target.closest(".video");
-    if (v && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openPlayer(v); }
+    if (!v) return;
+    if (e.target.closest(".video__sound")) toggleSound(v);
+    else openPlayer(v);
   });
 
   /* --- Stills: trascinamento col mouse e frecce --------------------------- */
@@ -584,17 +606,17 @@
 
     // il cerchio è sempre esattamente sotto il puntatore (nessun ritardo, nessuno "spostamento")
     let x = 0, y = 0, current = null;
-    const label = () => { if (current) cursor.textContent = "Sound"; };
+    cursor.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v9.6L12.6 8z"/></svg>';
+    const label = () => {};
     // "translate" (e non "transform"): così l'ingrandimento con "scale" non sposta il cerchio
     const place = () => { cursor.style.translate = `${x}px ${y}px`; };
     document.addEventListener("mousemove", (e) => {
       x = e.clientX; y = e.clientY;
       place();
-      const v = e.target.closest(".video");
+      const v = e.target.closest(".video__sound") ? null : e.target.closest(".video");
       if (v !== current) {
         current = v;
         cursor.classList.toggle("is-visible", !!v);
-        label();
       }
     }, { passive: true });
     document.addEventListener("mouseleave", () => { current = null; cursor.classList.remove("is-visible"); });

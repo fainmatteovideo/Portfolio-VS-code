@@ -25,9 +25,9 @@
 /* --- Variabili ----------------------------------------------------------- */
 :root {
   /* Colori */
-  --c-black: #070708;
-  --c-wall: #26272c;          /* antracite del "muro" */
-  --c-wall-soft: #1b1c20;
+  --c-black: #090b0a;         /* quasi nero, appena verde */
+  --c-glow-green: 46, 128, 84;  /* bagliore verde dello sfondo (RGB) */
+  --c-glow-warm: 176, 112, 52;  /* punta calda sul bordo sinistro (RGB) */
   --c-text: #f3f2ef;          /* bianco caldo, meno duro del #fff */
   --c-text-muted: rgba(243, 242, 239, 0.62);
   --c-text-faint: rgba(243, 242, 239, 0.38);
@@ -93,8 +93,8 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Muro da studio: diagonale nera al centro, antracite sfumato verso i bordi.
-   È un livello fisso dietro a tutto, così la pagina resta un unico ambiente. */
+/* Sfondo verde scuro "pellicola": bagliore verde in alto a sinistra, punta calda sul bordo,
+   il resto quasi nero. Solo gradienti CSS (nessuna immagine), fisso dietro a tutto. */
 body::before {
   content: "";
   position: fixed;
@@ -102,10 +102,11 @@ body::before {
   z-index: -2;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 75% 55% at 0% 0%, rgba(38, 39, 45, 0.95), transparent 70%),
-    radial-gradient(ellipse 70% 45% at 100% 80%, rgba(36, 37, 43, 0.9), transparent 70%),
-    radial-gradient(ellipse 120% 28% at 40% 104%, rgba(30, 31, 36, 0.85), transparent 72%),
-    linear-gradient(128deg, var(--c-wall-soft) 0%, #0b0b0d 38%, var(--c-black) 55%, #0e0e10 78%, #141418 100%);
+    radial-gradient(ellipse 48% 55% at 14% 12%, rgba(var(--c-glow-green), 0.55), transparent 70%),
+    radial-gradient(ellipse 34% 40% at 30% 4%, rgba(var(--c-glow-green), 0.25), transparent 72%),
+    radial-gradient(ellipse 16% 42% at -2% 46%, rgba(var(--c-glow-warm), 0.38), transparent 72%),
+    radial-gradient(ellipse 60% 45% at 100% 100%, rgba(var(--c-glow-green), 0.12), transparent 70%),
+    linear-gradient(160deg, #0f1311 0%, var(--c-black) 55%, #0b0d0c 100%);
 }
 
 /* Grana leggerissima: evita le bande nei gradienti e dà una texture "pellicola" */
@@ -115,7 +116,7 @@ body::after {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  opacity: 0.06;
+  opacity: 0.12;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -218,7 +219,7 @@ h3 {
 }
 /* Dopo l'apertura il menu prende un fondo leggero, per restare leggibile sopra i video */
 .site-nav.is-scrolled {
-  background-color: rgba(7, 7, 8, 0.55);
+  background-color: rgba(9, 11, 10, 0.55);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
 }
@@ -253,7 +254,7 @@ h3 {
   display: flex;
   align-items: center;
   padding-inline: var(--gutter);
-  background-color: rgba(7, 7, 8, 0.92);
+  background-color: rgba(9, 11, 10, 0.92);
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   opacity: 0;
@@ -321,8 +322,8 @@ h3 {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 60% at 50% 50%, rgba(7, 7, 8, 0.25), rgba(7, 7, 8, 0.75) 100%),
-    linear-gradient(to bottom, rgba(7, 7, 8, 0.5), transparent 25%);
+    radial-gradient(ellipse 70% 60% at 50% 50%, rgba(9, 11, 10, 0.25), rgba(9, 11, 10, 0.75) 100%),
+    linear-gradient(to bottom, rgba(9, 11, 10, 0.5), transparent 25%);
 }
 
 .hero__content {
@@ -408,7 +409,7 @@ h3 {
   position: sticky;
   top: calc(var(--nav-h) - 1px);
   z-index: 30;
-  background-color: rgba(7, 7, 8, 0.55);
+  background-color: rgba(9, 11, 10, 0.55);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--c-line);
@@ -525,45 +526,59 @@ h3 {
 }
 .video.is-playing .video__poster { opacity: 0; }
 
-/* Indicatore audio: al click sul video si attiva l'audio */
+/* Pulsante invisibile grande quanto il video: apre il player completo */
+.video__open {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+.video__open:focus-visible { outline: 1px solid var(--c-text); outline-offset: -4px; }
+
+/* Pulsante audio tondo con 4 barre (audio sul posto, senza aprire il player) */
 .video__sound {
   position: absolute;
   right: 14px;
-  bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
+  bottom: 14px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(243, 242, 239, 0.55);
   color: var(--c-text);
-  background-color: rgba(7, 7, 8, 0.45);
+  background-color: rgba(9, 11, 10, 0.35);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  border-radius: 2px;
-  opacity: 0.75;
-  pointer-events: none;
-  transition: opacity var(--dur-fast) ease;
+  transition: background-color var(--dur-fast) ease, border-color var(--dur-fast) ease, transform var(--dur-fast) ease;
 }
-.video:hover .video__sound { opacity: 1; }
-/* piccolo equalizzatore: fermo con audio spento, si muove con audio acceso */
-.video__sound em { font-style: normal; }
+.video__sound:hover { border-color: var(--c-text); transform: scale(1.06); }
 .video__sound i {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 2px;
-  height: 10px;
+  height: 14px;
 }
-.video__sound i::before,
-.video__sound i::after,
 .video__sound b {
-  content: "";
   width: 2px;
-  height: 3px;
+  height: 6px;
+  border-radius: 1px;
   background: currentColor;
 }
+/* audio acceso: le barre si muovono a velocità diverse */
+.video.is-unmuted .video__sound { background-color: rgba(243, 242, 239, 0.16); border-color: var(--c-text); }
+.video.is-unmuted .video__sound b { animation: eq 0.9s ease-in-out infinite; }
+.video.is-unmuted .video__sound b:nth-child(2) { animation-duration: 0.7s; animation-delay: -0.2s; }
+.video.is-unmuted .video__sound b:nth-child(3) { animation-duration: 1.1s; animation-delay: -0.5s; }
+.video.is-unmuted .video__sound b:nth-child(4) { animation-duration: 0.8s; animation-delay: -0.35s; }
 @keyframes eq {
-  0%, 100% { height: 3px; }
-  50%      { height: 10px; }
+  0%, 100% { height: 4px; }
+  50%      { height: 14px; }
 }
+.reels .video__sound { width: 36px; height: 36px; right: 8px; bottom: 8px; }
 
 /* --- Carosello stills ---------------------------------------------------- */
 .stills {
@@ -619,8 +634,8 @@ h3 {
   opacity: 0;
   transition: opacity var(--dur-fast) ease;
 }
-.stills__arrow--prev { left: 0;  background: linear-gradient(to right, rgba(7, 7, 8, 0.8), transparent); }
-.stills__arrow--next { right: 0; background: linear-gradient(to left, rgba(7, 7, 8, 0.8), transparent); }
+.stills__arrow--prev { left: 0;  background: linear-gradient(to right, rgba(9, 11, 10, 0.8), transparent); }
+.stills__arrow--next { right: 0; background: linear-gradient(to left, rgba(9, 11, 10, 0.8), transparent); }
 .stills__arrow svg { width: 22px; height: 22px; }
 .stills__arrow:disabled { visibility: hidden; }
 @media (hover: hover) and (pointer: fine) {
@@ -702,8 +717,7 @@ h3 {
   .reels__grid--horizontal { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .reels__grid--vertical   { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }
-.reels .video__sound { right: 8px; bottom: 8px; padding: 6px 8px; }
-.reels .video__sound em { display: none; }
+
 
 /* ==========================================================================
    Carosello loghi clienti
@@ -1254,10 +1268,10 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   transition: opacity 0.2s ease, scale 0.25s var(--ease);
 }
 .sound-cursor.is-visible { opacity: 1; scale: 1; }
+.sound-cursor svg { width: 18px; height: 18px; margin-left: 2px; fill: currentColor; }
 @media (hover: hover) and (pointer: fine) {
-  .has-sound-cursor .video { cursor: none; }
-  /* con il cursore "Sound" l'etichetta nel video è superflua */
-  .has-sound-cursor .video .video__sound { opacity: 0; }
+  .has-sound-cursor .video__open { cursor: none; }
+
 }
 
 /* 4. Titoli delle sezioni che salgono da una maschera, come titoli di testa */
@@ -1293,7 +1307,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   display: grid;
   place-items: center;
   padding: clamp(56px, 8vh, 96px) var(--gutter);
-  background: rgba(7, 7, 8, 0.94);
+  background: rgba(9, 11, 10, 0.94);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   opacity: 0;
