@@ -984,6 +984,38 @@
     });
   }
 
+  /* 7. Collaborazioni: la sezione si ferma e le foto salgono dal basso una alla volta;
+        il testo di chi è in primo piano compare in dissolvenza */
+  const partners = document.querySelector(".partners");
+  if (partners && !reducedMotion) {
+    const cards = [...partners.querySelectorAll(".partner")];
+    const n = cards.length;
+    partners.style.setProperty("--count", n);
+    partners.classList.add("is-pinned");
+    let last = "";
+    onFrame(() => {
+      const r = partners.getBoundingClientRect();
+      const vh = window.innerHeight;
+      if (r.bottom < 0 || r.top > vh) return;
+      // la prima foto inizia a salire quando la sezione è a metà schermo
+      const total = partners.offsetHeight - vh + vh * 0.5;
+      const p = Math.min(1, Math.max(0, (vh * 0.5 - r.top) / total));
+      let current = 0;
+      const enters = cards.map((c, i) => {
+        const e = Math.min(1, Math.max(0, (p * n - i) / 0.7));
+        if (e > 0.5) current = i;
+        return e;
+      });
+      const key = enters.map((e) => e.toFixed(3)).join() + current;
+      if (key === last) return;
+      last = key;
+      cards.forEach((c, i) => {
+        c.querySelector(".partner__img").style.setProperty("--e", enters[i].toFixed(3));
+        c.classList.toggle("is-current", i === current);
+      });
+    });
+  }
+
   /* 4. Titoli delle sezioni che salgono da una maschera */
   const titleObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {

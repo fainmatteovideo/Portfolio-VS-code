@@ -972,75 +972,152 @@ h3 {
 }
 
 /* --- Collaborazioni ------------------------------------------------------ */
+/* Base (senza JS o con "riduci movimento"): elenco con foto incorniciata e testo a fianco.
+   Con .is-pinned (main.js) la sezione si ferma e le foto salgono dal basso una alla volta. */
 .partners {
-  /* dal menu "Collaborators" si arriva con il titolo subito sotto la barra */
-  scroll-margin-top: calc(var(--nav-h) - var(--space-l) + 2rem);
   margin-top: var(--space-xl);
   padding-top: var(--space-l);
   border-top: 1px solid var(--c-line);
 }
-.partners__head { max-width: 46ch; margin: 0 auto var(--space-l); text-align: center; }
 .partners__title {
   font-size: clamp(1.6rem, 1.3rem + 1.4vw, 2.4rem);
   font-weight: var(--w-display);
   letter-spacing: -0.035em;
   line-height: 1;
+  text-align: center;
   margin-bottom: var(--space-s);
 }
-
-/* Mobile: fila orizzontale con swipe. Da tablet in su: tre colonne */
-.partners__list {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 70%;
-  gap: var(--space-s);
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  margin-inline: calc(var(--gutter) * -1);
-  padding-inline: var(--gutter);
-  scroll-padding-inline: var(--gutter);
-}
-.partners__list::-webkit-scrollbar { display: none; }
-.partner { scroll-snap-align: start; }
+.partners__intro { max-width: 46ch; margin: 0 auto var(--space-l); text-align: center; }
+.partners__list { display: grid; gap: var(--space-l); }
+.partner { display: grid; gap: 1.5rem; align-items: center; }
 @media (min-width: 700px) {
-  .partners__list {
-    grid-auto-flow: row;
-    /* foto più piccole, come quella dell'About: colonne fisse e centrate */
-    grid-template-columns: repeat(3, minmax(0, 320px));
-    justify-content: center;
-    gap: var(--space-l) var(--space-m);
-    overflow: visible;
-    margin-inline: 0;
-    padding-inline: 0;
-  }
+  .partner { grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: var(--space-m); }
 }
 
+/* foto con cornice chiara, come una stampa */
 .partner__img {
+  --rot: 0deg;
   aspect-ratio: 4 / 5;
-  overflow: hidden;
-  background-color: #0c0c0e;
-  margin-bottom: 1.25rem;
+  width: min(100%, 300px);
+  padding: 10px;
+  background: #ece7dd;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5), 0 4px 14px rgba(0, 0, 0, 0.3);
+  transform: rotate(var(--rot));
 }
-.partner__img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: grayscale(0.35);
-  transform: scale(1.001);
-  transition: transform var(--dur-slow) var(--ease), filter var(--dur-slow) var(--ease);
-}
+.partner:nth-child(1) .partner__img { --rot: -3deg; }
+.partner:nth-child(2) .partner__img { --rot: 2.5deg; }
+.partner:nth-child(3) .partner__img { --rot: -1.5deg; }
+.partner__img img { width: 100%; height: 100%; object-fit: cover; }
 
-.partner:hover .partner__img img { transform: scale(1.04); filter: grayscale(0); }
-
+.partner__num { margin-bottom: 1rem; }
 .partner__name {
-  font-size: clamp(1.5rem, 1.25rem + 1vw, 2rem);
+  font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.75rem);
   font-weight: var(--w-display);
   letter-spacing: -0.03em;
-  line-height: 1.1;
+  line-height: 1.05;
   margin-bottom: 0.4rem;
 }
 .partner__text { margin-top: 0.9rem; max-width: 38ch; }
+
+/* --- Scena ferma ---------------------------------------------------------- */
+.partners.is-pinned {
+  /* altezza = una schermata + lo scorrimento che serve alle tre foto (--count da main.js) */
+  height: calc(100vh + var(--count, 3) * 70vh);
+  height: calc(100svh + var(--count, 3) * 70svh);
+  padding-top: 0;
+  scroll-margin-top: 0;
+}
+.is-pinned .partners__pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas: "intro" "photo" "info";
+  gap: 1.25rem;
+  /* fino ai bordi dello schermo: le ombre delle foto non vengono tagliate */
+  margin-inline: calc(var(--gutter) * -1);
+  padding: calc(var(--nav-h) + 1rem) var(--gutter) 1.5rem;
+  overflow: hidden;
+}
+/* la parola grande dietro le foto */
+.is-pinned .partners__title {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  font-size: clamp(2.5rem, 11.5vw, 12rem);
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(236, 231, 221, 0.13);
+  pointer-events: none;
+}
+.is-pinned .partners__intro { grid-area: intro; margin: 0 auto; font-size: var(--fs-small); max-width: 40ch; }
+.is-pinned .partners__list,
+.is-pinned .partner { display: contents; }
+
+/* foto: tutte nello stesso punto, salgono dal basso (--e da 0 a 1) e restano impilate */
+.is-pinned .partner__img {
+  --e: 0;
+  grid-area: photo;
+  place-self: center;
+  width: auto;
+  height: min(46vh, 420px);
+  height: min(46svh, 420px);
+  max-width: 100%;
+  transform:
+    translate3d(0, calc((1 - var(--e)) * 110vh), 0)
+    rotate(calc(var(--rot) + (1 - var(--e)) * 9deg));
+  will-change: transform;
+}
+.is-pinned .partner:nth-child(2) .partner__img { transform: translate3d(0, calc((1 - var(--e)) * 110vh), 0) rotate(calc(var(--rot) - (1 - var(--e)) * 9deg)); }
+
+/* testo di chi è in primo piano: compare in dissolvenza */
+.is-pinned .partner__info {
+  grid-area: info;
+  align-self: start;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(14px);
+  transition: opacity 0.6s var(--ease), transform 0.7s var(--ease), visibility 0s linear 0.6s;
+}
+.is-pinned .partner.is-current .partner__info {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.7s var(--ease) 0.1s, transform 0.8s var(--ease) 0.1s, visibility 0s;
+}
+.is-pinned .partner__text { margin-inline: auto; }
+
+/* telefono: testo più compatto sotto la foto */
+@media (max-width: 899px) {
+  .is-pinned .partner__name { font-size: 1.6rem; }
+  .is-pinned .partner__text { font-size: var(--fs-small); margin-top: 0.5rem; }
+  .is-pinned .partner__num { margin-bottom: 0.5rem; }
+  .is-pinned .partners__intro { padding-inline: var(--gutter); }
+}
+
+/* desktop: foto al centro, testo di lato */
+@media (min-width: 900px) {
+  .is-pinned .partners__pin {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-areas: "intro photo info";
+    column-gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+    padding: calc(var(--nav-h) + 2rem) var(--gutter) 2.5rem;
+  }
+  /* in basso a sinistra, lontana dalla parola grande */
+  .is-pinned .partners__intro { justify-self: end; align-self: end; text-align: left; margin: 0 0 1rem; max-width: 30ch; }
+  .is-pinned .partner__info { align-self: center; text-align: left; }
+  .is-pinned .partner__text { margin-inline: 0; }
+  .is-pinned .partner__img { height: min(68vh, 600px); }
+}
 
 /* ==========================================================================
    5. Contatti e footer
