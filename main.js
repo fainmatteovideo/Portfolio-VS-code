@@ -2,6 +2,19 @@
 (function () {
   "use strict";
 
+  /* --- Un solo ciclo per scroll e ridimensionamento ------------------------ */
+  // Tutti gli effetti legati allo scroll si aggiornano insieme, una volta per fotogramma.
+  const frameTasks = [];
+  let frameQueued = false;
+  function onFrame(task) { frameTasks.push(task); task(); }
+  function queueFrame() {
+    if (frameQueued) return;
+    frameQueued = true;
+    requestAnimationFrame(() => { frameQueued = false; frameTasks.forEach((t) => t()); });
+  }
+  window.addEventListener("scroll", queueFrame, { passive: true });
+  window.addEventListener("resize", queueFrame);
+
   /* --- Anno nel footer ---------------------------------------------------- */
   const year = document.getElementById("year");
   if (year) year.textContent = new Date().getFullYear();
@@ -99,9 +112,7 @@
 
   // attiva l'ultima sezione il cui inizio ha superato il terzo superiore dello schermo
   // (funziona anche per sezioni basse come la fascia dei loghi)
-  let ticking = false;
   function updateActive() {
-    ticking = false;
     const line = window.innerHeight * 0.35;
     let current = null;
     sections.forEach((s) => { if (s.getBoundingClientRect().top <= line) current = s; });
@@ -113,8 +124,7 @@
     currentLabel = link ? link.textContent.trim() : "Menu";
     if (menu.hidden) setLabel(currentLabel);
   }
-  window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(updateActive); } }, { passive: true });
-  updateActive();
+  onFrame(updateActive);
 
   /* --- Showreel: compare in dissolvenza quando parte davvero -------------- */
   const heroVideo = document.querySelector(".hero__video");
@@ -144,7 +154,6 @@
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const work = document.getElementById("work");
   const list = document.getElementById("work-list");
-  const reelsBox = document.getElementById("reels");
   const intro = document.getElementById("work-intro");
   const filterList = document.querySelector(".filters__list");
 
@@ -153,15 +162,13 @@
   // pulsante audio: 4 barre ferme con audio spento, in movimento con audio acceso
   const SOUND = '<button class="video__sound" type="button" aria-label="Turn sound on" aria-pressed="false"><i><b></b><b></b><b></b><b></b></i></button>';
   const ARROW = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="${d}"/></svg>`;
-  // categorie i cui reel stanno nello showcase (con i pallini) invece che nella griglia
-  const REEL_SLIDES = ["social", "motion-graphic"];
 
   function videoHTML(id, hash, title, poster) {
     return `<div class="video" data-vimeo="${esc(id)}" data-hash="${esc(hash || "")}" data-title="${esc(title)}">
               <button class="video__open" type="button" aria-label="${esc(title)}: open the video with sound"></button>
-              ${poster ? `<img class="video__poster" src="${esc(poster)}"${poster.startsWith("assets/posters/")
-                ? ` srcset="${esc(poster.replace(".webp", "-800.webp"))} 800w, ${esc(poster)} 1600w" sizes="(max-width: 900px) 100vw, 1120px"` : ""}
-                alt="" loading="lazy" decoding="async">` : ""}
+              ${poster ? `<img class="video__poster" data-src="${esc(poster)}"${poster.startsWith("assets/posters/")
+                ? ` data-srcset="${esc(poster.replace(".webp", "-800.webp"))} 800w, ${esc(poster)} 1600w" sizes="(max-width: 1023px) 100vw, 1000px"` : ""}
+                alt="" decoding="async">` : ""}
               ${SOUND}
             </div>`;
   }
@@ -190,9 +197,9 @@
     </article>`;
   }
 
-  // Reel come slide dello showcase: una pagina con tutti gli orizzontali e una con tutti
-  // i verticali. Colonne e file dipendono da quanti sono (telefono / desktop).
-  function reelSlidesHTML(reels) {
+  // Reel come slide dello showcase (dopo i progetti della stessa categoria): una pagina con
+  // tutti gli orizzontali e una con tutti i verticali. Colonne e file dipendono da quanti sono.
+  function reelSlidesHTML(reels, categories) {
     const slide = (category, group, name, items, kind) => {
       const n = items.length;
       const many = kind === "h" ? n > 8 : n > 6;
@@ -204,28 +211,13 @@
         </div>
       </article>`;
     };
-    return REEL_SLIDES.map((category) => {
+    return categories.map(({ id: category }) => {
       const of = (o) => reels.filter((r) => r.category === category && r.orientation === o);
       const h = of("horizontal");
       const v = of("vertical");
       return (h.length ? slide(category, "16:9", "Horizontal reels", h, "h") : "") +
         (v.length ? slide(category, "9:16", "Vertical reels", v, "v") : "");
     }).join("");
-  }
-
-  function reelsHTML(reels, category) {
-    if (REEL_SLIDES.includes(category)) return "";
-    const group = (orientation, title) => {
-      const items = reels.filter((r) => r.category === category && r.orientation === orientation);
-      if (!items.length) return "";
-      return `<div class="reels__group">
-        <p class="reels__title label">${title}</p>
-        <div class="reels__grid reels__grid--${orientation}">
-          ${items.map((r) => videoHTML(r.vimeo, r.hash, r.label, r.poster)).join("")}
-        </div>
-      </div>`;
-    };
-    return group("horizontal", "Reels — 16:9") + group("vertical", "Reels — 9:16");
   }
 
   /* --- Loghi: stessa altezza "visiva" a prescindere dalle proporzioni ----- */
@@ -240,10 +232,7 @@
   }
 
   /* --- Video: caricamento pigro, play/pausa allo scroll, audio al click --- */
-  // Nello showcase dei lavori i progetti sono sovrapposti: vale solo quello attivo
-  const inShowcase = (el) => !!el.closest(".showcase__stage");
-  const isActiveProject = (el) => !!el.closest(".slide")?.classList.contains("is-active");
-  const allowed = (el) => !inShowcase(el) || isActiveProject(el);
+  // Tutti i video stanno nello showcase: suona solo la slide attiva (vedi syncPlayback)
   let showcaseInView = false;
   let workCovered = false; // il pannello di Services copre del tutto i lavori
   const videos = new Map(); // elemento .video -> { player, visible }
@@ -269,7 +258,8 @@
     iframe.tabIndex = -1;
     el.prepend(iframe);
 
-    const state = { player: new Vimeo.Player(iframe), visible: inShowcase(el) ? isActiveProject(el) && showcaseInView : false };
+    const visible = !!el.closest(".slide.is-active") && showcaseInView && !workCovered && modal.hidden;
+    const state = { player: new Vimeo.Player(iframe), visible };
     videos.set(el, state);
     state.player.on("timeupdate", function reveal(d) {
       if (d.seconds > 0.1) { el.classList.add("is-playing"); state.player.off("timeupdate", reveal); }
@@ -348,31 +338,15 @@
   });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closePlayer(); });
 
-  // Video: si caricano quando mancano circa mezza schermata
-  const videoNearObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting || !allowed(entry.target)) return;
-      loadVideo(entry.target);
-      videoNearObserver.unobserve(entry.target);
-    });
-  }, { rootMargin: "50% 0px 50% 0px" });
-
+  // immagini pigre: data-src (e data-srcset) diventano src quando servono
   function loadImages(root) {
     root.querySelectorAll("img[data-src]").forEach((img) => {
       img.addEventListener("load", () => img.classList.add("is-loaded"), { once: true });
+      if (img.dataset.srcset) { img.srcset = img.dataset.srcset; img.removeAttribute("data-srcset"); }
       img.src = img.dataset.src;
       img.removeAttribute("data-src");
     });
   }
-
-  // Loghi (leggeri): si caricano con una schermata di anticipo
-  const nearObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting || !allowed(entry.target)) return;
-      loadImages(entry.target);
-      nearObserver.unobserve(entry.target);
-    });
-  }, { rootMargin: "100% 0px 100% 0px" });
 
   /* --- Audio sul posto: il pulsante con le barre accende/spegne l'audio ---- */
   function setSound(el, on) {
@@ -396,24 +370,6 @@
     if (on) videos.get(el)?.player.play().catch(() => {});
   }
 
-  // Visibile: play muto. Fuori dallo schermo: pausa (e audio spento)
-  const playObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      const el = entry.target;
-      const visible = entry.isIntersecting && allowed(el) && (!inShowcase(el) || showcaseInView);
-      if (visible) loadVideo(el);
-      const s = videos.get(el);
-      if (!s) return;
-      s.visible = visible;
-      if (s.visible && modal.hidden) {
-        s.player.play().catch(() => {});
-      } else {
-        s.player.pause().catch(() => {});
-        if (el.classList.contains("is-unmuted")) setSound(el, false);
-      }
-    });
-  }, { threshold: 0.25 });
-
   // Comparsa morbida
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -423,13 +379,7 @@
     });
   }, { rootMargin: "0px 0px -10% 0px" });
 
-  function observe(root) {
-    root.querySelectorAll(".video").forEach((v) => { playObserver.observe(v); videoNearObserver.observe(v); });
-    root.querySelectorAll(".project").forEach((el) => nearObserver.observe(el));
-    root.querySelectorAll(".reveal").forEach((el) => reducedMotion ? el.classList.add("is-visible") : revealObserver.observe(el));
-  }
-
-  // Comparsa morbida anche per gli elementi già presenti nella pagina (servizi, step, about)
+  // servizi, step, about…
   document.querySelectorAll(".reveal").forEach((el) => reducedMotion ? el.classList.add("is-visible") : revealObserver.observe(el));
 
   // Click sul pulsante con le barre = audio sul posto; click sul resto del video = player completo
@@ -465,11 +415,8 @@
       setActive(i);
     }, { passive: true });
 
-    let ticking = false;
-    window.addEventListener("scroll", () => {
-      if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; updateFromScroll(); }); }
-    }, { passive: true });
-    window.addEventListener("resize", () => { layoutShowcase(); updateFromScroll(); });
+    onFrame(updateFromScroll);
+    window.addEventListener("resize", layoutShowcase);
     desktopMQ.addEventListener("change", () => { layoutShowcase(); activeIndex = -1; setActive(0); updateFromScroll(); });
 
     // video in pausa quando lo showcase non è sullo schermo
@@ -544,8 +491,15 @@
   const slideResize = "ResizeObserver" in window ? new ResizeObserver(() => fitStage()) : null;
 
   function setActive(i) {
+    if (!items.length) {
+      // categoria senza slide (Photo): nessun progetto attivo, tutti i video in pausa
+      activeIndex = -1;
+      stage.querySelectorAll(".slide.is-active").forEach((p) => p.classList.remove("is-active"));
+      videos.forEach((s) => { s.visible = false; s.player.pause().catch(() => {}); });
+      return;
+    }
     i = Math.max(0, Math.min(items.length - 1, i));
-    if (i === activeIndex || !items.length) return;
+    if (i === activeIndex) return;
     activeIndex = i;
     // anche le slide nascoste (altre categorie) perdono lo stato attivo: niente schede sovrapposte
     stage.querySelectorAll(".slide").forEach((p) => p.classList.toggle("is-active", p === items[i]));
@@ -597,8 +551,6 @@
       buildShowcase();
       const category = data.categories.find((c) => c.id === cat);
       intro.textContent = category ? category.intro : "";
-      reelsBox.innerHTML = reelsHTML(data.reels, cat);
-      observe(reelsBox);
       if (photoBox) photoBox.hidden = cat !== "photo";
     };
 
@@ -640,9 +592,9 @@
 
     // file alterne: una verso sinistra, una verso destra, a velocità più bassa dello scroll
     const rowEls = [...photoWall.querySelectorAll(".photo__row")];
-    let wallTicking = false, wallInView = false;
+    let wallInView = false;
     const drift = () => {
-      wallTicking = false;
+      if (!wallInView) return;
       const r = photoWall.getBoundingClientRect();
       const vh = window.innerHeight;
       const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
@@ -653,12 +605,8 @@
       });
     };
     if (!reducedMotion) {
-      new IntersectionObserver(([e]) => { wallInView = e.isIntersecting; if (wallInView) drift(); }).observe(photoWall);
-      window.addEventListener("scroll", () => {
-        if (wallInView && !wallTicking) { wallTicking = true; requestAnimationFrame(drift); }
-      }, { passive: true });
-      window.addEventListener("resize", drift);
-      drift();
+      new IntersectionObserver(([e]) => { wallInView = e.isIntersecting; drift(); }).observe(photoWall);
+      onFrame(drift);
     }
 
     photoWall.addEventListener("click", (e) => {
@@ -904,7 +852,7 @@
 
       list.innerHTML = `<div class="showcase">
           <nav class="showcase__dots" aria-label="Projects"></nav>
-          <div class="showcase__stage">${data.projects.map(projectHTML).join("")}${reelSlidesHTML(data.reels)}</div>
+          <div class="showcase__stage">${data.projects.map(projectHTML).join("")}${reelSlidesHTML(data.reels, data.categories)}</div>
         </div>`;
       setupShowcase();
       buildPhotoWall(data.photos || []);
@@ -922,7 +870,6 @@
         applyFilter(id, true);
         goToWork();
       });
-      observe(list);
     })
     .catch(() => {
       list.innerHTML = '<p class="muted">Projects could not be loaded. Please reload the page.</p>';
@@ -934,35 +881,23 @@
 
   /* 2. Scorrendo, logo e frase dell'apertura si allontanano e il video si scurisce */
   if (!reducedMotion && hero) {
-    let heroTicking = false;
-    const updateHero = () => {
-      heroTicking = false;
+    onFrame(() => {
       const p = Math.min(1, Math.max(0, window.scrollY / (hero.offsetHeight * 0.8)));
       hero.style.setProperty("--hero-p", p.toFixed(3));
-    };
-    window.addEventListener("scroll", () => {
-      if (!heroTicking) { heroTicking = true; requestAnimationFrame(updateHero); }
-    }, { passive: true });
-    updateHero();
+    });
   }
 
   /* 3. Bagliore caldo (lens flare) che si sposta appena lungo il bordo sinistro mentre si scorre */
   const flare = document.querySelector(".flare");
   if (flare && !reducedMotion) {
-    let flareTicking = false;
-    const updateFlare = () => {
-      flareTicking = false;
+    onFrame(() => {
       const max = document.documentElement.scrollHeight - window.innerHeight || 1;
       const p = Math.min(1, Math.max(0, window.scrollY / max));
       // scende appena con la pagina e ondeggia di pochissimo, restando vicino al bordo
       flare.style.setProperty("--flare-y", (p * 18).toFixed(2) + "vh");
       flare.style.setProperty("--flare-x", (Math.sin(p * Math.PI * 2) * 2.5 - 1.5).toFixed(2) + "vw");
       flare.style.setProperty("--flare-r", (p * 12 - 8).toFixed(1) + "deg");
-    };
-    window.addEventListener("scroll", () => {
-      if (!flareTicking) { flareTicking = true; requestAnimationFrame(updateFlare); }
-    }, { passive: true });
-    updateFlare();
+    });
   }
 
   /* 5. Pannello di Services/How I work: i lavori restano fermi e il pannello ci sale sopra;
@@ -975,15 +910,13 @@
   pinWork();
   if (act) {
     // quando il pannello copre tutto, i lavori sotto si nascondono e i video si fermano
-    const updateCover = () => {
+    onFrame(() => {
       const covered = act.getBoundingClientRect().top <= 0;
       if (covered === workCovered) return;
       workCovered = covered;
       work.classList.toggle("is-covered", covered);
       syncPlayback();
-    };
-    window.addEventListener("scroll", updateCover, { passive: true });
-    updateCover();
+    });
   }
   // il pannello si ferma a sua volta quando il suo fondo tocca lo schermo, e About ci sale sopra
   const about = document.getElementById("about");
@@ -994,7 +927,6 @@
   window.addEventListener("resize", pinAct);
   pinAct();
   if (act && about) {
-    let actTicking = false;
     // taglio diagonale di un bordo che sale: ripido quando entra dal basso, dritto quando arriva in cima
     const slantFor = (top, vh) => {
       if (reducedMotion) return 0;
@@ -1002,27 +934,21 @@
       // senza aggancio (telefono/tablet) il taglio resta entro la sovrapposizione di About (10vh)
       return (1 - p) * vh * (pinnedMQ.matches ? 0.24 : 0.1);
     };
-    const setEdge = (el, slant, top, vh) => {
+    const setEdge = (el, slant, top, vh, width) => {
       el.style.setProperty("--slant", slant.toFixed(1) + "px");
-      el.style.setProperty("--angle", (-Math.atan2(slant, el.offsetWidth) * 180 / Math.PI).toFixed(3) + "deg");
+      el.style.setProperty("--angle", (-Math.atan2(slant, width) * 180 / Math.PI).toFixed(3) + "deg");
       el.style.setProperty("--edge", (0.3 + 0.7 * Math.min(1, Math.max(0, top / vh))).toFixed(2));
     };
-    const updateAct = () => {
-      actTicking = false;
+    onFrame(() => {
+      // prima tutte le letture, poi le scritture (niente ricalcoli del layout a metà)
       const vh = window.innerHeight;
+      const width = act.offsetWidth;
       const actTop = act.getBoundingClientRect().top;
       const aboutTop = about.getBoundingClientRect().top;
-      const inSlant = slantFor(actTop, vh);
-      const outSlant = slantFor(aboutTop, vh);
-      setEdge(act, inSlant, actTop, vh);
-      setEdge(about, outSlant, aboutTop, vh);
+      setEdge(act, slantFor(actTop, vh), actTop, vh, width);
+      setEdge(about, slantFor(aboutTop, vh), aboutTop, vh, width);
       act.classList.toggle("is-covered", aboutTop <= 0);
-    };
-    window.addEventListener("scroll", () => {
-      if (!actTicking) { actTicking = true; requestAnimationFrame(updateAct); }
-    }, { passive: true });
-    window.addEventListener("resize", updateAct);
-    updateAct();
+    });
   }
 
   /* 4. Titoli delle sezioni che salgono da una maschera */
