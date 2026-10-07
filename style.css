@@ -222,6 +222,8 @@ h3 {
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
 }
+/* sopra il pannello rosso il fondo del menu prende il suo colore */
+.site-nav.is-scrolled.is-red { background-color: rgba(30, 6, 5, 0.6); }
 .site-nav__logo img { height: 34px; width: auto; }
 
 @media (min-width: 768px) {
@@ -527,6 +529,15 @@ h3 {
   overscroll-behavior-x: contain;
 }
 .filters__list { position: relative; }
+/* bordi sfumati quando la barra continua oltre lo schermo (classi da main.js) */
+.filters__list {
+  --fade-l: 0px;
+  --fade-r: 0px;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
+}
+.filters__list.is-cut-left  { --fade-l: 48px; }
+.filters__list.is-cut-right { --fade-r: 48px; }
 .filters__list .filter:first-of-type { margin-left: auto; }
 .filters__list .filter:last-of-type { margin-right: auto; }
 /* spazio finale: Safari ignora il padding destro dei contenitori che scorrono */
@@ -673,13 +684,8 @@ h3 {
   gap: var(--space-m);
   margin-top: var(--space-m);
 }
-.project__head {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  column-gap: 1.25rem;
-  align-items: baseline;
-}
-.project__num { color: var(--c-text-faint); }
+/* numero sopra, poi titolo, sottotitolo e loghi tutti allineati a sinistra */
+.project__num { display: block; margin-bottom: 0.6rem; color: var(--c-text-faint); }
 .project__title {
   font-size: clamp(1.5rem, 1.2rem + 1.3vw, 2.4rem);
   font-weight: var(--w-display);
@@ -687,8 +693,7 @@ h3 {
   letter-spacing: -0.03em;
 }
 .project__subtitle {
-  grid-column: 2;
-  margin-top: 0.6rem;
+  margin-top: 0.5rem;
   color: var(--c-text-muted);
   font-weight: 300;
 }
@@ -704,12 +709,11 @@ h3 {
 .project__credits span { display: block; color: var(--c-text-faint); }
 
 .project__logos {
-  grid-column: 2;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1.5rem 2.5rem;
-  margin-top: 1.75rem;
+  gap: 1rem 1.75rem;
+  margin-top: 1.25rem;
 }
 .project__logos img { width: auto; }
 
@@ -1217,14 +1221,6 @@ h3 {
 }
 a > .arrow:first-child { margin: 0 0.35em 0 0; }
 
-/* Mobile: loghi dei progetti allineati al bordo sinistro, non sotto il titolo */
-@media (max-width: 899px) {
-  .project__logos {
-    grid-column: 1 / -1;
-    justify-content: flex-start;
-  }
-}
-
 /* ==========================================================================
    Effetti
    ========================================================================== */
@@ -1517,7 +1513,6 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
     backdrop-filter: blur(10px);
   }
   .showcase__stage .project__meta::-webkit-scrollbar { display: none; }
-  .showcase__stage .project__head { display: block; }
   .showcase__stage .project__title { font-size: clamp(1.4rem, 1rem + 1vw, 2rem); }
   .showcase__stage .project__subtitle { margin-top: 0.4rem; font-size: var(--fs-small); }
   .showcase__stage .project__logos { margin-top: 1.25rem; gap: 1rem 1.5rem; }
@@ -1714,7 +1709,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
    l'altezza dello schermo e faceva saltare le sezioni). Il pannello rosso e About salgono
    comunque con il taglio diagonale, scorrendo normalmente. */
 @media (max-width: 1023px), (hover: none) {
-  .work { position: relative; top: auto; }
+  .work { position: relative; top: auto; padding-bottom: calc(var(--space-l) + 14vh); }
   .work.is-covered { visibility: visible; opacity: 1; }
 }   /* opacity: anche la slide attiva (visibility: visible) sparisce */
 
@@ -1733,9 +1728,10 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 /* coperto da About: sparisce (così sotto il fondo sfumato di About non si vede il rosso) */
 .act.is-covered { visibility: hidden; opacity: 0; }
 @media (max-width: 1023px), (hover: none) {
-  .act { position: relative; top: auto; }   /* telefono e tablet: niente aggancio (vedi .work) */
-  /* About si sovrappone alla fine del pannello: nel taglio diagonale si vede il rosso */
-  .about { margin-top: -10vh; }
+  /* telefono e tablet: niente aggancio (vedi .work). Il pannello sale sopra la fine dei lavori
+     e About sopra la fine del pannello: nei tagli diagonali si vede la sezione precedente */
+  .act { position: relative; top: auto; margin-top: -14vh; padding-bottom: 14vh; }
+  .about { margin-top: -14vh; }
 }
 /* mentre si calcola la posizione vera delle sezioni (link del menu) niente sticky */
 .is-measuring .work,

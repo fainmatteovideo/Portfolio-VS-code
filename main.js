@@ -842,6 +842,15 @@
         moveIndicator();
       });
       if (document.fonts) document.fonts.ready.then(() => moveIndicator());
+      // sfumatura ai bordi quando ci sono altre categorie oltre lo schermo
+      const fadeEdges = () => {
+        const max = filterList.scrollWidth - filterList.clientWidth;
+        filterList.classList.toggle("is-cut-left", filterList.scrollLeft > 4);
+        filterList.classList.toggle("is-cut-right", filterList.scrollLeft < max - 4);
+      };
+      filterList.addEventListener("scroll", fadeEdges, { passive: true });
+      window.addEventListener("resize", fadeEdges);
+      fadeEdges();
       filterList.addEventListener("click", (e) => {
         const b = e.target.closest(".filter");
         if (b && b.getAttribute("aria-pressed") !== "true") {
@@ -856,7 +865,7 @@
         </div>`;
       setupShowcase();
       buildPhotoWall(data.photos || []);
-      const projectLogoBase = window.matchMedia("(min-width: 768px)").matches ? 60 : 56;
+      const projectLogoBase = window.matchMedia("(min-width: 768px)").matches ? 60 : 40;
       list.querySelectorAll(".project__logos img").forEach((img) => sizeLogo(img, projectLogoBase));
       // un indirizzo come fainmatteo.com/#documentary apre i lavori con quel filtro attivo
       const isCategory = (id) => data.categories.some((c) => c.id === id);
@@ -931,8 +940,9 @@
     const slantFor = (top, vh) => {
       if (reducedMotion) return 0;
       const p = Math.min(1, Math.max(0, 1 - top / vh));
-      // senza aggancio (telefono/tablet) il taglio resta entro la sovrapposizione di About (10vh)
-      return (1 - p) * vh * (pinnedMQ.matches ? 0.24 : 0.1);
+      // desktop: da ripido a dritto. Telefono/tablet: resta sempre un po' obliquo, entro la
+      // sovrapposizione delle sezioni (14vh)
+      return pinnedMQ.matches ? (1 - p) * vh * 0.24 : vh * (0.04 + 0.1 * (1 - p));
     };
     const setEdge = (el, slant, top, vh, width) => {
       el.style.setProperty("--slant", slant.toFixed(1) + "px");
@@ -945,9 +955,12 @@
       const width = act.offsetWidth;
       const actTop = act.getBoundingClientRect().top;
       const aboutTop = about.getBoundingClientRect().top;
+      const navH = nav.offsetHeight;
       setEdge(act, slantFor(actTop, vh), actTop, vh, width);
       setEdge(about, slantFor(aboutTop, vh), aboutTop, vh, width);
       act.classList.toggle("is-covered", aboutTop <= 0);
+      // il menu prende il colore del pannello rosso quando ci sta sopra
+      nav.classList.toggle("is-red", actTop < navH && aboutTop > navH);
     });
   }
 
