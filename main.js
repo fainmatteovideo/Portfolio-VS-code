@@ -535,7 +535,9 @@
     const bar = filterList.querySelector(".filters__indicator");
     const active = filterList.querySelector('.filter[aria-pressed="true"]');
     if (!bar || !active) return;
-    bar.style.transform = `translateX(${active.offsetLeft}px) scaleX(${active.offsetWidth})`;
+    bar.style.width = active.offsetWidth + "px";
+    bar.style.height = active.offsetHeight + "px";
+    bar.style.transform = `translate(${active.offsetLeft}px, ${active.offsetTop}px)`;
     if (center !== true) return;
     const left = active.offsetLeft - (filterList.clientWidth - active.offsetWidth) / 2;
     filterList.scrollTo({ left: Math.max(0, left), behavior: reducedMotion ? "auto" : "smooth" });
@@ -851,6 +853,24 @@
       filterList.addEventListener("scroll", fadeEdges, { passive: true });
       window.addEventListener("resize", fadeEdges);
       fadeEdges();
+      // telefono: la prima volta che la barra compare scorre un attimo e torna indietro,
+      // per far capire che ci sono altre categorie con lo swipe
+      if (!reducedMotion && window.matchMedia("(hover: none), (max-width: 767px)").matches) {
+        let touched = false;
+        filterList.addEventListener("pointerdown", () => { touched = true; }, { once: true });
+        const peek = new IntersectionObserver(([e]) => {
+          if (!e.isIntersecting) return;
+          peek.disconnect();
+          const start = filterList.scrollLeft;
+          if (filterList.scrollWidth - filterList.clientWidth < 40) return;
+          setTimeout(() => {
+            if (touched) return;
+            filterList.scrollTo({ left: start + 90, behavior: "smooth" });
+            setTimeout(() => { if (!touched) filterList.scrollTo({ left: start, behavior: "smooth" }); }, 750);
+          }, 700);
+        }, { threshold: 1 });
+        peek.observe(filterList);
+      }
       filterList.addEventListener("click", (e) => {
         const b = e.target.closest(".filter");
         if (b && b.getAttribute("aria-pressed") !== "true") {
