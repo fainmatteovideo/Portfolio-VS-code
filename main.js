@@ -426,6 +426,26 @@
     }, { passive: true });
 
     onFrame(updateFromScroll);
+    // desktop: quando lo scroll si ferma a metà fra due progetti, la pagina si assesta
+    // dolcemente sul progetto più vicino (niente slide "a metà")
+    let settleTimer = 0, settling = false;
+    window.addEventListener("scroll", () => {
+      clearTimeout(settleTimer);
+      if (settling || reducedMotion || !desktopMQ.matches || items.length < 2) return;
+      settleTimer = setTimeout(settle, 220);
+    }, { passive: true });
+    function settle() {
+      const total = list.offsetHeight - stageH;
+      const listTop = list.getBoundingClientRect().top + window.scrollY - stageTop;
+      const y = window.scrollY - listTop;
+      if (y <= 0 || y >= total) return; // fuori dallo showcase
+      const slot = total / items.length;
+      const target = listTop + (Math.min(items.length - 1, Math.floor(y / slot)) + 0.5) * slot;
+      if (Math.abs(target - window.scrollY) < 4 || Math.abs(target - window.scrollY) > slot * 0.45) return;
+      settling = true;
+      window.scrollTo({ top: target, behavior: "smooth" });
+      setTimeout(() => { settling = false; }, 700);
+    }
     window.addEventListener("resize", layoutShowcase);
     desktopMQ.addEventListener("change", () => { layoutShowcase(); activeIndex = -1; setActive(0); updateFromScroll(); });
 
