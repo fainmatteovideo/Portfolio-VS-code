@@ -1002,27 +1002,41 @@
     const n = cards.length;
     partners.style.setProperty("--count", n);
     partners.classList.add("is-pinned");
-    let last = "";
+    const imgs = cards.map((c) => c.querySelector(".partner__img"));
+    // lo scroll dà la posizione "obiettivo"; le foto la raggiungono con un'inerzia morbida
+    // (niente scatti con la rotella del mouse)
+    const target = cards.map(() => 0);
+    const shown = cards.map(() => 0);
+    let current = -1, gliding = false;
+    const ease = (t) => 1 - Math.pow(1 - t, 3);
+    const glide = () => {
+      let moving = false;
+      shown.forEach((v, i) => {
+        const d = target[i] - v;
+        shown[i] = Math.abs(d) < 0.001 ? target[i] : v + d * 0.11;
+        if (shown[i] !== target[i]) moving = true;
+        imgs[i].style.setProperty("--e", ease(shown[i]).toFixed(4));
+      });
+      gliding = moving;
+      if (moving) requestAnimationFrame(glide);
+    };
     onFrame(() => {
       const r = partners.getBoundingClientRect();
       const vh = window.innerHeight;
-      if (r.bottom < 0 || r.top > vh) return;
-      // la prima foto inizia a salire quando la sezione è a metà schermo
+      if (r.bottom < -vh || r.top > vh * 2) return;
+      // la prima foto inizia a entrare quando la sezione è a metà schermo
       const total = partners.offsetHeight - vh + vh * 0.5;
       const p = Math.min(1, Math.max(0, (vh * 0.5 - r.top) / total));
-      let current = 0;
-      const enters = cards.map((c, i) => {
-        const e = Math.min(1, Math.max(0, (p * n - i) / 0.7));
-        if (e > 0.5) current = i;
-        return e;
-      });
-      const key = enters.map((e) => e.toFixed(3)).join() + current;
-      if (key === last) return;
-      last = key;
+      let now = 0;
       cards.forEach((c, i) => {
-        c.querySelector(".partner__img").style.setProperty("--e", enters[i].toFixed(3));
-        c.classList.toggle("is-current", i === current);
+        target[i] = Math.min(1, Math.max(0, (p * n - i) / 0.7));
+        if (target[i] > 0.5) now = i;
       });
+      if (now !== current) {
+        current = now;
+        cards.forEach((c, i) => c.classList.toggle("is-current", i === current));
+      }
+      if (!gliding) { gliding = true; requestAnimationFrame(glide); }
     });
   }
 
