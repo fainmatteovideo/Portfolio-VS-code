@@ -1324,6 +1324,44 @@ h3 {
 
 .contact__or { margin-bottom: 0.5rem; font-size: var(--fs-small); }
 
+/* --- Contatti compatti: tutto in una schermata, fino alle icone dei social --- */
+.contact {
+  padding-top: calc(var(--nav-h) + clamp(1rem, 3vh, 2.5rem));
+  padding-bottom: var(--space-m);
+}
+.contact .section-head { gap: 0.6rem; margin-bottom: clamp(1rem, 3vh, 2rem); }
+.contact .brief { padding: clamp(1rem, 0.8rem + 1.2vw, 1.75rem); margin-bottom: clamp(1rem, 3vh, 2rem); }
+.contact .brief__grid { gap: 0.6rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.contact .brief__field--full { grid-column: 1 / -1; }
+.contact .brief input[type="text"],
+.contact .brief input[type="email"],
+.contact .brief select,
+.contact .brief textarea { padding: 0.75rem 0.95rem; border-radius: 10px; font-size: 0.95rem; }
+.contact .brief textarea { min-height: 5.5rem; }
+.contact .brief__foot { margin-top: 1rem; }
+.contact .brief__consent { margin-top: 0; font-size: 0.8rem; line-height: 1.45; }
+.contact .brief__submit { margin-top: 0.9rem; padding: 0.85rem 1.5rem; font-size: 1rem; }
+.contact .contact__or { margin-bottom: 0.25rem; }
+.contact .contact__links { margin-top: clamp(0.75rem, 2.5vh, 1.5rem); }
+@media (max-width: 699px) {
+  /* telefono: azienda e servizio uno sopra l'altro (il testo del menu non finisce sotto la freccia),
+     icone dei social su una riga sola */
+  .contact .brief__grid label:nth-child(3),
+  .contact .brief__grid label:nth-child(4) { grid-column: 1 / -1; }
+  .contact .brief textarea { min-height: 4rem; }
+  .contact .brief__consent { font-size: 0.75rem; }
+  .contact .section-head { margin-bottom: 0.9rem; }
+  .contact .contact__links { flex-wrap: nowrap; gap: 1.25rem; }
+  .contact .contact__links .label { letter-spacing: 0.12em; }
+}
+@media (min-width: 700px) {
+  /* nome, email, azienda, servizio sulla stessa riga; consenso e pulsante affiancati */
+  .contact .brief__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .contact .brief__foot { display: flex; align-items: center; gap: 1.5rem; }
+  .contact .brief__submit { flex: 0 0 auto; width: auto; margin-top: 0; padding-inline: 2.25rem; }
+  .contact .brief { max-width: 980px; }
+}
+
 /* Frecce disegnate (Instagram, LinkedIn, Back to top): niente emoji sui telefoni */
 .arrow {
   display: inline-block;

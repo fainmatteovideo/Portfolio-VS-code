@@ -397,6 +397,7 @@
             <textarea name="message" rows="5" placeholder="Goal, deliverables, length, platform, timeline, budget range and anything I should know." required></textarea>
           </label>
         </div>
+        <div class="brief__foot">
         <label class="brief__consent">
           <input type="checkbox" name="consent" required>
           <span>I have read the <a href="privacy.html">Privacy Policy</a> and agree that Matteo Fain may process my data to respond to this inquiry.</span>
@@ -404,6 +405,7 @@
         <!-- campo trappola contro lo spam: invisibile alle persone -->
         <input type="checkbox" name="botcheck" class="visually-hidden" tabindex="-1" autocomplete="off" aria-hidden="true">
         <button class="brief__submit" type="submit">Send brief</button>
+        </div>
         <p class="brief__status" id="brief-status" role="status" aria-live="polite"></p>
       </form>
 
