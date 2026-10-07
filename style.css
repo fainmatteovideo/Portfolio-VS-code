@@ -1042,17 +1042,12 @@ h3 {
   padding: calc(var(--nav-h) + 1rem) var(--gutter) 1.5rem;
   overflow: hidden;
 }
-/* la parola grande in alto, sempre intera */
+/* titolo come quello delle altre sezioni */
 .is-pinned .partners__title {
   grid-area: title;
   margin: 0;
-  font-size: min(10.5vw, 10rem);
-  letter-spacing: -0.05em;
-  line-height: 0.9;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: rgba(236, 231, 221, 0.22);
-  pointer-events: none;
+  font-size: var(--fs-h2);
+  line-height: 0.98;
 }
 /* frase introduttiva in evidenza */
 .is-pinned .partners__intro {
@@ -1113,16 +1108,18 @@ h3 {
 @media (min-width: 900px) {
   .is-pinned .partners__pin {
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    grid-template-rows: auto auto minmax(0, 1fr);
-    grid-template-areas: "title title title" "intro intro intro" ". photo info";
+    /* foto al centro; a destra la frase in alto e, sotto, il collaboratore in primo piano */
+    grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas: "title title title" ". photo intro" ". photo info";
     row-gap: clamp(1rem, 3vh, 2.5rem);
     column-gap: clamp(2rem, 5vw, 5rem);
     align-items: center;
     padding: calc(var(--nav-h) + 2rem) var(--gutter) 2.5rem;
   }
   .is-pinned .partners__title { justify-self: center; }
-  .is-pinned .partners__intro { justify-self: center; text-align: center; max-width: 44ch; }
-  .is-pinned .partner__info { align-self: center; text-align: left; }
+  .is-pinned .partners__intro { align-self: end; justify-self: start; text-align: left; margin: 0 0 1.75rem; max-width: 30ch; }
+  .is-pinned .partner__info { align-self: start; }
+  .is-pinned .partner__info { text-align: left; }
   .is-pinned .partner__text { margin-inline: 0; }
   .is-pinned .partner__img { height: min(48vh, 460px); }
 }
@@ -1551,6 +1548,23 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 .slide__grid .video__sound i { transform: scale(0.8); }
 @media (min-width: 640px) {
   .slide__grid { --gap: 10px; }
+}
+
+/* Social, col mouse: il cursore diventa una lente e il reel sotto si ingrandisce sul posto
+   (l'origine dell'ingrandimento verso l'interno della griglia arriva da main.js) */
+@media (hover: hover) and (pointer: fine) {
+  .slide[data-category="social"] .slide__grid .video {
+    z-index: 0;
+    cursor: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='32'%20height='32'%20viewBox='0%200%2032%2032'%3E%3Cg%20fill='none'%20stroke-linecap='round'%3E%3Ccircle%20cx='13'%20cy='13'%20r='8'%20stroke='rgba(0,0,0,.55)'%20stroke-width='4'/%3E%3Cpath%20d='M19%2019l7%207'%20stroke='rgba(0,0,0,.55)'%20stroke-width='5'/%3E%3Ccircle%20cx='13'%20cy='13'%20r='8'%20stroke='white'%20stroke-width='2'%20fill='rgba(255,255,255,.12)'/%3E%3Cpath%20d='M19%2019l7%207'%20stroke='white'%20stroke-width='2.5'/%3E%3Cpath%20d='M13%209.5v7M9.5%2013h7'%20stroke='white'%20stroke-width='1.6'/%3E%3C/g%3E%3C/svg%3E") 13 13, zoom-in;
+    transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease), z-index 0s linear 0.5s;
+  }
+  .slide[data-category="social"] .slide__grid .video__open { cursor: inherit; }
+  .slide[data-category="social"] .slide__grid .video:hover {
+    z-index: 5;
+    transform: scale(1.6);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65);
+    transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease), z-index 0s;
+  }
 }
 
 @media (min-width: 1024px) {

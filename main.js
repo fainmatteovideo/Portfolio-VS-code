@@ -382,6 +382,16 @@
   // servizi, step, about…
   document.querySelectorAll(".reveal").forEach((el) => reducedMotion ? el.classList.add("is-visible") : revealObserver.observe(el));
 
+  // Social: il reel ingrandito dalla lente cresce verso l'interno della griglia (non esce dai bordi)
+  work.addEventListener("pointerover", (e) => {
+    const v = e.target.closest('.slide[data-category="social"] .slide__grid .video');
+    if (!v || e.pointerType !== "mouse") return;
+    const g = v.parentElement.getBoundingClientRect();
+    const r = v.getBoundingClientRect();
+    const edge = (a, b) => (a < 8 ? "0%" : b < 8 ? "100%" : "50%");
+    v.style.transformOrigin = `${edge(r.left - g.left, g.right - r.right)} ${edge(r.top - g.top, g.bottom - r.bottom)}`;
+  });
+
   // Click sul pulsante con le barre = audio sul posto; click sul resto del video = player completo
   work.addEventListener("click", (e) => {
     const v = e.target.closest(".video");
