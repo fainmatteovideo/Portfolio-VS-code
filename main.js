@@ -493,6 +493,7 @@
       return `<button class="showcase__dot${cls}${first}" type="button" data-index="${i}" aria-label="${esc(p.dataset.name)} (${i + 1} of ${items.length})"></button>`;
     }).join("");
     stage.scrollLeft = 0;
+    if (slideResize) { slideResize.disconnect(); items.forEach((p) => slideResize.observe(p)); }
     layoutShowcase();
     activeIndex = -1;
     setActive(0);
@@ -533,12 +534,13 @@
     }
   }
 
-  // telefono: lo stage prende l'altezza della slide attiva (le slide dei reel verticali sono più alte)
+  // telefono: lo stage è alto quanto la slide più alta della categoria e non cambia durante
+  // lo swipe (un'altezza che cambia faceva saltare la pagina e scorrere il carosello in verticale)
   function fitStage() {
-    if (desktopMQ.matches || !items[activeIndex]) return;
-    stage.style.height = items[activeIndex].offsetHeight + "px";
+    if (desktopMQ.matches || !items.length) return;
+    stage.style.height = Math.max(...items.map((p) => p.offsetHeight)) + "px";
   }
-  // la slide cambia altezza quando arrivano loghi e font: lo stage la segue
+  // le slide cambiano altezza quando arrivano loghi e font: lo stage le segue
   const slideResize = "ResizeObserver" in window ? new ResizeObserver(() => fitStage()) : null;
 
   function setActive(i) {
@@ -547,8 +549,6 @@
     activeIndex = i;
     // anche le slide nascoste (altre categorie) perdono lo stato attivo: niente schede sovrapposte
     stage.querySelectorAll(".slide").forEach((p) => p.classList.toggle("is-active", p === items[i]));
-    if (slideResize) { slideResize.disconnect(); slideResize.observe(items[i]); }
-    fitStage();
     dotsNav.querySelectorAll(".showcase__dot").forEach((d, j) => d.setAttribute("aria-current", String(j === i)));
     // immagini del progetto attivo e del successivo
     loadImages(items[i]);
@@ -987,6 +987,8 @@
   }
   // il pannello si ferma a sua volta quando il suo fondo tocca lo schermo, e About ci sale sopra
   const about = document.getElementById("about");
+  // stessa condizione del CSS: con mouse e schermo largo lavori e pannello restano agganciati
+  const pinnedMQ = window.matchMedia("(min-width: 1024px) and (hover: hover)");
   const pinAct = () => act && act.style.setProperty("--act-top", Math.min(0, window.innerHeight - act.offsetHeight) + "px");
   if (act && "ResizeObserver" in window) new ResizeObserver(pinAct).observe(act);
   window.addEventListener("resize", pinAct);
@@ -997,7 +999,8 @@
     const slantFor = (top, vh) => {
       if (reducedMotion) return 0;
       const p = Math.min(1, Math.max(0, 1 - top / vh));
-      return (1 - p) * vh * (window.innerWidth >= 768 ? 0.24 : 0.12);
+      // senza aggancio (telefono/tablet) il taglio resta entro la sovrapposizione di About (10vh)
+      return (1 - p) * vh * (pinnedMQ.matches ? 0.24 : 0.1);
     };
     const setEdge = (el, slant, top, vh) => {
       el.style.setProperty("--slant", slant.toFixed(1) + "px");

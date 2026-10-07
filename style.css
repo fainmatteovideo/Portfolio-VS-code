@@ -1456,10 +1456,10 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   align-items: flex-start;
   gap: var(--gutter);
   overflow-x: auto;
+  overflow-y: hidden;   /* solo swipe orizzontale: in verticale scorre la pagina */
   scroll-snap-type: x mandatory;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
-  transition: height 0.5s var(--ease);
 }
 .showcase__stage::-webkit-scrollbar { display: none; }
 .showcase__stage .slide {
@@ -1750,7 +1750,14 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   position: sticky;
   top: var(--work-top, 0px);
 }
-.work.is-covered { visibility: hidden; opacity: 0; }   /* opacity: anche la slide attiva (visibility: visible) sparisce */
+.work.is-covered { visibility: hidden; opacity: 0; }
+/* telefono e tablet: niente aggancio (la barra degli indirizzi che compare/scompare cambia
+   l'altezza dello schermo e faceva saltare le sezioni). Il pannello rosso e About salgono
+   comunque con il taglio diagonale, scorrendo normalmente. */
+@media (max-width: 1023px), (hover: none) {
+  .work { position: relative; top: auto; }
+  .work.is-covered { visibility: visible; opacity: 1; }
+}   /* opacity: anche la slide attiva (visibility: visible) sparisce */
 
 .act {
   --slant: 0px;
@@ -1766,6 +1773,11 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 }
 /* coperto da About: sparisce (così sotto il fondo sfumato di About non si vede il rosso) */
 .act.is-covered { visibility: hidden; opacity: 0; }
+@media (max-width: 1023px), (hover: none) {
+  .act { position: relative; top: auto; }   /* telefono e tablet: niente aggancio (vedi .work) */
+  /* About si sovrappone alla fine del pannello: nel taglio diagonale si vede il rosso */
+  .about { margin-top: -10vh; }
+}
 /* mentre si calcola la posizione vera delle sezioni (link del menu) niente sticky */
 .is-measuring .work,
 .is-measuring .act { position: relative !important; top: 0 !important; }
