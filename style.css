@@ -1025,6 +1025,8 @@ h3 {
   height: calc(100vh + var(--count, 3) * 70vh);
   height: calc(100svh + var(--count, 3) * 70svh);
   padding-top: 0;
+  margin-top: var(--space-m);
+  border-top: 0;
   scroll-margin-top: 0;
 }
 .is-pinned .partners__pin {
