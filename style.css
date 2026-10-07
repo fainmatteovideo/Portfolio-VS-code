@@ -1170,6 +1170,20 @@ h3 {
   transition: color var(--dur-fast) ease;
 }
 .contact__links a:hover { color: var(--c-text); }
+.contact__links a { display: inline-flex; align-items: center; gap: 0.55rem; }
+/* icone dei social: tratto sottile, stesso colore del testo */
+.social-icon {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform var(--dur-fast) ease;
+}
+.social-icon .fill { fill: currentColor; stroke: none; }
+.contact__links a:hover .social-icon { transform: translateY(-2px); }
 
 /* Footer sobrio: linea sottile dentro i margini, testo piccolo */
 .site-footer { padding-bottom: var(--space-m); }
