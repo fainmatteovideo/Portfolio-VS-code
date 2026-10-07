@@ -102,9 +102,9 @@ body::before {
   z-index: -2;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 48% 55% at 14% 12%, rgba(var(--c-glow-green), 0.55), transparent 70%),
-    radial-gradient(ellipse 34% 40% at 30% 4%, rgba(var(--c-glow-green), 0.25), transparent 72%),
-    radial-gradient(ellipse 60% 45% at 100% 100%, rgba(var(--c-glow-green), 0.12), transparent 70%),
+    radial-gradient(ellipse 48% 55% at 14% 12%, rgba(var(--c-glow-green), 0.72), transparent 70%),
+    radial-gradient(ellipse 34% 40% at 30% 4%, rgba(var(--c-glow-green), 0.34), transparent 72%),
+    radial-gradient(ellipse 60% 45% at 100% 100%, rgba(var(--c-glow-green), 0.2), transparent 70%),
     linear-gradient(160deg, #0f1311 0%, var(--c-black) 55%, #0b0d0c 100%);
 }
 
@@ -1034,29 +1034,37 @@ h3 {
   height: 100svh;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  grid-template-areas: "intro" "photo" "info";
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  grid-template-areas: "title" "intro" "photo" "info";
   gap: 1.25rem;
   /* fino ai bordi dello schermo: le ombre delle foto non vengono tagliate */
   margin-inline: calc(var(--gutter) * -1);
   padding: calc(var(--nav-h) + 1rem) var(--gutter) 1.5rem;
   overflow: hidden;
 }
-/* la parola grande dietro le foto */
+/* la parola grande in alto, sempre intera */
 .is-pinned .partners__title {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
+  grid-area: title;
   margin: 0;
-  font-size: clamp(2.5rem, 11.5vw, 12rem);
+  font-size: min(10.5vw, 10rem);
   letter-spacing: -0.05em;
+  line-height: 0.9;
   text-transform: uppercase;
   white-space: nowrap;
-  color: rgba(236, 231, 221, 0.13);
+  color: rgba(236, 231, 221, 0.22);
   pointer-events: none;
 }
-.is-pinned .partners__intro { grid-area: intro; margin: 0 auto; font-size: var(--fs-small); max-width: 40ch; }
+/* frase introduttiva in evidenza */
+.is-pinned .partners__intro {
+  grid-area: intro;
+  margin: 0 auto;
+  max-width: 34ch;
+  color: var(--c-text);
+  font-size: clamp(1.05rem, 0.95rem + 0.6vw, 1.45rem);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
 .is-pinned .partners__list,
 .is-pinned .partner { display: contents; }
 
@@ -1066,15 +1074,15 @@ h3 {
   grid-area: photo;
   place-self: center;
   width: auto;
-  height: min(46vh, 420px);
-  height: min(46svh, 420px);
+  height: min(34vh, 360px);
+  height: min(34svh, 360px);
   max-width: 100%;
+  /* entrano da sinistra e ruotano fino alla loro inclinazione */
   transform:
-    translate3d(0, calc((1 - var(--e)) * 110vh), 0)
-    rotate(calc(var(--rot) + (1 - var(--e)) * 9deg));
+    translate3d(calc((1 - var(--e)) * -110vw), 0, 0)
+    rotate(calc(var(--rot) - (1 - var(--e)) * 12deg));
   will-change: transform;
 }
-.is-pinned .partner:nth-child(2) .partner__img { transform: translate3d(0, calc((1 - var(--e)) * 110vh), 0) rotate(calc(var(--rot) - (1 - var(--e)) * 9deg)); }
 
 /* testo di chi è in primo piano: compare in dissolvenza */
 .is-pinned .partner__info {
@@ -1099,24 +1107,24 @@ h3 {
   .is-pinned .partner__name { font-size: 1.6rem; }
   .is-pinned .partner__text { font-size: var(--fs-small); margin-top: 0.5rem; }
   .is-pinned .partner__num { margin-bottom: 0.5rem; }
-  .is-pinned .partners__intro { padding-inline: var(--gutter); }
 }
 
 /* desktop: foto al centro, testo di lato */
 @media (min-width: 900px) {
   .is-pinned .partners__pin {
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    grid-template-rows: minmax(0, 1fr);
-    grid-template-areas: "intro photo info";
+    grid-template-rows: auto auto minmax(0, 1fr);
+    grid-template-areas: "title title title" "intro intro intro" ". photo info";
+    row-gap: clamp(1rem, 3vh, 2.5rem);
     column-gap: clamp(2rem, 5vw, 5rem);
     align-items: center;
     padding: calc(var(--nav-h) + 2rem) var(--gutter) 2.5rem;
   }
-  /* in basso a sinistra, lontana dalla parola grande */
-  .is-pinned .partners__intro { justify-self: end; align-self: end; text-align: left; margin: 0 0 1rem; max-width: 30ch; }
+  .is-pinned .partners__title { justify-self: center; }
+  .is-pinned .partners__intro { justify-self: center; text-align: center; max-width: 44ch; }
   .is-pinned .partner__info { align-self: center; text-align: left; }
   .is-pinned .partner__text { margin-inline: 0; }
-  .is-pinned .partner__img { height: min(68vh, 600px); }
+  .is-pinned .partner__img { height: min(48vh, 460px); }
 }
 
 /* ==========================================================================
@@ -1877,8 +1885,8 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   z-index: 2;
   background-image:
     radial-gradient(ellipse 30vw 45vh at 0% 35vh, rgba(var(--c-glow-warm), 0.32), transparent 72%),
-    radial-gradient(ellipse 48vw 55vh at 14% 12vh, rgba(var(--c-glow-green), 0.5), transparent 70%),
-    radial-gradient(ellipse 34vw 40vh at 30% 0, rgba(var(--c-glow-green), 0.22), transparent 72%),
+    radial-gradient(ellipse 48vw 55vh at 14% 12vh, rgba(var(--c-glow-green), 0.66), transparent 70%),
+    radial-gradient(ellipse 34vw 40vh at 30% 0, rgba(var(--c-glow-green), 0.3), transparent 72%),
     linear-gradient(to bottom, #0e1210 0, var(--c-black) 60vh, var(--c-black) calc(100% - 35vh), rgba(9, 11, 10, 0) 100%);
   clip-path: polygon(0 var(--slant), 100% 0, 100% 100%, 0 100%);
 }
