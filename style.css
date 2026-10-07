@@ -1356,7 +1356,6 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   padding: var(--space-l) var(--gutter);
   text-align: center;
 }
-.notfound__logo { height: clamp(90px, 14vh, 140px); width: auto; margin-bottom: var(--space-s); }
 .notfound h1 { font-size: var(--fs-h2); max-width: 18ch; }
 .notfound__back {
   margin-top: var(--space-s);
@@ -1366,6 +1365,11 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease;
 }
 .notfound__back:hover { background: var(--c-text); color: var(--c-black); }
+
+/* Privacy e 404: la stessa pillola del menu, qui come ritorno al sito */
+.nav-pill { gap: 10px; }
+.nav-pill .arrow { width: 12px; height: 12px; transition: transform var(--dur-fast) ease; }
+.nav-pill:hover .arrow { transform: translateX(-3px); }
 
 /* ==========================================================================
    Showcase dei lavori
