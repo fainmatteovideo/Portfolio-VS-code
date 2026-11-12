@@ -391,6 +391,15 @@
     const edge = (a, b) => (a < 8 ? "0%" : b < 8 ? "100%" : "50%");
     v.style.transformOrigin = `${edge(r.left - g.left, g.right - r.right)} ${edge(r.top - g.top, g.bottom - r.bottom)}`;
   });
+  // il reel appena lasciato resta sopra gli altri mentre si rimpicciolisce,
+  // ma sotto quello nuovo sotto la lente (prima a volte lo copriva)
+  work.addEventListener("pointerout", (e) => {
+    const v = e.target.closest('.slide[data-category="social"] .slide__grid .video');
+    if (!v || e.pointerType !== "mouse" || v.contains(e.relatedTarget)) return;
+    v.classList.add("is-leaving");
+    clearTimeout(v._leaveTimer);
+    v._leaveTimer = setTimeout(() => v.classList.remove("is-leaving"), 700);
+  });
 
   // Click sul pulsante con le barre = audio sul posto; click sul resto del video = player completo
   work.addEventListener("click", (e) => {

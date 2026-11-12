@@ -222,6 +222,24 @@
       "thumbnail": "assets/posters/gs1-exd-2026.webp"
     },
     {
+      "id": "nordstern-basel",
+      "title": "Nordstern Basel",
+      "subtitle": "",
+      "category": "aftermovie",
+      "vimeo": "1246288671",
+      "credits": [
+        "Client: Nordstern Basel",
+        "Videographer & Editor: Matteo Fain"
+      ],
+      "logos": [
+        {
+          "src": "assets/logos/nordstern.webp",
+          "alt": "Nordstern Basel"
+        }
+      ],
+      "thumbnail": "assets/posters/nordstern-basel.webp"
+    },
+    {
       "id": "sgaim-ssmig-ssgim",
       "title": "SGAIM SSMIG SSGIM",
       "subtitle": "",
