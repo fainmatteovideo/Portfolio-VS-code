@@ -26,8 +26,8 @@
       "intro": "My motion graphics work ranges from handling long and complex music video projects to integrating VFX and animation into social reels."
     },
     {
-      "id": "events",
-      "label": "Events",
+      "id": "aftermovie",
+      "label": "Aftermovie",
       "intro": "I help capture the energy of tech and IT conferences, working seamlessly as a solo freelancer or as part of a larger team to deliver high-impact event coverage."
     },
     {
@@ -42,7 +42,7 @@
       "title": "ANYbotics",
       "subtitle": "",
       "category": "startup",
-      "vimeo": "1246279647",
+      "vimeo": "1246285604",
       "credits": [
         "Client: ANYbotics",
         "Producer: Girts Apskalns",
@@ -142,7 +142,7 @@
       "id": "btry",
       "title": "BTRY",
       "subtitle": "",
-      "category": "commercial",
+      "category": "startup",
       "vimeo": "1172322519",
       "credits": [
         "Client: BTRY",
@@ -180,7 +180,7 @@
       "id": "gs1-exd-2026",
       "title": "GS1 EXD 2026",
       "subtitle": "",
-      "category": "events",
+      "category": "aftermovie",
       "vimeo": "1206485408",
       "credits": [
         "Agency: Kordial",
@@ -204,7 +204,7 @@
       "id": "sgaim-ssmig-ssgim",
       "title": "SGAIM SSMIG SSGIM",
       "subtitle": "",
-      "category": "events",
+      "category": "aftermovie",
       "vimeo": "1206509583",
       "credits": [
         "Agency: Kordial",
@@ -228,7 +228,7 @@
       "id": "gs1-logistic",
       "title": "GS1 Logistic",
       "subtitle": "",
-      "category": "events",
+      "category": "aftermovie",
       "vimeo": "1206485546",
       "credits": [
         "Agency: Kordial",
