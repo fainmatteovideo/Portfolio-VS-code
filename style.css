@@ -242,6 +242,40 @@ h3 {
   .site-nav { padding-block: 28px; }
 }
 
+/* --- Invito al contatto: pillola piena (menu e fine dei lavori) ---------- */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: var(--c-text);
+  color: var(--c-black);
+  line-height: 1.2;
+  white-space: nowrap;
+  transition: transform var(--dur-fast) ease, background-color var(--dur-fast) ease;
+}
+.cta:hover { background: #ffffff; transform: translateY(-1px); }
+.cta .arrow { margin-left: 0.6em; transition: transform var(--dur-fast) ease; }
+.cta:hover .arrow { transform: translateX(3px); }
+
+.site-nav__actions { display: flex; align-items: center; gap: 10px; }
+/* nel menu solo da tablet in su: su telefono la pillola con il nome della sezione occupa già lo spazio */
+.cta--nav {
+  display: none;
+  transition: transform var(--dur-fast) ease, background-color var(--dur-fast) ease,
+    opacity var(--dur-med) var(--ease), visibility 0s;
+}
+@media (min-width: 768px) {
+  .cta--nav { display: inline-flex; }
+}
+/* nella sezione Contact (e sotto il menu a tutto schermo) non serve */
+.is-at-contact .cta--nav,
+.is-menu-open .cta--nav {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur-med) var(--ease), visibility 0s linear var(--dur-med);
+}
+
 /* --- Pillola con la sezione corrente + tendina ---------------------------- */
 .navdrop { position: relative; }
 .navdrop__trigger {
@@ -428,6 +462,7 @@ h3 {
   left: 50%;
   width: max(100vw, 177.78vh);
   height: max(100vh, 56.25vw);
+  max-width: none;   /* senza, il limite generale del 100% lasciava il video a fascia sui telefoni */
   transform: translate(-50%, -50%);
   border: 0;
   pointer-events: none;
@@ -514,8 +549,17 @@ h3 {
 /* ==========================================================================
    2. Lavori
    ========================================================================== */
-.work { padding-bottom: var(--space-l); }
+.work { padding-bottom: var(--space-m); }
 .work .section-head { margin-bottom: var(--space-m); }
+/* invito al contatto alla fine dei lavori */
+.work__cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-top: var(--space-m);
+}
 
 /* --- Barra filtri, resta sotto il menu mentre si scorre ------------------ */
 .filters {
@@ -618,14 +662,33 @@ h3 {
   transition: opacity var(--dur-med) var(--ease);
 }
 .work__intro:empty { margin-top: 0; }
+/* telefono: due righe e "Read more", così il primo video resta in alto (stato da main.js) */
+.work__more { display: none; }
+@media (max-width: 767px) {
+  .work__intro { margin-top: 1.25rem; font-size: 0.9375rem; }
+  .work__intro.is-clamped {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+  .work__more:not([hidden]) {
+    display: block;
+    margin: 0.15rem auto 0;
+    padding: 0.6rem 1rem;
+    color: var(--c-text-muted);
+  }
+}
 
 /* Transizione al cambio filtro */
 .work__list,
 .photo,
-.work__intro { transition: opacity 0.45s var(--ease), transform 0.45s var(--ease); }
+.work__intro,
+.work__more { transition: opacity 0.45s var(--ease), transform 0.45s var(--ease); }
 .work.is-filtering .work__list,
 .work.is-filtering .photo,
-.work.is-filtering .work__intro { opacity: 0; transform: translateY(12px); }
+.work.is-filtering .work__intro,
+.work.is-filtering .work__more { opacity: 0; transform: translateY(12px); }
 
 /* --- Progetto ------------------------------------------------------------ */
 /* Video 16:9 con miniatura statica finché il player non parte */
@@ -1625,6 +1688,22 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 @media (min-width: 640px) {
   .slide__grid { --gap: 10px; }
 }
+/* telefono e tablet: i reel restano miniature (niente player di sfondo, vedi syncPlayback
+   in main.js); al posto del pulsante audio un piccolo "play", il tocco apre il video */
+@media (max-width: 1023px) {
+  .slide__grid .video__sound { display: none; }
+  .slide__grid .video__open::after {
+    content: "";
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid rgba(243, 242, 239, 0.55);
+    background: rgba(9, 11, 10, 0.45) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M3 1.6v6.8L8.6 5z' fill='%23f3f2ef'/%3E%3C/svg%3E") center / 8px no-repeat;
+  }
+}
 
 /* Social, col mouse: il cursore diventa una lente e il reel sotto si ingrandisce sul posto
    (l'origine dell'ingrandimento verso l'interno della griglia arriva da main.js) */
@@ -2006,6 +2085,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   --edge: 0;
   position: relative;
   z-index: 2;
+  padding-bottom: var(--space-m);   /* la fascia dei loghi segue subito la scena Collaboration */
   background-image:
     radial-gradient(ellipse 30vw 45vh at 0% 35vh, rgba(var(--c-glow-warm), 0.32), transparent 72%),
     radial-gradient(ellipse 48vw 55vh at 14% 12vh, rgba(var(--c-glow-green), 0.66), transparent 70%),

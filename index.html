@@ -67,10 +67,10 @@
   <link rel="preconnect" href="https://f.vimeocdn.com">
   <link rel="preload" href="assets/logo/mf-logo-white.webp" as="image" type="image/webp">
   <link rel="preload" href="assets/posters/showreel.webp" as="image" type="image/webp">
-  <link rel="stylesheet" href="style.css?v=20261112c">
+  <link rel="stylesheet" href="style.css?v=20261113a">
   <script src="https://player.vimeo.com/api/player.js" defer></script>
   <!-- ?v=: cambiare la data quando si aggiornano CSS o JS, così i browser non usano la copia vecchia -->
-  <script src="main.js?v=20261112c" defer></script>
+  <script src="main.js?v=20261113a" defer></script>
 </head>
 <body>
   <a class="skip-link label" href="#work">Skip to content</a>
@@ -81,6 +81,9 @@
     <a class="site-nav__logo" href="#top" aria-label="Matteo Fain – back to top">
       <img src="assets/logo/mf-logo-white.webp" alt="" width="717" height="1034">
     </a>
+    <div class="site-nav__actions">
+    <!-- invito al contatto sempre a portata di mano (da tablet in su; sparisce nella sezione Contact) -->
+    <a class="cta cta--nav label" href="#contact">Let's talk</a>
     <!-- Menu: la pillola mostra la sezione corrente; col mouse sopra si apre la tendina,
          su telefono apre il menu a tutto schermo -->
     <div class="navdrop" id="navdrop">
@@ -94,9 +97,10 @@
         <a href="#process"><span>How I work</span></a>
         <a href="#about"><span>About</span></a>
         <a href="#collaborators"><span>Collaborators</span></a>
-        <a href="#partners"><span>Partners</span></a>
+        <a href="#clients"><span>Clients</span></a>
         <a href="#contact"><span>Contact</span></a>
       </nav>
+    </div>
     </div>
   </header>
 
@@ -107,7 +111,7 @@
       <a href="#process">How I work</a>
       <a href="#about">About</a>
       <a href="#collaborators">Collaborators</a>
-      <a href="#partners">Partners</a>
+      <a href="#clients">Clients</a>
       <a href="#contact">Contact</a>
     </nav>
   </div>
@@ -156,6 +160,8 @@
 
     <div class="container">
       <p class="work__intro muted" id="work-intro" aria-live="polite"></p>
+      <!-- solo su telefono: il testo sopra è tagliato a due righe e questo pulsante lo apre -->
+      <button class="work__more label" id="work-intro-more" type="button" aria-expanded="false" aria-controls="work-intro" hidden>Read more</button>
       <div class="work__list" id="work-list"></div>
     </div>
     <!-- categoria Photo: parete di stills che scorre con la pagina -->
@@ -163,6 +169,11 @@
       <div class="photo__wall" id="photo-wall" aria-label="Photos and stills"></div>
       <p class="photo__hint label faint container">Open any frame to see it larger</p>
     </div>
+    <!-- invito al contatto alla fine dei lavori -->
+    <p class="work__cta container">
+      <span class="muted">Have a project in mind?</span>
+      <a class="cta label" href="#contact">Let's talk <svg class="arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6h8M6.5 2.5L10 6l-3.5 3.5"/></svg></a>
+    </p>
   </section>
 
   <!-- Servizi e Come lavoro: pannello rosso scuro che sale con un taglio diagonale sopra i lavori -->
@@ -283,9 +294,10 @@
         </figure>
         <div class="about__text reveal">
           <p class="about__lead">Hi, I'm Matteo, a video editor and filmmaker based in Zurich.</p>
-          <p>My path to this career was a journey of discovery. During my university studies, I constantly looked for my professional calling. This led me to travel and work across Australia, Spain, and Southeast Asia, exploring diverse roles.</p>
-          <p>Eventually, 4 years ago, I transitioned my passion for shooting and editing into a career. I began as a freelancer, serving small clients, and quickly advanced to a full-time position as a video editor and motion graphic designer for a YouTube channel with 2.5 million subscribers.</p>
-          <p>While I specialise in video editing for social media, I am now transitioning to commercial video and documentaries. My dream is to collaborate with renowned brands and agencies.</p>
+          <p>My path to this career was a journey of discovery. During my university studies I travelled and worked across Australia, Spain and Southeast Asia, exploring very different roles until I found my calling behind the camera and in the edit.</p>
+          <p>I turned my passion for shooting and editing into a career as a freelancer, and soon became the full-time video editor and motion graphic designer of a YouTube channel with over 2.6 million subscribers.</p>
+          <p>Today my work spans commercial films, documentaries and social content. I have contributed to projects for brands such as Swisscom, Raiffeisen and BYD, and I regularly team up with agencies and production companies like Kordial and Stories AG.</p>
+          <p>If you are a brand or an agency looking for a reliable editor and filmmaker, I would love to hear about your project.</p>
         </div>
       </div>
 
@@ -332,11 +344,11 @@
   </div>
 
   <!-- Carosello loghi clienti (main.js duplica la fila per lo scorrimento continuo) -->
-  <section class="clients" id="partners" aria-labelledby="clients-title">
+  <section class="clients" id="clients" aria-labelledby="clients-title">
     <!-- l'etichetta sta sopra la linea; le linee racchiudono le due file di loghi
          (la seconda fila, che scorre al contrario, la crea main.js) -->
     <div class="container">
-      <p class="label faint" id="clients-title">Creative partners &amp; brands I've worked with</p>
+      <p class="label faint" id="clients-title">Clients &amp; partners I've worked with</p>
     </div>
     <div class="clients__marquee">
       <ul class="clients__track">

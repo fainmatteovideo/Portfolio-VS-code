@@ -136,6 +136,8 @@
     const link = current && links.find((a) => a.getAttribute("href") === "#" + current.id);
     currentLabel = link ? link.textContent.trim() : "Menu";
     if (menu.hidden) setLabel(currentLabel);
+    // "Let's talk" nel menu: nella sezione Contact non serve
+    nav.classList.toggle("is-at-contact", !!current && current.id === "contact");
   }
   onFrame(updateActive);
 
@@ -571,11 +573,14 @@
   }
 
   // solo il video del progetto attivo è in riproduzione; il successivo si prepara
-  // (non le pagine dei reel: fino a 15 player caricati per chi magari non ci arriva mai)
+  // (non le pagine dei reel: fino a 15 player caricati per chi magari non ci arriva mai).
+  // Telefono e tablet: i reel restano miniature, senza player di sfondo (15 insieme pesano
+  // troppo su rete mobile e batteria); il tocco apre il video completo.
   function syncPlayback() {
     items.forEach((p, j) => p.querySelectorAll(".video").forEach((v) => {
       const play = j === activeIndex && showcaseInView && !workCovered && modal.hidden;
-      if (play || (j === activeIndex + 1 && !p.classList.contains("slide--reels"))) loadVideo(v);
+      const reels = p.classList.contains("slide--reels");
+      if (!(reels && !desktopMQ.matches) && (play || (j === activeIndex + 1 && !reels))) loadVideo(v);
       const s = videos.get(v);
       if (!s) return;
       s.visible = play;
@@ -605,6 +610,20 @@
   }
   let data = null;
 
+  // Telefono: il testo della categoria è tagliato a due righe (CSS) e "Read more" lo apre.
+  // Il pulsante compare solo se il testo è davvero tagliato.
+  const introMore = document.getElementById("work-intro-more");
+  function clampIntro(open) {
+    intro.classList.toggle("is-clamped", !open);
+    introMore.setAttribute("aria-expanded", String(open));
+    introMore.textContent = open ? "Show less" : "Read more";
+    introMore.hidden = !open && intro.scrollHeight <= intro.clientHeight + 1;
+  }
+  const introOpen = () => introMore.getAttribute("aria-expanded") === "true";
+  introMore.addEventListener("click", () => clampIntro(!introOpen()));
+  window.addEventListener("resize", () => { if (!introOpen()) clampIntro(false); });
+  if (document.fonts) document.fonts.ready.then(() => { if (!introOpen()) clampIntro(false); });
+
   function applyFilter(cat, animate) {
     filterList.querySelectorAll(".filter").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.filter === cat)));
     moveIndicator(true);
@@ -614,6 +633,7 @@
       buildShowcase();
       const category = data.categories.find((c) => c.id === cat);
       intro.textContent = category ? category.intro : "";
+      clampIntro(false);
       if (photoBox) photoBox.hidden = cat !== "photo";
     };
 
