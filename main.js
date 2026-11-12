@@ -201,19 +201,6 @@
     </article>`;
   }
 
-  // Loghi come ultima slide dei progetti della categoria (es. Start-up), da "clients" in projects.json
-  function clientsSlideHTML(categories) {
-    return categories.filter((c) => c.clients).map((c) =>
-      `<article class="slide slide--clients" data-category="${esc(c.id)}" data-name="${esc(c.clients.title)}">
-        <p class="slide__num label"></p>
-        <div class="slide__clients">
-          <h3 class="slide__clients-title">${esc(c.clients.title)}</h3>
-          <ul class="slide__clients-list">${c.clients.logos.map((l) =>
-            `<li><img data-src="${esc(l.src)}" alt="${esc(l.alt)}" decoding="async"></li>`).join("")}</ul>
-        </div>
-      </article>`).join("");
-  }
-
   // Reel come slide dello showcase (dopo i progetti della stessa categoria): una pagina con
   // tutti gli orizzontali e una con tutti i verticali. Colonne e file dipendono da quanti sono.
   function reelSlidesHTML(reels, categories) {
@@ -938,7 +925,7 @@
 
       list.innerHTML = `<div class="showcase">
           <nav class="showcase__dots" aria-label="Projects"></nav>
-          <div class="showcase__stage">${data.projects.map(projectHTML).join("")}${clientsSlideHTML(data.categories)}${reelSlidesHTML(data.reels, data.categories)}</div>
+          <div class="showcase__stage">${data.projects.map(projectHTML).join("")}${reelSlidesHTML(data.reels, data.categories)}</div>
         </div>`;
       setupShowcase();
       buildPhotoWall(data.photos || []);

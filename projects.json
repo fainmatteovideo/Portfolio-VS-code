@@ -8,28 +8,7 @@
     {
       "id": "startup",
       "label": "Start-up",
-      "intro": "I work with startups and tech companies on their image films, assisting on set as producer assistant and gaffer to capture the fast-paced energy of innovation.",
-      "clients": {
-        "title": "Start-ups I've worked with",
-        "logos": [
-          {
-            "src": "assets/logos/anybotics.webp",
-            "alt": "ANYbotics"
-          },
-          {
-            "src": "assets/logos/btry.webp",
-            "alt": "BTRY"
-          },
-          {
-            "src": "assets/logos/corintis.webp",
-            "alt": "Corintis"
-          },
-          {
-            "src": "assets/logos/impact-build.webp",
-            "alt": "Impact Build"
-          }
-        ]
-      }
+      "intro": "I work with startups and tech companies on their image films, assisting on set as producer assistant and gaffer to capture the fast-paced energy of innovation."
     },
     {
       "id": "social",

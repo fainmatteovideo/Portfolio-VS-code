@@ -1612,62 +1612,6 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   .slide__grid { --gap: 10px; }
 }
 
-/* Slide dei loghi (es. Start-up): titolo e loghi bianchi centrati.
-   Telefono: griglia di due colonne; da tablet in su una fila sola */
-.slide__clients {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 46vw;
-  padding: var(--space-m) 0;
-  border-top: 1px solid var(--c-line);
-  border-bottom: 1px solid var(--c-line);
-  text-align: center;
-}
-.slide__clients-title {
-  margin-bottom: var(--space-m);
-  font-size: clamp(1.5rem, 1.2rem + 1.3vw, 2.4rem);
-  font-weight: var(--w-display);
-  line-height: 1;
-  letter-spacing: -0.03em;
-}
-.slide__clients-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  justify-items: center;
-  align-items: center;
-  gap: 2rem 1.5rem;
-  width: 100%;
-}
-/* dimensioni solo da CSS: i loghi larghi si fermano alla larghezza, quelli quadrati all'altezza */
-.slide__clients-list img {
-  width: auto;
-  height: auto;
-  max-width: min(100%, 150px);
-  max-height: 52px;
-  opacity: 0.8;
-  transition: opacity var(--dur-fast) ease;
-}
-.slide__clients-list img:hover { opacity: 1; }
-@media (min-width: 768px) {
-  .slide__clients-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2rem clamp(2.5rem, 5vw, 5rem);
-  }
-  .slide__clients-list img { max-width: 220px; max-height: 76px; }
-}
-@media (min-width: 1024px) {
-  .showcase__stage .slide--clients {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .slide__clients { min-height: min(60vh, calc(var(--stage-h, 760px) - 120px)); }
-}
-
 /* Social, col mouse: il cursore diventa una lente e il reel sotto si ingrandisce sul posto
    (l'origine dell'ingrandimento verso l'interno della griglia arriva da main.js) */
 @media (hover: hover) and (pointer: fine) {
