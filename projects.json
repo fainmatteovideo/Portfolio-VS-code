@@ -116,37 +116,6 @@
       "thumbnail": "assets/posters/ost-wing.webp"
     },
     {
-      "id": "security-cafe",
-      "title": "Security - Cafe",
-      "subtitle": "UI design, texture and animation",
-      "category": "commercial",
-      "vimeo": "1172299160",
-      "crop": [
-        0.0857,
-        0.0481
-      ],
-      "credits": [
-        "Client: Swisscom",
-        "Production: Stories AG",
-        "Director: Samuel Morris",
-        "DOP: Léo Schrepel",
-        "Producer: Vera Matta, Meret Früh",
-        "Agency: Mona & Mateo",
-        "Motion Graphics: Matteo Fain"
-      ],
-      "logos": [
-        {
-          "src": "assets/logos/swisscom.webp",
-          "alt": "Swisscom"
-        },
-        {
-          "src": "assets/logos/stories.webp",
-          "alt": "Stories"
-        }
-      ],
-      "thumbnail": "assets/posters/security-cafe.webp"
-    },
-    {
       "id": "btry",
       "title": "BTRY",
       "subtitle": "",
@@ -183,6 +152,37 @@
         }
       ],
       "thumbnail": "assets/posters/raiffeisen-bank.webp"
+    },
+    {
+      "id": "security-cafe",
+      "title": "Security - Cafe",
+      "subtitle": "UI design, texture and animation",
+      "category": "commercial",
+      "vimeo": "1172299160",
+      "crop": [
+        0.0857,
+        0.0481
+      ],
+      "credits": [
+        "Client: Swisscom",
+        "Production: Stories AG",
+        "Director: Samuel Morris",
+        "DOP: Léo Schrepel",
+        "Producer: Vera Matta, Meret Früh",
+        "Agency: Mona & Mateo",
+        "Motion Graphics: Matteo Fain"
+      ],
+      "logos": [
+        {
+          "src": "assets/logos/swisscom.webp",
+          "alt": "Swisscom"
+        },
+        {
+          "src": "assets/logos/stories.webp",
+          "alt": "Stories"
+        }
+      ],
+      "thumbnail": "assets/posters/security-cafe.webp"
     },
     {
       "id": "gs1-exd-2026",
@@ -757,35 +757,11 @@
       ]
     },
     {
-      "src": "assets/stills/tcb/01.webp",
-      "project": "TCB",
-      "size": [
-        800,
-        450
-      ]
-    },
-    {
       "src": "assets/stills/ost-wing/04.webp",
       "project": "OST Wing",
       "size": [
         800,
         451
-      ]
-    },
-    {
-      "src": "assets/stills/btry/12.webp",
-      "project": "BTRY",
-      "size": [
-        800,
-        450
-      ]
-    },
-    {
-      "src": "assets/stills/raiffeisen/05.webp",
-      "project": "Raiffeisen Bank",
-      "size": [
-        800,
-        452
       ]
     },
     {
@@ -826,14 +802,6 @@
       "size": [
         800,
         401
-      ]
-    },
-    {
-      "src": "assets/stills/tcb/09.webp",
-      "project": "TCB",
-      "size": [
-        800,
-        450
       ]
     },
     {
