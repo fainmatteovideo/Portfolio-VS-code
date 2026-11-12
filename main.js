@@ -574,6 +574,19 @@
   }
   let data = null;
 
+  // loghi in fondo alla categoria: si caricano solo quando la categoria viene aperta
+  const clientsBox = document.getElementById("work-clients");
+  function renderClients(clients) {
+    if (!clientsBox) return;
+    clientsBox.hidden = !clients;
+    if (!clients) { clientsBox.innerHTML = ""; return; }
+    clientsBox.innerHTML = `<p class="label faint">${esc(clients.title)}</p>
+      <ul class="work__clients-list">${clients.logos.map((l) =>
+        `<li><img src="${esc(l.src)}" alt="${esc(l.alt)}" decoding="async"></li>`).join("")}</ul>`;
+    const base = window.matchMedia("(min-width: 768px)").matches ? 56 : 40;
+    clientsBox.querySelectorAll("img").forEach((img) => sizeLogo(img, base, 1.1));
+  }
+
   function applyFilter(cat, animate) {
     filterList.querySelectorAll(".filter").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.filter === cat)));
     moveIndicator(true);
@@ -584,6 +597,7 @@
       const category = data.categories.find((c) => c.id === cat);
       intro.textContent = category ? category.intro : "";
       if (photoBox) photoBox.hidden = cat !== "photo";
+      renderClients(category && category.clients);
     };
 
     if (!animate || reducedMotion) { swap(); return; }
