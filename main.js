@@ -15,6 +15,15 @@
   window.addEventListener("scroll", queueFrame, { passive: true });
   window.addEventListener("resize", queueFrame);
 
+  /* --- Pagina ferma sotto menu, player e visualizzatore foto --------------- */
+  // ognuno chiede e rilascia il blocco per conto suo: la pagina torna a scorrere
+  // solo quando nessuno dei tre è aperto
+  const scrollLocks = new Set();
+  function lockScroll(who, on) {
+    on ? scrollLocks.add(who) : scrollLocks.delete(who);
+    document.body.style.overflow = scrollLocks.size ? "hidden" : "";
+  }
+
   /* --- Anno nel footer ---------------------------------------------------- */
   const year = document.getElementById("year");
   if (year) year.textContent = new Date().getFullYear();
@@ -36,6 +45,7 @@
   // con mouse e schermo largo: tendina; altrimenti menu a tutto schermo
   const dropMQ = window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 768px)");
   let currentLabel = "Menu";
+  let menuTimer = 0;
 
   function setLabel(text) {
     if (text === navLabel.textContent) return;
@@ -55,19 +65,20 @@
     toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
     nav.classList.toggle("is-menu-open", open);
     setLabel(open ? "Close" : currentLabel);
-    document.body.style.overflow = open ? "hidden" : "";
+    lockScroll("menu", open);
+    clearTimeout(menuTimer); // riaperto durante la chiusura: non deve sparire a metà
     if (open) {
       menu.hidden = false;
       requestAnimationFrame(() => menu.classList.add("is-open"));
     } else {
       menu.classList.remove("is-open");
-      setTimeout(() => { menu.hidden = true; }, 400);
+      menuTimer = setTimeout(() => { menu.hidden = true; }, 400);
     }
   }
 
   toggle.addEventListener("click", () => {
     if (dropMQ.matches) setDrop(!navdrop.classList.contains("is-open"));
-    else setMenu(menu.hidden);
+    else setMenu(!nav.classList.contains("is-menu-open")); // non menu.hidden: durante la chiusura è ancora visibile
   });
   menu.addEventListener("click", (e) => { if (e.target.closest("a")) setMenu(false); });
   document.addEventListener("keydown", (e) => {
@@ -104,6 +115,8 @@
     e.preventDefault();
     const y = id === "top" ? 0 : sectionY(target);
     window.scrollTo({ top: y, behavior: reducedMotion ? "auto" : "smooth" });
+    // "Skip to content": anche il focus della tastiera passa ai lavori
+    if (a.classList.contains("skip-link")) { target.tabIndex = -1; target.focus({ preventScroll: true }); }
   });
 
   /* --- Link attivo in base alla sezione visibile ------------------------- */
@@ -204,19 +217,21 @@
   // Reel come slide dello showcase (dopo i progetti della stessa categoria): una pagina con
   // tutti gli orizzontali e una con tutti i verticali. Colonne e file dipendono da quanti sono.
   function reelSlidesHTML(reels, categories) {
-    const slide = (category, group, name, items, kind) => {
+    const slide = ({ id: category, label }, group, name, items, kind) => {
       const n = items.length;
+      // nome letto dagli screen reader: "label" in projects.json è solo il nome interno del file
+      const title = (i) => `${label} reel ${i + 1} of ${n} (${kind === "h" ? "horizontal" : "vertical"})`;
       const many = kind === "h" ? n > 8 : n > 6;
       const cols = kind === "h" ? [many ? 3 : 2, many ? 5 : 4] : [many ? 4 : 3, many ? 8 : 5];
       return `<article class="slide slide--reels" data-category="${esc(category)}" data-group="${group}" data-name="${name}">
         <p class="slide__num label"></p>
         <div class="slide__grid slide__grid--${kind}" style="--cm:${cols[0]};--cd:${cols[1]};--rd:${Math.ceil(n / cols[1])}">
-          ${items.map((r) => videoHTML(r.vimeo, r.hash, r.label, r.poster)).join("")}
+          ${items.map((r, i) => videoHTML(r.vimeo, r.hash, title(i), r.poster)).join("")}
         </div>
       </article>`;
     };
-    return categories.map(({ id: category }) => {
-      const of = (o) => reels.filter((r) => r.category === category && r.orientation === o);
+    return categories.map((category) => {
+      const of = (o) => reels.filter((r) => r.category === category.id && r.orientation === o);
       const h = of("horizontal");
       const v = of("vertical");
       return (h.length ? slide(category, "16:9", "Horizontal reels", h, "h") : "") +
@@ -285,6 +300,7 @@
   document.body.appendChild(modal);
   const modalFrame = modal.querySelector(".player-modal__frame");
   let lastFocus = null;
+  let modalTimer = 0;
 
   // Animazione "FLIP": il riquadro del player parte esattamente da dove sta il video
   // nella pagina e si allarga fino alla sua posizione finale (o il contrario in chiusura)
@@ -310,7 +326,8 @@
   function openPlayer(el) {
     const hash = el.dataset.hash ? `h=${el.dataset.hash}&` : "";
     const title = el.dataset.title;
-    modalFrame.classList.toggle("is-vertical", !!el.closest(".reels__grid--vertical, .slide__grid--v"));
+    clearTimeout(modalTimer); // riaperto durante la chiusura: il nuovo video non va svuotato
+    modalFrame.classList.toggle("is-vertical", !!el.closest(".slide__grid--v"));
     // la miniatura fa da sfondo al riquadro mentre il player si carica (continuità visiva)
     const poster = el.querySelector(".video__poster");
     modalFrame.style.backgroundImage = poster ? `url("${poster.currentSrc || poster.src}")` : "";
@@ -323,16 +340,16 @@
     modal.hidden = false;
     flip(el, true);
     requestAnimationFrame(() => modal.classList.add("is-open"));
-    document.body.style.overflow = "hidden";
+    lockScroll("player", true);
     modal.querySelector(".player-modal__close").focus();
   }
 
   function closePlayer() {
     if (modal.hidden) return;
     modal.classList.remove("is-open");
-    document.body.style.overflow = "";
+    lockScroll("player", false);
     if (openedFrom && document.body.contains(openedFrom)) flip(openedFrom, false);
-    setTimeout(() => { modal.hidden = true; modalFrame.innerHTML = ""; modalFrame.style.transform = ""; }, 550);
+    modalTimer = setTimeout(() => { modal.hidden = true; modalFrame.innerHTML = ""; modalFrame.style.transform = ""; }, 550);
     videos.forEach((state) => { if (state.visible) state.player.play().catch(() => {}); });
     if (lastFocus) lastFocus.focus({ preventScroll: true });
   }
@@ -554,10 +571,11 @@
   }
 
   // solo il video del progetto attivo è in riproduzione; il successivo si prepara
+  // (non le pagine dei reel: fino a 15 player caricati per chi magari non ci arriva mai)
   function syncPlayback() {
     items.forEach((p, j) => p.querySelectorAll(".video").forEach((v) => {
       const play = j === activeIndex && showcaseInView && !workCovered && modal.hidden;
-      if (play || j === activeIndex + 1) loadVideo(v);
+      if (play || (j === activeIndex + 1 && !p.classList.contains("slide--reels"))) loadVideo(v);
       const s = videos.get(v);
       if (!s) return;
       s.visible = play;
@@ -675,7 +693,7 @@
   document.body.appendChild(lightbox);
   const lbImg = lightbox.querySelector("img");
   const lbCaption = lightbox.querySelector(".lightbox__caption");
-  let lbPhotos = [], lbIndex = 0, lbFocus = null;
+  let lbPhotos = [], lbIndex = 0, lbFocus = null, lbTimer = 0;
 
   function showPhoto(i) {
     const n = lbPhotos.length;
@@ -694,17 +712,18 @@
     lbPhotos = photos;
     lbFocus = document.activeElement;
     showPhoto(i);
+    clearTimeout(lbTimer);
     lightbox.hidden = false;
     requestAnimationFrame(() => lightbox.classList.add("is-open"));
-    document.body.style.overflow = "hidden";
+    lockScroll("lightbox", true);
     lightbox.querySelector(".lightbox__close").focus();
   }
 
   function closeLightbox() {
     if (lightbox.hidden) return;
     lightbox.classList.remove("is-open");
-    document.body.style.overflow = "";
-    setTimeout(() => { lightbox.hidden = true; }, 400);
+    lockScroll("lightbox", false);
+    lbTimer = setTimeout(() => { lightbox.hidden = true; }, 400);
     if (lbFocus) lbFocus.focus({ preventScroll: true });
   }
 
@@ -930,7 +949,8 @@
       setupShowcase();
       buildPhotoWall(data.photos || []);
       const projectLogoBase = window.matchMedia("(min-width: 768px)").matches ? 60 : 40;
-      list.querySelectorAll(".project__logos img").forEach((img) => sizeLogo(img, projectLogoBase));      // un indirizzo come fainmatteo.com/#documentary apre i lavori con quel filtro attivo
+      list.querySelectorAll(".project__logos img").forEach((img) => sizeLogo(img, projectLogoBase));
+      // un indirizzo come fainmatteo.com/#documentary apre i lavori con quel filtro attivo
       const isCategory = (id) => data.categories.some((c) => c.id === id);
       const goToWork = () => requestAnimationFrame(() => work.scrollIntoView({ behavior: "auto" }));
       const fromHash = location.hash.slice(1);
