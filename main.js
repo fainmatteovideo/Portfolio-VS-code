@@ -880,7 +880,8 @@
     brief.addEventListener("change", (e) => { if (e.target.name === "consent") e.target.closest("label").classList.remove("is-invalid"); });
   }
 
-  fetch("projects.json")
+  // no-cache: il browser controlla sempre se projects.json è cambiato (nuovi progetti visibili subito)
+  fetch("projects.json", { cache: "no-cache" })
     .then((r) => r.json())
     .then((json) => {
       data = json;
