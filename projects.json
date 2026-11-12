@@ -6,6 +6,11 @@
       "intro": "My corporate and commercial work spans on-set production and post-production. I assist startups on set to bring their image videos to life, while also working as a motion designer to create engaging commercial content."
     },
     {
+      "id": "startup",
+      "label": "Start-up",
+      "intro": "I work with startups and tech companies on their image films, assisting on set as producer assistant and gaffer to capture the fast-paced energy of innovation."
+    },
+    {
       "id": "social",
       "label": "Social",
       "intro": "My background includes also a year and a half as the video editor for a major YouTube channel with over 2.6 million subscribers. Now, I partner with creators and brands to produce impactful content across fashion, animation, events, and music videos."
@@ -32,6 +37,25 @@
     }
   ],
   "projects": [
+    {
+      "id": "anybotics",
+      "title": "ANYbotics",
+      "subtitle": "",
+      "category": "startup",
+      "vimeo": "1246279647",
+      "credits": [
+        "Client: ANYbotics",
+        "Producer: Girts Apskalns",
+        "Producer Assistant & Gaffer: Matteo Fain"
+      ],
+      "logos": [
+        {
+          "src": "assets/logos/anybotics.webp",
+          "alt": "ANYbotics"
+        }
+      ],
+      "thumbnail": "assets/posters/anybotics.webp"
+    },
     {
       "id": "security-office",
       "title": "Security - Office",
@@ -367,38 +391,6 @@
       "orientation": "vertical",
       "label": "1196229721",
       "poster": "assets/reels/1196229721.webp"
-    },
-    {
-      "category": "motion-graphic",
-      "vimeo": "1196609537",
-      "hash": "",
-      "orientation": "horizontal",
-      "label": "transizione compro pulisci",
-      "poster": "assets/reels/1196609537.webp"
-    },
-    {
-      "category": "motion-graphic",
-      "vimeo": "1196609526",
-      "hash": "",
-      "orientation": "horizontal",
-      "label": "transizione - casa piccola",
-      "poster": "assets/reels/1196609526.webp"
-    },
-    {
-      "category": "motion-graphic",
-      "vimeo": "1196609468",
-      "hash": "",
-      "orientation": "horizontal",
-      "label": "transition docce",
-      "poster": "assets/reels/1196609468.webp"
-    },
-    {
-      "category": "motion-graphic",
-      "vimeo": "1196609481",
-      "hash": "",
-      "orientation": "horizontal",
-      "label": "transition parrucchiere",
-      "poster": "assets/reels/1196609481.webp"
     },
     {
       "category": "motion-graphic",
