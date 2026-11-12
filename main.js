@@ -894,7 +894,7 @@
         })
         .finally(() => {
           button.disabled = false;
-          button.textContent = "Send brief";
+          button.textContent = "Send";
         });
     });
     const service = brief.elements.service;
