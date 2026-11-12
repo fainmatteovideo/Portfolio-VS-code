@@ -659,11 +659,13 @@ h3 {
   background-color: #0c0c0e;
   cursor: pointer;
 }
+/* --crop-h / --crop-top: video con bande nere nel file (da "crop" in projects.json) */
 .video iframe {
   position: absolute;
-  inset: 0;
+  top: var(--crop-top, 0);
+  left: 0;
   width: 100%;
-  height: 100%;
+  height: var(--crop-h, 100%);
   border: 0;
   pointer-events: none;
 }

@@ -163,8 +163,12 @@
   const SOUND = '<button class="video__sound" type="button" aria-label="Turn sound on" aria-pressed="false"><i><b></b><b></b><b></b><b></b></i></button>';
   const ARROW = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="${d}"/></svg>`;
 
-  function videoHTML(id, hash, title, poster) {
-    return `<div class="video" data-vimeo="${esc(id)}" data-hash="${esc(hash || "")}" data-title="${esc(title)}">
+  // crop: [sopra, sotto], frazioni del fotogramma con bande nere già nel file video:
+  // il player si ingrandisce e si sposta così nel riquadro 16:9 resta solo l'immagine
+  function videoHTML(id, hash, title, poster, crop) {
+    const keep = crop ? 1 - crop[0] - crop[1] : 1;
+    const style = crop ? ` style="--crop-h:${(100 / keep).toFixed(2)}%;--crop-top:${(-100 * crop[0] / keep).toFixed(2)}%"` : "";
+    return `<div class="video" data-vimeo="${esc(id)}" data-hash="${esc(hash || "")}" data-title="${esc(title)}"${style}>
               <button class="video__open" type="button" aria-label="${esc(title)}: open the video with sound"></button>
               ${poster ? `<img class="video__poster" data-src="${esc(poster)}"${poster.startsWith("assets/posters/")
                 ? ` data-srcset="${esc(poster.replace(".webp", "-800.webp"))} 800w, ${esc(poster)} 1600w" sizes="(max-width: 1023px) 100vw, 1000px"` : ""}
@@ -184,7 +188,7 @@
       `<img data-src="${esc(l.src)}" alt="${esc(l.alt)}" decoding="async">`).join("");
 
     return `<article class="project slide" data-category="${esc(p.category)}" data-name="${esc(p.title)}" id="project-${esc(p.id)}">
-      ${videoHTML(p.vimeo, "", p.title, p.thumbnail)}
+      ${videoHTML(p.vimeo, "", p.title, p.thumbnail, p.crop)}
       <div class="project__meta">
         <div class="project__head">
           <span class="project__num slide__num label"></span>

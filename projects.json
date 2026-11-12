@@ -83,6 +83,10 @@
       "subtitle": "UI design, texture and animation",
       "category": "commercial",
       "vimeo": "1171989015",
+      "crop": [
+        0.0857,
+        0.0481
+      ],
       "credits": [
         "Client: Swisscom",
         "Production: Stories AG",
@@ -138,6 +142,10 @@
       "subtitle": "UI design, texture and animation",
       "category": "commercial",
       "vimeo": "1172299160",
+      "crop": [
+        0.0857,
+        0.0481
+      ],
       "credits": [
         "Client: Swisscom",
         "Production: Stories AG",
