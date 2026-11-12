@@ -201,6 +201,19 @@
     </article>`;
   }
 
+  // Loghi come ultima slide dei progetti della categoria (es. Start-up), da "clients" in projects.json
+  function clientsSlideHTML(categories) {
+    return categories.filter((c) => c.clients).map((c) =>
+      `<article class="slide slide--clients" data-category="${esc(c.id)}" data-name="${esc(c.clients.title)}">
+        <p class="slide__num label"></p>
+        <div class="slide__clients">
+          <h3 class="slide__clients-title">${esc(c.clients.title)}</h3>
+          <ul class="slide__clients-list">${c.clients.logos.map((l) =>
+            `<li><img data-src="${esc(l.src)}" alt="${esc(l.alt)}" decoding="async"></li>`).join("")}</ul>
+        </div>
+      </article>`).join("");
+  }
+
   // Reel come slide dello showcase (dopo i progetti della stessa categoria): una pagina con
   // tutti gli orizzontali e una con tutti i verticali. Colonne e file dipendono da quanti sono.
   function reelSlidesHTML(reels, categories) {
@@ -587,19 +600,6 @@
   }
   let data = null;
 
-  // loghi in fondo alla categoria: si caricano solo quando la categoria viene aperta
-  const clientsBox = document.getElementById("work-clients");
-  function renderClients(clients) {
-    if (!clientsBox) return;
-    clientsBox.hidden = !clients;
-    if (!clients) { clientsBox.innerHTML = ""; return; }
-    clientsBox.innerHTML = `<p class="label faint">${esc(clients.title)}</p>
-      <ul class="work__clients-list">${clients.logos.map((l) =>
-        `<li><img src="${esc(l.src)}" alt="${esc(l.alt)}" decoding="async"></li>`).join("")}</ul>`;
-    const base = window.matchMedia("(min-width: 768px)").matches ? 56 : 40;
-    clientsBox.querySelectorAll("img").forEach((img) => sizeLogo(img, base, 1.1));
-  }
-
   function applyFilter(cat, animate) {
     filterList.querySelectorAll(".filter").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.filter === cat)));
     moveIndicator(true);
@@ -610,7 +610,6 @@
       const category = data.categories.find((c) => c.id === cat);
       intro.textContent = category ? category.intro : "";
       if (photoBox) photoBox.hidden = cat !== "photo";
-      renderClients(category && category.clients);
     };
 
     if (!animate || reducedMotion) { swap(); return; }
@@ -938,13 +937,12 @@
 
       list.innerHTML = `<div class="showcase">
           <nav class="showcase__dots" aria-label="Projects"></nav>
-          <div class="showcase__stage">${data.projects.map(projectHTML).join("")}${reelSlidesHTML(data.reels, data.categories)}</div>
+          <div class="showcase__stage">${data.projects.map(projectHTML).join("")}${clientsSlideHTML(data.categories)}${reelSlidesHTML(data.reels, data.categories)}</div>
         </div>`;
       setupShowcase();
       buildPhotoWall(data.photos || []);
       const projectLogoBase = window.matchMedia("(min-width: 768px)").matches ? 60 : 40;
-      list.querySelectorAll(".project__logos img").forEach((img) => sizeLogo(img, projectLogoBase));
-      // un indirizzo come fainmatteo.com/#documentary apre i lavori con quel filtro attivo
+      list.querySelectorAll(".project__logos img").forEach((img) => sizeLogo(img, projectLogoBase));      // un indirizzo come fainmatteo.com/#documentary apre i lavori con quel filtro attivo
       const isCategory = (id) => data.categories.some((c) => c.id === id);
       const goToWork = () => requestAnimationFrame(() => work.scrollIntoView({ behavior: "auto" }));
       const fromHash = location.hash.slice(1);

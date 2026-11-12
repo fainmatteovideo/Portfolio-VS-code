@@ -607,47 +607,12 @@ h3 {
 }
 .work__intro:empty { margin-top: 0; }
 
-/* Loghi in fondo alla categoria (Start-up) */
-.work__clients {
-  margin-top: var(--space-l);
-  padding-top: var(--space-m);
-  border-top: 1px solid var(--c-line);
-  text-align: center;
-}
-.work__clients[hidden] { display: none; }
-.work__clients .label { margin-bottom: var(--space-m); }
-/* telefono: griglia di due colonne; da tablet in su una fila sola */
-.work__clients-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  justify-items: center;
-  align-items: center;
-  gap: 1.75rem 1.5rem;
-}
-.work__clients-list img { max-width: 100%; object-fit: contain; }
-@media (min-width: 768px) {
-  .work__clients-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1.5rem clamp(2rem, 5vw, 4.5rem);
-  }
-}
-.work__clients-list img {
-  width: auto;
-  opacity: 0.7;
-  transition: opacity var(--dur-fast) ease;
-}
-.work__clients-list img:hover { opacity: 1; }
-
 /* Transizione al cambio filtro */
 .work__list,
 .photo,
-.work__clients,
 .work__intro { transition: opacity 0.45s var(--ease), transform 0.45s var(--ease); }
 .work.is-filtering .work__list,
 .work.is-filtering .photo,
-.work.is-filtering .work__clients,
 .work.is-filtering .work__intro { opacity: 0; transform: translateY(12px); }
 
 /* --- Progetto ------------------------------------------------------------ */
@@ -1645,6 +1610,62 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 .slide__grid .video__sound i { transform: scale(0.8); }
 @media (min-width: 640px) {
   .slide__grid { --gap: 10px; }
+}
+
+/* Slide dei loghi (es. Start-up): titolo e loghi bianchi centrati.
+   Telefono: griglia di due colonne; da tablet in su una fila sola */
+.slide__clients {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 46vw;
+  padding: var(--space-m) 0;
+  border-top: 1px solid var(--c-line);
+  border-bottom: 1px solid var(--c-line);
+  text-align: center;
+}
+.slide__clients-title {
+  margin-bottom: var(--space-m);
+  font-size: clamp(1.5rem, 1.2rem + 1.3vw, 2.4rem);
+  font-weight: var(--w-display);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.slide__clients-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  justify-items: center;
+  align-items: center;
+  gap: 2rem 1.5rem;
+  width: 100%;
+}
+/* dimensioni solo da CSS: i loghi larghi si fermano alla larghezza, quelli quadrati all'altezza */
+.slide__clients-list img {
+  width: auto;
+  height: auto;
+  max-width: min(100%, 150px);
+  max-height: 52px;
+  opacity: 0.8;
+  transition: opacity var(--dur-fast) ease;
+}
+.slide__clients-list img:hover { opacity: 1; }
+@media (min-width: 768px) {
+  .slide__clients-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem clamp(2.5rem, 5vw, 5rem);
+  }
+  .slide__clients-list img { max-width: 220px; max-height: 76px; }
+}
+@media (min-width: 1024px) {
+  .showcase__stage .slide--clients {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .slide__clients { min-height: min(60vh, calc(var(--stage-h, 760px) - 120px)); }
 }
 
 /* Social, col mouse: il cursore diventa una lente e il reel sotto si ingrandisce sul posto
