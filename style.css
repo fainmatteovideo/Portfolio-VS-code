@@ -45,11 +45,9 @@
   --fs-lead: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
   --fs-h3: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
   --fs-h2: clamp(2rem, 1.5rem + 2.2vw, 3.25rem);
-  --fs-display: clamp(2.5rem, 1.2rem + 6.5vw, 7.5rem);
 
   /* Spaziature */
   --gutter: clamp(16px, 4vw, 64px);
-  --space-xs: 0.5rem;
   --space-s: 1rem;
   --space-m: 2rem;
   --space-l: clamp(3rem, 2rem + 4vw, 6rem);
@@ -121,6 +119,22 @@ body::after {
 
 ::selection { background: var(--c-text); color: var(--c-black); }
 
+/* "Skip to content": compare solo quando riceve il focus da tastiera */
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--c-text);
+  color: var(--c-black);
+  transform: translateY(-200%);
+}
+.skip-link:focus { transform: none; }
+/* la sezione che riceve il focus dal link qui sopra non mostra il contorno */
+[tabindex="-1"]:focus { outline: none; }
+
 :focus-visible {
   outline: 1px solid var(--c-text);
   outline-offset: 4px;
@@ -128,13 +142,11 @@ body::after {
 
 /* --- Tipografia ---------------------------------------------------------- */
 /* Titoli: maiuscole/minuscole normali, peso molto alto, spaziatura stretta */
-.display,
 h1, h2 {
   font-weight: var(--w-display);
   line-height: 0.98;
   letter-spacing: -0.035em;
 }
-.display { font-size: var(--fs-display); }
 h2 { font-size: var(--fs-h2); }
 h3 {
   font-size: var(--fs-h3);
@@ -245,6 +257,9 @@ h3 {
   backdrop-filter: blur(10px);
   transition: border-color var(--dur-fast) ease, background-color var(--dur-fast) ease;
 }
+/* area di tocco più alta della pillola (44 px), senza cambiarne l'aspetto */
+.navdrop__trigger { position: relative; }
+.navdrop__trigger::after { content: ""; position: absolute; inset: -5px; }
 .navdrop:hover .navdrop__trigger,
 .navdrop.is-open .navdrop__trigger,
 .navdrop__trigger:focus-visible { border-color: rgba(243, 242, 239, 0.45); background-color: rgba(9, 11, 10, 0.6); }
@@ -361,11 +376,13 @@ h3 {
 }
 .mobile-menu[hidden] { display: none; }
 .mobile-menu.is-open { opacity: 1; }
-.mobile-menu nav { display: flex; flex-direction: column; gap: 1.75rem; }
+/* il padding allarga l'area di tocco di ogni voce: la distanza fra le voci resta la stessa */
+.mobile-menu nav { display: flex; flex-direction: column; gap: 0.75rem; }
 .mobile-menu a {
   display: flex;
   align-items: baseline;
   gap: 1rem;
+  padding-block: 0.5rem;
   font-size: clamp(1.75rem, 8vw, 2.5rem);
   font-weight: var(--w-display);
   line-height: 1;
@@ -482,11 +499,8 @@ h3 {
 }
 
 @media (min-width: 768px) {
-  .hero__logo img { height: clamp(160px, 28.8vh, 320px); }
-}
-
-@media (min-width: 768px) {
   :root { --nav-h: 90px; }
+  .hero__logo img { height: clamp(160px, 28.8vh, 320px); }
 }
 
 /* Comparsa morbida allo scroll (aggiunta da main.js) */
@@ -514,6 +528,7 @@ h3 {
   border-bottom: 1px solid var(--c-line);
 }
 .filters__list {
+  position: relative;
   display: flex;
   gap: 8px;
   padding-block: 12px;
@@ -522,21 +537,16 @@ h3 {
   /* su mobile i filtri scorrono in orizzontale fino al bordo dello schermo */
   margin-inline: calc(var(--gutter) * -1);
   padding-inline: var(--gutter);
-}
-.filters__list::-webkit-scrollbar { display: none; }
-/* su touch la barra dei filtri scorre solo in orizzontale (non trascina la pagina) */
-.filters__list {
+  /* su touch la barra dei filtri scorre solo in orizzontale (non trascina la pagina) */
   touch-action: pan-x;
   overscroll-behavior-x: contain;
-}
-.filters__list { position: relative; }
-/* bordi sfumati quando la barra continua oltre lo schermo (classi da main.js) */
-.filters__list {
+  /* bordi sfumati quando la barra continua oltre lo schermo (classi da main.js) */
   --fade-l: 0px;
   --fade-r: 0px;
   -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
   mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
 }
+.filters__list::-webkit-scrollbar { display: none; }
 .filters__list.is-cut-left  { --fade-l: 48px; }
 .filters__list.is-cut-right { --fade-r: 48px; }
 .filters__list .filter:first-of-type { margin-left: auto; }
@@ -576,6 +586,8 @@ h3 {
 @media (max-width: 767px) {
   .filters__list { gap: 6px; padding-block: 10px; }
   .filter { padding: 9px 14px; }
+  /* area di tocco fino ai bordi della barra */
+  .filter::after { content: ""; position: absolute; inset: -6px 0; }
 }
 
 /* invito sopra la barra */
@@ -1134,8 +1146,13 @@ h3 {
 /* ==========================================================================
    5. Contatti e footer
    ========================================================================== */
-.contact { padding-bottom: var(--space-l); text-align: center; }
-.contact .section-head { margin-bottom: var(--space-m); }
+/* compatti: tutto in una schermata, fino alle icone dei social */
+.contact {
+  padding-top: calc(var(--nav-h) + clamp(1rem, 3vh, 2.5rem));
+  padding-bottom: var(--space-m);
+  text-align: center;
+}
+.contact .section-head { gap: 0.6rem; margin-bottom: clamp(1rem, 3vh, 2rem); }
 
 .contact__email {
   display: inline-block;
@@ -1165,14 +1182,19 @@ h3 {
   flex-wrap: wrap;
   justify-content: center;
   gap: 1rem 2.5rem;
-  margin-top: var(--space-m);
+  margin-top: clamp(0.75rem, 2.5vh, 1.5rem);
 }
 .contact__links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
   color: var(--c-text-muted);
   transition: color var(--dur-fast) ease;
 }
 .contact__links a:hover { color: var(--c-text); }
-.contact__links a { display: inline-flex; align-items: center; gap: 0.55rem; }
+/* area di tocco più grande di icona e scritta */
+.contact__links a { position: relative; }
+.contact__links a::after { content: ""; position: absolute; inset: -14px -8px; }
 /* icone dei social: tratto sottile, stesso colore del testo */
 .social-icon {
   width: 17px;
@@ -1201,7 +1223,8 @@ h3 {
   color: var(--c-text-faint);
 }
 .site-footer__group { display: flex; flex-wrap: wrap; gap: 0.4rem 1.5rem; }
-.site-footer a { transition: color var(--dur-fast) ease; }
+.site-footer a { position: relative; transition: color var(--dur-fast) ease; }
+.site-footer a::after { content: ""; position: absolute; inset: -11px -8px; }
 .site-footer a:hover { color: var(--c-text); }
 /* su mobile tutto allineato a sinistra, uno sotto l'altro */
 @media (max-width: 699px) {
@@ -1225,11 +1248,13 @@ h3 {
 .legal__text p + p { margin-top: 1rem; }
 .legal__text a { text-decoration: underline; text-underline-offset: 3px; }
 
-/* --- Form "Send brief" -------------------------------------------------- */
+/* ==========================================================================
+   Form "Send brief" (sezione Contatti)
+   ========================================================================== */
 .brief {
   max-width: 880px;
-  margin: 0 auto var(--space-l);
-  padding: clamp(1.25rem, 1rem + 2vw, 2.75rem);
+  margin: 0 auto clamp(1rem, 3vh, 2rem);
+  padding: clamp(1rem, 0.8rem + 1.2vw, 1.75rem);
   text-align: left;
   border: 1px solid var(--c-line);
   border-radius: 18px;
@@ -1239,26 +1264,25 @@ h3 {
 }
 .brief__grid {
   display: grid;
-  gap: 0.9rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
 }
-@media (min-width: 700px) {
-  .brief__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .brief__field--full { grid-column: 1 / -1; }
-}
+.brief__field--full { grid-column: 1 / -1; }
 .brief input[type="text"],
 .brief input[type="email"],
 .brief select,
 .brief textarea {
   width: 100%;
-  padding: 1rem 1.1rem;
+  padding: 0.75rem 0.95rem;
   font: inherit;
+  font-size: 0.95rem;
   color: var(--c-text);
   background-color: rgba(243, 242, 239, 0.04);
   border: 1px solid rgba(243, 242, 239, 0.18);
-  border-radius: 12px;
+  border-radius: 10px;
   transition: border-color var(--dur-fast) ease, background-color var(--dur-fast) ease;
 }
-.brief textarea { resize: vertical; min-height: 9rem; }
+.brief textarea { resize: vertical; min-height: 5.5rem; }
 .brief select {
   appearance: none;
   -webkit-appearance: none;
@@ -1266,8 +1290,8 @@ h3 {
   /* freccina */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%23f3f2ef' stroke-opacity='.6' stroke-width='1.4'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 1.1rem center;
-  padding-right: 2.75rem;
+  background-position: right 0.95rem center;
+  padding-right: 2.25rem;
 }
 /* "What do you need?" grigio come gli altri campi vuoti, finché non si sceglie */
 .brief select.is-empty { color: var(--c-text-faint); }
@@ -1282,12 +1306,13 @@ h3 {
 }
 .brief .is-invalid { border-color: #e0816f !important; }
 
+.brief__foot { margin-top: 1rem; }
 .brief__consent {
   display: flex;
   align-items: flex-start;
   gap: 0.85rem;
-  margin-top: 1.4rem;
-  font-size: var(--fs-small);
+  font-size: 0.8rem;
+  line-height: 1.45;
   color: var(--c-text-muted);
   cursor: pointer;
 }
@@ -1305,13 +1330,13 @@ h3 {
 .brief__submit {
   display: block;
   width: 100%;
-  margin-top: 1.4rem;
-  padding: 1.05rem 1.5rem;
+  margin-top: 0.9rem;
+  padding: 0.85rem 1.5rem;
   border-radius: 999px;
   background: var(--c-text);
   color: var(--c-black);
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 1rem;
   transition: transform var(--dur-fast) ease, background-color var(--dur-fast) ease;
 }
 .brief__submit:hover { background: #ffffff; transform: translateY(-1px); }
@@ -1324,44 +1349,30 @@ h3 {
 }
 .brief__status:empty { display: none; }
 
-.contact__or { margin-bottom: 0.5rem; font-size: var(--fs-small); }
+.contact__or { margin-bottom: 0.25rem; font-size: var(--fs-small); }
 
-/* --- Contatti compatti: tutto in una schermata, fino alle icone dei social --- */
-.contact {
-  padding-top: calc(var(--nav-h) + clamp(1rem, 3vh, 2.5rem));
-  padding-bottom: var(--space-m);
-}
-.contact .section-head { gap: 0.6rem; margin-bottom: clamp(1rem, 3vh, 2rem); }
-.contact .brief { padding: clamp(1rem, 0.8rem + 1.2vw, 1.75rem); margin-bottom: clamp(1rem, 3vh, 2rem); }
-.contact .brief__grid { gap: 0.6rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.contact .brief__field--full { grid-column: 1 / -1; }
-.contact .brief input[type="text"],
-.contact .brief input[type="email"],
-.contact .brief select,
-.contact .brief textarea { padding: 0.75rem 0.95rem; border-radius: 10px; font-size: 0.95rem; }
-.contact .brief textarea { min-height: 5.5rem; }
-.contact .brief__foot { margin-top: 1rem; }
-.contact .brief__consent { margin-top: 0; font-size: 0.8rem; line-height: 1.45; }
-.contact .brief__submit { margin-top: 0.9rem; padding: 0.85rem 1.5rem; font-size: 1rem; }
-.contact .contact__or { margin-bottom: 0.25rem; }
-.contact .contact__links { margin-top: clamp(0.75rem, 2.5vh, 1.5rem); }
 @media (max-width: 699px) {
   /* telefono: azienda e servizio uno sopra l'altro (il testo del menu non finisce sotto la freccia),
      icone dei social su una riga sola */
-  .contact .brief__grid label:nth-child(3),
-  .contact .brief__grid label:nth-child(4) { grid-column: 1 / -1; }
-  .contact .brief textarea { min-height: 4rem; }
-  .contact .brief__consent { font-size: 0.75rem; }
+  .brief__grid label:nth-child(3),
+  .brief__grid label:nth-child(4) { grid-column: 1 / -1; }
+  /* 16px: sotto questa misura iPhone ingrandisce la pagina quando si tocca un campo */
+  .brief input[type="text"],
+  .brief input[type="email"],
+  .brief select,
+  .brief textarea { font-size: 1rem; }
+  .brief textarea { min-height: 4rem; }
+  .brief__consent { font-size: 0.75rem; }
   .contact .section-head { margin-bottom: 0.9rem; }
-  .contact .contact__links { flex-wrap: nowrap; gap: 1.25rem; }
-  .contact .contact__links .label { letter-spacing: 0.12em; }
+  .contact__links { flex-wrap: nowrap; gap: 1.25rem; }
+  .contact__links .label { letter-spacing: 0.12em; }
 }
 @media (min-width: 700px) {
   /* nome, email, azienda, servizio sulla stessa riga; consenso e pulsante affiancati */
-  .contact .brief__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .contact .brief__foot { display: flex; align-items: center; gap: 1.5rem; }
-  .contact .brief__submit { flex: 0 0 auto; width: auto; margin-top: 0; padding-inline: 2.25rem; }
-  .contact .brief { max-width: 980px; }
+  .brief { max-width: 980px; }
+  .brief__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .brief__foot { display: flex; align-items: center; gap: 1.5rem; }
+  .brief__submit { flex: 0 0 auto; width: auto; margin-top: 0; padding-inline: 2.25rem; }
 }
 
 /* Frecce disegnate (Instagram, LinkedIn, Back to top): niente emoji sui telefoni */
@@ -1554,12 +1565,15 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   margin: var(--space-m) 0 var(--space-s);
 }
 .showcase__dot {
+  position: relative;
   width: 8px;
   height: 8px;
   border-radius: 999px;
   background: rgba(243, 242, 239, 0.28);
   transition: width 0.45s var(--ease), height 0.45s var(--ease), background-color 0.3s ease;
 }
+/* area di tocco molto più grande del pallino (fino a metà distanza dai vicini) */
+.showcase__dot::after { content: ""; position: absolute; inset: -14px -5px; }
 .showcase__dot:hover { background: rgba(243, 242, 239, 0.6); }
 .showcase__dot[aria-current="true"] { width: 26px; background: var(--c-text); }
 /* reel verticali: pallini "in piedi" (9:16), staccati dal gruppo precedente */
@@ -1662,6 +1676,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
     align-items: center;
   }
   .showcase__dots { flex-direction: column; margin: 0; }
+  .showcase__dot::after { inset: -5px -9px; }
   .showcase__dot[aria-current="true"] { width: 8px; height: 26px; }
   .showcase__dot--tall { width: 8px; height: 8px; border-radius: 2px; }
   .showcase__dot--tall[aria-current="true"] { width: 8px; height: 26px; }
