@@ -3,7 +3,7 @@
     {
       "id": "commercial",
       "label": "Commercial & Corporate",
-      "intro": "My corporate and commercial work spans on-set production and post-production. I assist startups on set to bring their image videos to life, while also working as a motion designer to create engaging commercial content."
+      "intro": "My commercial and corporate work is mostly post-production: I edit brand films and design the motion graphics, UI animations and VFX that bring them to life, for clients such as Swisscom, Raiffeisen and OST."
     },
     {
       "id": "startup",
@@ -13,7 +13,7 @@
     {
       "id": "social",
       "label": "Social",
-      "intro": "My background includes also a year and a half as the video editor for a major YouTube channel with over 2.6 million subscribers. Now, I partner with creators and brands to produce impactful content across fashion, animation, events, and music videos."
+      "intro": "I spent a year and a half as the video editor of a major YouTube channel with over 2.6 million subscribers. Today I partner with creators and brands to produce high-impact content across fashion, animation, events and music videos."
     },
     {
       "id": "documentary",
@@ -73,7 +73,7 @@
         "DOP: Léo Schrepel",
         "Producer: Vera Matta, Meret Früh",
         "Agency: Mona & Mateo",
-        "Matteo Fain: motion graphic"
+        "Motion Graphics: Matteo Fain"
       ],
       "logos": [
         {
@@ -94,14 +94,14 @@
       "category": "commercial",
       "vimeo": "1197366584",
       "credits": [
-        "Agency: kordial.ch",
+        "Agency: Kordial",
         "Director / Grading: Damian Ruchti",
         "DP / CamOp: Nils Bätscher",
         "Grip / Gaffer: Noah Steiner",
         "VFX Artist: Jonas Schertenleib",
         "Editor: Matteo Fain",
         "Script: Stefan Saladin",
-        "Customer: OST, Stefanie Schnelli"
+        "Client: OST, Stefanie Schnelli"
       ],
       "logos": [
         {
@@ -132,7 +132,7 @@
         "DOP: Léo Schrepel",
         "Producer: Vera Matta, Meret Früh",
         "Agency: Mona & Mateo",
-        "Matteo Fain: motion graphic"
+        "Motion Graphics: Matteo Fain"
       ],
       "logos": [
         {
@@ -174,7 +174,7 @@
       "credits": [
         "Client: Raiffeisen Bank",
         "Producer & Filmmaker: Franz Thiel",
-        "Video Editor: Matteo Fain"
+        "Editor: Matteo Fain"
       ],
       "logos": [
         {
@@ -338,7 +338,7 @@
       "category": "motion-graphic",
       "vimeo": "1172326097",
       "credits": [
-        "Lyrics music video",
+        "Format: Lyric music video",
         "Artist: Fulminacci",
         "Editor: Matteo Fain",
         "Platform: YouTube"
@@ -353,7 +353,7 @@
       "category": "motion-graphic",
       "vimeo": "1196674967",
       "credits": [
-        "Lyrics music video",
+        "Format: Lyric music video",
         "Client: Ninna & Matti",
         "Editor: Matteo Fain",
         "Platform: YouTube"
@@ -368,7 +368,7 @@
       "category": "motion-graphic",
       "vimeo": "1196680074",
       "credits": [
-        "Lyrics music video",
+        "Format: Lyric music video",
         "Client: Ninna & Matti",
         "Editor: Matteo Fain",
         "Platform: YouTube"
