@@ -15,6 +15,17 @@
   window.addEventListener("scroll", queueFrame, { passive: true });
   window.addEventListener("resize", queueFrame);
 
+  // Altezza dello schermo per gli effetti legati allo scroll. Su telefono la barra degli indirizzi
+  // compare e scompare cambiando innerHeight di qualche decina di pixel: usarla direttamente faceva
+  // saltare foto, tagli diagonali e polaroid. Lì si aggiorna solo quando cambia la larghezza
+  // (rotazione del telefono), come le unità svh del CSS.
+  const touchMQ = window.matchMedia("(hover: none)");
+  let stableH = window.innerHeight, stableW = window.innerWidth;
+  window.addEventListener("resize", () => {
+    if (!touchMQ.matches || window.innerWidth !== stableW) { stableH = window.innerHeight; stableW = window.innerWidth; }
+  });
+  const viewH = () => touchMQ.matches ? stableH : window.innerHeight;
+
   /* --- Pagina ferma sotto menu, player e visualizzatore foto --------------- */
   // ognuno chiede e rilascia il blocco per conto suo: la pagina torna a scorrere
   // solo quando nessuno dei tre è aperto
@@ -621,7 +632,12 @@
   }
   const introOpen = () => introMore.getAttribute("aria-expanded") === "true";
   introMore.addEventListener("click", () => clampIntro(!introOpen()));
-  window.addEventListener("resize", () => { if (!introOpen()) clampIntro(false); });
+  let introWidth = window.innerWidth;
+  window.addEventListener("resize", () => {
+    if (window.innerWidth === introWidth) return; // solo la barra degli indirizzi: il testo non cambia
+    introWidth = window.innerWidth;
+    if (!introOpen()) clampIntro(false);
+  });
   if (document.fonts) document.fonts.ready.then(() => { if (!introOpen()) clampIntro(false); });
 
   function applyFilter(cat, animate) {
@@ -679,7 +695,7 @@
     const drift = () => {
       if (!wallInView) return;
       const r = photoWall.getBoundingClientRect();
-      const vh = window.innerHeight;
+      const vh = viewH();
       const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
       rowEls.forEach((row, i) => {
         const travel = Math.min(Math.max(0, row.scrollWidth - photoWall.clientWidth), (vh + r.height) * 0.45);
@@ -1030,23 +1046,31 @@
       filterList.addEventListener("scroll", fadeEdges, { passive: true });
       window.addEventListener("resize", fadeEdges);
       fadeEdges();
-      // telefono: la prima volta che la barra compare scorre un attimo e torna indietro,
-      // per far capire che ci sono altre categorie con lo swipe
+      // telefono: finché non la si tocca, la barra scorre piano verso destra e poi torna indietro,
+      // così si capisce che ci sono altre categorie. Si ferma per sempre al primo tocco.
       if (!reducedMotion && window.matchMedia("(hover: none), (max-width: 767px)").matches) {
-        let touched = false;
-        filterList.addEventListener("pointerdown", () => { touched = true; }, { once: true });
-        const peek = new IntersectionObserver(([e]) => {
-          if (!e.isIntersecting) return;
-          peek.disconnect();
-          const start = filterList.scrollLeft;
-          if (filterList.scrollWidth - filterList.clientWidth < 40) return;
-          setTimeout(() => {
-            if (touched) return;
-            filterList.scrollTo({ left: start + 90, behavior: "smooth" });
-            setTimeout(() => { if (!touched) filterList.scrollTo({ left: start, behavior: "smooth" }); }, 750);
-          }, 700);
-        }, { threshold: 1 });
-        peek.observe(filterList);
+        const SPEED = 14;   // px al secondo
+        const PAUSE = 1800; // ms di sosta a ogni capo
+        let stopped = false, visible = false, dir = 1, pos = filterList.scrollLeft, last = 0, waitUntil = 0;
+        const stop = () => { stopped = true; };
+        ["pointerdown", "touchstart", "wheel"].forEach((ev) => filterList.addEventListener(ev, stop, { once: true, passive: true }));
+        const drift = (t) => {
+          if (stopped || !visible) { last = 0; return; }
+          const max = filterList.scrollWidth - filterList.clientWidth;
+          if (max > 8 && t >= waitUntil) {
+            const dt = last ? Math.min(0.05, (t - last) / 1000) : 0;
+            pos = Math.min(max, Math.max(0, pos + dir * SPEED * dt));
+            filterList.scrollLeft = pos;
+            if (pos >= max || pos <= 0) { dir = -dir; waitUntil = t + PAUSE; }
+          }
+          last = t;
+          requestAnimationFrame(drift);
+        };
+        new IntersectionObserver(([e]) => {
+          const was = visible;
+          visible = e.isIntersecting;
+          if (visible && !was && !stopped) { pos = filterList.scrollLeft; waitUntil = performance.now() + 900; requestAnimationFrame(drift); }
+        }).observe(filterList);
       }
       filterList.addEventListener("click", (e) => {
         const b = e.target.closest(".filter");
@@ -1136,7 +1160,7 @@
     };
     onFrame(() => {
       // prima tutte le letture, poi le scritture (niente ricalcoli del layout a metà)
-      const vh = window.innerHeight;
+      const vh = viewH();
       const width = act.offsetWidth;
       const actTop = act.getBoundingClientRect().top;
       const aboutTop = about.getBoundingClientRect().top;
@@ -1179,7 +1203,7 @@
     };
     onFrame(() => {
       const r = partners.getBoundingClientRect();
-      const vh = window.innerHeight;
+      const vh = viewH();
       if (r.bottom < -vh || r.top > vh * 2) return;
       // la prima foto inizia a entrare quando la sezione è a metà schermo
       const total = partners.offsetHeight - vh + vh * 0.5;
