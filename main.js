@@ -806,12 +806,11 @@
     new IntersectionObserver(([e]) => tracks.forEach((t) => t.classList.toggle("is-paused", !e.isIntersecting))).observe(tracks[0]);
   }
 
-  /* --- Form "Send brief": compone l'email nell'app di posta ------------- */
-  // Nessun servizio esterno: i dati non lasciano il browser finché il visitatore
-  // non invia l'email dalla propria posta.
-  // Invio diretto con Web3Forms: incollare qui la chiave gratuita ricevuta da web3forms.com.
-  // Finché è vuota, il form apre l'app di posta del visitatore con il messaggio già scritto.
-  const WEB3FORMS_KEY = "";
+  /* --- Form di contatto: invio diretto con Web3Forms --------------------- */
+  // Il messaggio passa da web3forms.com, che lo inoltra per email (vedi privacy.html).
+  // La chiave è pubblica per natura: identifica solo la casella di destinazione.
+  // Se l'invio fallisce (o la chiave è vuota) si apre l'app di posta con il messaggio già scritto.
+  const WEB3FORMS_KEY = "e4b78b84-0fa2-4cbc-a929-d1050e0f663c";
 
   const brief = document.getElementById("brief-form");
   if (brief) {
@@ -854,19 +853,22 @@
       button.disabled = true;
       button.textContent = "Sending…";
       status.textContent = "";
+      // FormData: richiesta "semplice", senza la verifica preliminare (preflight) del browser
+      const payload = new FormData();
+      Object.entries({
+        access_key: WEB3FORMS_KEY,
+        subject,
+        from_name: v("name"),
+        email: v("email"),
+        company: v("company"),
+        service: v("service"),
+        message: v("message"),
+      }).forEach(([k, val]) => payload.append(k, val));
+      if (f.botcheck.checked) payload.append("botcheck", "on"); // casella trappola: la spuntano solo i bot
       fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          access_key: WEB3FORMS_KEY,
-          subject,
-          from_name: v("name"),
-          email: v("email"),
-          company: v("company"),
-          service: v("service"),
-          message: v("message"),
-          botcheck: f.botcheck.checked,
-        }),
+        headers: { Accept: "application/json" },
+        body: payload,
       })
         .then((r) => r.json())
         .then((res) => {

@@ -68,10 +68,10 @@
   <link rel="preconnect" href="https://f.vimeocdn.com">
   <link rel="preload" href="assets/logo/mf-logo-white.webp" as="image" type="image/webp">
   <link rel="preload" href="assets/posters/showreel.webp" as="image" type="image/webp">
-  <link rel="stylesheet" href="style.css?v=20261113m">
+  <link rel="stylesheet" href="style.css?v=20261113n">
   <script src="https://player.vimeo.com/api/player.js" defer></script>
   <!-- ?v=: cambiare la data quando si aggiornano CSS o JS, così i browser non usano la copia vecchia -->
-  <script src="main.js?v=20261113m" defer></script>
+  <script src="main.js?v=20261113n" defer></script>
 </head>
 <body>
   <a class="skip-link label" href="#work">Skip to content</a>
@@ -393,7 +393,7 @@
         <h2>Let's work together</h2>
         <p class="lead muted contact__intro">Tell me about your project.</p>
       </div>
-      <!-- Il form non invia dati a servizi esterni: compone l'email nell'app di posta del visitatore (main.js) -->
+      <!-- Il form invia il messaggio con Web3Forms, che lo inoltra per email (main.js); se l'invio fallisce apre l'app di posta -->
       <form class="brief" id="brief-form" novalidate>
         <div class="brief__grid">
           <label class="brief__field">
