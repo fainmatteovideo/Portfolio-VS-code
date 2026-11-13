@@ -68,24 +68,24 @@
   <link rel="preconnect" href="https://f.vimeocdn.com">
   <link rel="preload" href="assets/logo/mf-logo-white.webp" as="image" type="image/webp">
   <link rel="preload" href="assets/posters/showreel.webp" as="image" type="image/webp">
-  <link rel="stylesheet" href="style.css?v=20261113f">
+  <link rel="stylesheet" href="style.css?v=20261113g">
   <script src="https://player.vimeo.com/api/player.js" defer></script>
   <!-- ?v=: cambiare la data quando si aggiornano CSS o JS, così i browser non usano la copia vecchia -->
-  <script src="main.js?v=20261113f" defer></script>
+  <script src="main.js?v=20261113g" defer></script>
 </head>
 <body>
   <a class="skip-link label" href="#work">Skip to content</a>
 
   <!-- Menu -->
-  <header class="site-nav" id="site-nav">
+  <header class="site-nav site-nav--main" id="site-nav">
     <a class="site-nav__logo" href="#top" aria-label="Matteo Fain – back to top">
       <img src="assets/logo/mf-logo-white.webp" alt="" width="717" height="1034">
     </a>
     <div class="site-nav__actions">
     <!-- invito al contatto sempre a portata di mano (da tablet in su; sparisce nella sezione Contact) -->
     <a class="cta cta--nav label" href="#contact">Let's talk</a>
-    <!-- Menu: la pillola mostra la sezione corrente; col mouse sopra si apre la tendina,
-         su telefono apre il menu a tutto schermo -->
+    <!-- Menu: su schermo largo le voci stanno in fila al centro della barra; su telefono e tablet
+         resta il pulsante con il nome della sezione corrente, che apre il menu a tutto schermo -->
     <div class="navdrop" id="navdrop">
       <button class="navdrop__trigger" id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
         <span class="navdrop__icon" aria-hidden="true"><i></i><i></i></span>
@@ -102,6 +102,8 @@
       </nav>
     </div>
     </div>
+    <!-- linea che avanza con lo scorrimento della pagina -->
+    <span class="site-nav__progress" aria-hidden="true"></span>
   </header>
 
   <div class="mobile-menu" id="mobile-menu" hidden>

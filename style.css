@@ -289,6 +289,17 @@ h3 {
 /* Dopo l'apertura il menu diventa una barra piena, del colore della sezione che ha sotto */
 .site-nav.is-scrolled { background-color: var(--c-bg); background-image: var(--grain); }
 .site-nav__logo img { height: 34px; width: auto; transition: filter var(--dur-med) var(--ease); }
+/* linea sotto la barra: si allunga da sinistra man mano che si scorre la pagina (main.js) */
+.site-nav__progress {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 3px;
+  background: var(--c-yellow);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.site-nav.is-light .site-nav__progress,
+.site-nav.is-light-2 .site-nav__progress { background: var(--c-ink); }
 /* sulle sezioni chiare il logo bianco diventa scuro */
 .site-nav.is-light .site-nav__logo img,
 .site-nav.is-light-2 .site-nav__logo img { filter: brightness(0); }
@@ -353,7 +364,7 @@ h3 {
   transition: opacity var(--dur-med) var(--ease), visibility 0s linear var(--dur-med);
 }
 
-/* --- Pillola con la sezione corrente + tendina ---------------------------- */
+/* --- Pulsante con la sezione corrente (telefono e tablet) e voci in fila (schermo largo) --- */
 .navdrop { position: relative; }
 .navdrop__trigger {
   display: flex;
@@ -367,11 +378,10 @@ h3 {
 /* area di tocco più alta della pillola (44 px), senza cambiarne l'aspetto */
 .navdrop__trigger { position: relative; }
 .navdrop__trigger::after { content: ""; position: absolute; inset: -5px; }
-.navdrop:hover .navdrop__trigger,
-.navdrop.is-open .navdrop__trigger,
+.navdrop__trigger:hover,
 .navdrop__trigger:focus-visible { background-color: var(--c-text); color: var(--c-bg); }
 
-/* due linee di lunghezza diversa: si allineano quando la tendina è aperta, diventano una X col menu a tutto schermo */
+/* due linee di lunghezza diversa: si allineano al passaggio del mouse, diventano una X col menu a tutto schermo */
 .navdrop__icon { display: grid; gap: 5px; width: 18px; }
 .navdrop__icon i {
   display: block;
@@ -381,8 +391,7 @@ h3 {
 }
 .navdrop__icon i:first-child { width: 18px; }
 .navdrop__icon i:last-child  { width: 11px; }
-.navdrop:hover .navdrop__icon i:last-child,
-.navdrop.is-open .navdrop__icon i:last-child { width: 18px; }
+.navdrop__trigger:hover .navdrop__icon i:last-child { width: 18px; }
 .is-menu-open .navdrop__icon i:first-child { transform: translateY(3.25px) rotate(45deg); }
 .is-menu-open .navdrop__icon i:last-child  { width: 18px; transform: translateY(-3.25px) rotate(-45deg); }
 
@@ -405,65 +414,53 @@ h3 {
   to   { transform: none; opacity: 1; }
 }
 
-/* tendina verticale */
-.navdrop__panel {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  display: grid;
-  min-width: 220px;
-  padding: 6px;
-  background: var(--c-panel);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-8px);
-  transform-origin: top right;
-  transition: opacity 0.35s var(--ease), transform 0.45s var(--ease), visibility 0s linear 0.45s;
-}
-/* ponte invisibile: il mouse passa dalla pillola alla tendina senza chiuderla */
-.navdrop__panel::before { content: ""; position: absolute; left: 0; right: 0; top: -12px; height: 12px; }
-.navdrop:hover:not(.is-chosen) .navdrop__panel,
-.navdrop.is-open .navdrop__panel {
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-  transition: opacity 0.35s var(--ease), transform 0.45s var(--ease), visibility 0s;
-}
-.navdrop__panel a {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: baseline;
-  padding: 10px 12px;
-  color: var(--c-text);
-  font-size: 1.05rem;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  opacity: 0;
-  transform: translateY(-4px);
-  transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease, opacity 0.35s var(--ease), transform 0.4s var(--ease);
-}
-.navdrop:hover:not(.is-chosen) .navdrop__panel a,
-.navdrop.is-open .navdrop__panel a { opacity: 1; transform: none; }
-/* le voci entrano una dopo l'altra */
-.navdrop__panel a:nth-child(2) { transition-delay: 0s, 0s, 0.03s, 0.03s; }
-.navdrop__panel a:nth-child(3) { transition-delay: 0s, 0s, 0.06s, 0.06s; }
-.navdrop__panel a:nth-child(4) { transition-delay: 0s, 0s, 0.09s, 0.09s; }
-.navdrop__panel a:nth-child(5) { transition-delay: 0s, 0s, 0.12s, 0.12s; }
-.navdrop__panel a:nth-child(6) { transition-delay: 0s, 0s, 0.15s, 0.15s; }
-.navdrop__panel a:nth-child(7) { transition-delay: 0s, 0s, 0.18s, 0.18s; }
-.navdrop__panel a:hover,
-.navdrop__panel a:focus-visible { color: var(--c-bg); background-color: var(--c-text); }
-/* sezione corrente: quadratino giallo */
-.navdrop__panel a.is-active::after {
-  content: "";
-  width: 6px;
-  height: 6px;
-  background: var(--c-yellow);
-  align-self: center;
-}
-/* senza mouse (o schermo stretto) la pillola apre il menu a tutto schermo */
-@media (hover: none), (pointer: coarse), (max-width: 767px) {
-  .navdrop__panel { display: none; }
+/* voci del menu: nascoste su telefono e tablet (c'è il menu a tutto schermo) */
+.navdrop__panel { display: none; }
+
+/* schermo largo: voci in fila al centro della barra, tra il logo e "Let's talk" */
+@media (min-width: 1024px) {
+  .site-nav--main { display: grid; grid-template-columns: 1fr auto 1fr; }
+  .site-nav--main .site-nav__actions,
+  .site-nav--main .navdrop { display: contents; }
+  .site-nav--main .site-nav__logo { grid-area: 1 / 1; justify-self: start; }
+  .site-nav--main .cta--nav { grid-area: 1 / 3; justify-self: end; }
+  .navdrop__trigger { display: none; }
+  .navdrop__panel {
+    grid-area: 1 / 2;
+    display: flex;
+    align-items: center;
+    gap: clamp(1.25rem, 2.6vw, 2.75rem);
+  }
+  .navdrop__panel a {
+    position: relative;
+    padding-block: 10px;
+    color: var(--c-text-muted);
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+    transition: color var(--dur-fast) ease;
+  }
+  .navdrop__panel a:hover,
+  .navdrop__panel a:focus-visible,
+  .navdrop__panel a.is-active { color: var(--c-text); }
+  /* sopra il video d'apertura le voci restano piene, per leggersi bene */
+  .site-nav:not(.is-scrolled) .navdrop__panel a { color: var(--c-text); }
+  /* sezione corrente: una linea sotto la voce */
+  .navdrop__panel a::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 4px 0;
+    height: 1.5px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-med) var(--ease);
+  }
+  .navdrop__panel a.is-active::after { transform: scaleX(1); }
+  /* "Let's talk" fa già da voce Contact, e resta visibile anche in quella sezione */
+  .navdrop__panel a[href="#contact"] { display: none; }
+  .is-at-contact .cta--nav { opacity: 1; visibility: visible; }
 }
 @media (prefers-reduced-motion: reduce) {
   .navdrop__label.is-rolling { animation: none; }
@@ -903,6 +900,9 @@ h3 {
 
 .clients__marquee {
   overflow: hidden;
+  /* i loghi sfumano ai due bordi invece di essere tagliati di netto */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 14%, #000 86%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 14%, #000 86%, transparent 100%);
   padding-block: clamp(0.75rem, 0.5rem + 0.8vw, 1.25rem);
   border-top: 1px solid var(--c-line);
   border-bottom: 1px solid var(--c-line);

@@ -42,8 +42,8 @@
 
   const navdrop = document.getElementById("navdrop");
   const navLabel = navdrop.querySelector(".navdrop__label");
-  // con mouse e schermo largo: tendina; altrimenti menu a tutto schermo
-  const dropMQ = window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 768px)");
+  // su schermo largo le voci stanno in fila nella barra e il pulsante del menu non c'è
+  const inlineMQ = window.matchMedia("(min-width: 1024px)");
   let currentLabel = "Menu";
   let menuTimer = 0;
 
@@ -53,11 +53,6 @@
     void navLabel.offsetWidth; // riavvia l'animazione
     navLabel.textContent = text;
     navLabel.classList.add("is-rolling");
-  }
-
-  function setDrop(open) {
-    navdrop.classList.toggle("is-open", open);
-    toggle.setAttribute("aria-expanded", String(open));
   }
 
   function setMenu(open) {
@@ -76,25 +71,30 @@
     }
   }
 
-  toggle.addEventListener("click", () => {
-    if (dropMQ.matches) setDrop(!navdrop.classList.contains("is-open"));
-    else setMenu(!nav.classList.contains("is-menu-open")); // non menu.hidden: durante la chiusura è ancora visibile
-  });
+  // non menu.hidden: durante la chiusura è ancora visibile
+  toggle.addEventListener("click", () => setMenu(!nav.classList.contains("is-menu-open")));
+  // finestra allargata col menu aperto: si chiude, le voci sono tornate nella barra
+  inlineMQ.addEventListener("change", (e) => { if (e.matches && !menu.hidden) setMenu(false); });
   menu.addEventListener("click", (e) => { if (e.target.closest("a")) setMenu(false); });
   document.addEventListener("keydown", (e) => {
-    if (e.key !== "Escape") return;
-    if (!menu.hidden) setMenu(false);
-    if (navdrop.classList.contains("is-open")) { setDrop(false); toggle.focus(); }
+    if (e.key === "Escape" && !menu.hidden) setMenu(false);
   });
-  // la tendina si chiude dopo la scelta (e resta chiusa finché il mouse non esce)
-  navdrop.addEventListener("click", (e) => {
-    if (!e.target.closest(".navdrop__panel a")) return;
-    setDrop(false);
-    navdrop.classList.add("is-chosen");
-    document.activeElement.blur();
-  });
-  navdrop.addEventListener("mouseleave", () => { navdrop.classList.remove("is-chosen"); setDrop(false); });
-  document.addEventListener("click", (e) => { if (!navdrop.contains(e.target)) setDrop(false); });
+
+  /* --- Linea sotto il menu: quanta pagina è già stata scorsa ---------------- */
+  const progress = nav.querySelector(".site-nav__progress");
+  let progressQueued = false;
+  function updateProgress() {
+    progressQueued = false;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.transform = "scaleX(" + (max > 0 ? Math.min(1, window.scrollY / max) : 0) + ")";
+  }
+  window.addEventListener("scroll", () => {
+    if (progressQueued) return;
+    progressQueued = true;
+    requestAnimationFrame(updateProgress);
+  }, { passive: true });
+  window.addEventListener("resize", updateProgress);
+  updateProgress();
 
   /* --- Link interni: scorrono alla posizione vera della sezione ------------ */
   // Lavori e pannello rosso restano fermi (sticky) durante le transizioni: il browser
