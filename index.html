@@ -68,10 +68,10 @@
   <link rel="preconnect" href="https://f.vimeocdn.com">
   <link rel="preload" href="assets/logo/mf-logo-white.webp" as="image" type="image/webp">
   <link rel="preload" href="assets/posters/showreel.webp" as="image" type="image/webp">
-  <link rel="stylesheet" href="style.css?v=20261113p">
+  <link rel="stylesheet" href="style.css?v=20261113q">
   <script src="https://player.vimeo.com/api/player.js" defer></script>
   <!-- ?v=: cambiare la data quando si aggiornano CSS o JS, così i browser non usano la copia vecchia -->
-  <script src="main.js?v=20261113p" defer></script>
+  <script src="main.js?v=20261113q" defer></script>
 </head>
 <body>
   <a class="skip-link label" href="#work">Skip to content</a>
@@ -439,6 +439,12 @@
         </div>
         <p class="brief__status" id="brief-status" role="status" aria-live="polite"></p>
       </form>
+      <!-- dopo l'invio riuscito prende il posto del form (main.js) -->
+      <div class="brief-done" id="brief-done" hidden>
+        <h3 class="brief-done__title" tabindex="-1">Thanks!</h3>
+        <p class="brief-done__text">Your brief has been sent. I'll reply to <strong class="brief-done__email"></strong>.</p>
+        <button class="brief-done__again" type="button">Send another message</button>
+      </div>
 
       <p class="contact__or muted">Or write directly to</p>
       <a class="contact__email" href="mailto:fainmatteo.video@gmail.com">fainmatteo.video@gmail.com</a>

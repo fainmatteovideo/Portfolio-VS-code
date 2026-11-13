@@ -850,6 +850,26 @@
   if (brief) {
     const status = document.getElementById("brief-status");
     const hint = document.getElementById("email-hint");
+    const done = document.getElementById("brief-done");
+    const doneTitle = done.querySelector(".brief-done__title");
+    // invio riuscito: il form lascia il posto alla conferma, alta quanto lui (la pagina non salta)
+    function showDone(name, email) {
+      done.style.minHeight = brief.offsetHeight + "px";
+      doneTitle.textContent = `Thanks, ${name.split(/\s+/)[0]}!`;
+      done.querySelector(".brief-done__email").textContent = email;
+      brief.hidden = true;
+      done.hidden = false;
+      doneTitle.focus({ preventScroll: true });
+    }
+    // "Send another message": torna il form vuoto
+    done.querySelector(".brief-done__again").addEventListener("click", () => {
+      done.hidden = true;
+      brief.hidden = false;
+      brief.classList.remove("is-swapped-in");
+      void brief.offsetWidth; // riavvia la dissolvenza
+      brief.classList.add("is-swapped-in");
+      brief.elements.name.focus({ preventScroll: true });
+    });
     const emailField = brief.elements.email;
     // quando la proposta è stata mostrata all'invio, il secondo "Send" manda l'indirizzo così com'è
     let typoChecked = false;
@@ -936,16 +956,13 @@
         .then((r) => r.json())
         .then((res) => {
           if (!res.success) throw new Error(res.message);
-          const sentTo = v("email");
+          // l'indirizzo in chiaro: il visitatore lo rilegge e, se è sbagliato, se ne accorge subito
+          showDone(v("name"), v("email"));
           brief.reset();
           markEmpty();
           hint.textContent = "";
           typoChecked = false;
-          // l'indirizzo in chiaro: il visitatore lo rilegge e, se è sbagliato, se ne accorge subito
-          const address = document.createElement("strong");
-          address.textContent = sentTo;
           status.textContent = "";
-          status.append("Thanks! Your brief has been sent. I'll reply to ", address, ".");
         })
         .catch(() => {
           status.textContent = "Sending failed. Your email app will open instead.";
