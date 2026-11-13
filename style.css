@@ -1112,13 +1112,14 @@ h3 {
 .about__photo .polaroid::before {
   content: "";
   position: absolute;
-  top: -16px;
+  top: -22px;
   left: 50%;
-  width: 40%;
-  height: 34px;
+  width: 52%;
+  height: 46px;
   background-color: rgba(255, 200, 0, 0.78);
   box-shadow: 0 1px 3px rgba(60, 45, 20, 0.18);
-  transform: translateX(-50%) rotate(9deg);
+  /* dritto rispetto alla polaroid: segue la sua inclinazione */
+  transform: translateX(-50%);
   clip-path: polygon(
     0 6%, 3% 0, 97% 4%, 100% 0, 98% 22%, 100% 40%, 97% 60%, 100% 80%, 98% 100%,
     4% 96%, 0 100%, 2% 78%, 0 58%, 3% 40%, 0 20%);
