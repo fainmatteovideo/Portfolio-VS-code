@@ -999,19 +999,6 @@
     });
   }
 
-  /* 3. Bagliore caldo (lens flare) che si sposta appena lungo il bordo sinistro mentre si scorre */
-  const flare = document.querySelector(".flare");
-  if (flare && !reducedMotion) {
-    onFrame(() => {
-      const max = document.documentElement.scrollHeight - window.innerHeight || 1;
-      const p = Math.min(1, Math.max(0, window.scrollY / max));
-      // scende appena con la pagina e ondeggia di pochissimo, restando vicino al bordo
-      flare.style.setProperty("--flare-y", (p * 18).toFixed(2) + "vh");
-      flare.style.setProperty("--flare-x", (Math.sin(p * Math.PI * 2) * 2.5 - 1.5).toFixed(2) + "vw");
-      flare.style.setProperty("--flare-r", (p * 12 - 8).toFixed(1) + "deg");
-    });
-  }
-
   /* 5. Pannello di Services/How I work: i lavori restano fermi e il pannello ci sale sopra;
         il bordo diagonale si raddrizza mentre sale */
   const act = document.getElementById("act");
@@ -1038,6 +1025,7 @@
   if (act && "ResizeObserver" in window) new ResizeObserver(pinAct).observe(act);
   window.addEventListener("resize", pinAct);
   pinAct();
+  const sheet = document.querySelector(".about__sheet");
   if (act && about) {
     // taglio diagonale di un bordo che sale: ripido quando entra dal basso, dritto quando arriva in cima
     const slantFor = (top, vh) => {
@@ -1058,12 +1046,14 @@
       const width = act.offsetWidth;
       const actTop = act.getBoundingClientRect().top;
       const aboutTop = about.getBoundingClientRect().top;
+      const sheetBottom = sheet ? sheet.getBoundingClientRect().bottom : aboutTop;
       const navH = nav.offsetHeight;
       setEdge(act, slantFor(actTop, vh), actTop, vh, width);
       setEdge(about, slantFor(aboutTop, vh), aboutTop, vh, width);
       act.classList.toggle("is-covered", aboutTop <= 0);
-      // il menu prende il colore del pannello rosso quando ci sta sopra
-      nav.classList.toggle("is-red", actTop < navH && aboutTop > navH);
+      // il menu prende il colore del pannello chiaro che ha sotto (crema, poi il foglio di About)
+      nav.classList.toggle("is-light", actTop < navH && aboutTop > navH);
+      nav.classList.toggle("is-light-2", aboutTop <= navH && sheetBottom > navH);
     });
   }
 

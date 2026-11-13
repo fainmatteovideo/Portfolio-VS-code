@@ -33,15 +33,17 @@ Sostituire il sito attuale (index / work / about / contact separati) con **un'un
 - Miniature come immagini statiche in `assets/`, non richieste a Vimeo dal browser.
 
 ## Estetica
-- Riferimento principale per apertura, uso del logo e tipografia: synkron.xyz (screenshot in `_brief/references/`). Prendere lo *stile*, non copiare codice, testi o asset.
-- NON prendere da synkron.xyz la resa della griglia video sotto l'apertura.
-- Riferimento per la sezione "Come lavoro": amazeproduction.ch (step numerati con titolo, frase e punti elenco).
-- Dal vecchio sito mantenere: autoplay dei video, carosello di stills sotto ogni video, descrizioni e loghi clienti.
-- Dal vecchio sito eliminare: carosello in homepage.
-- Palette: bianco per logo e testi su sfondo scuro. Sobria, cinematografica.
-- Sfondo: NON nero piatto. Gradiente scuro "da studio" (nero profondo al centro, zone grigio antracite più chiare e sfumate verso i bordi, come un muro da studio fotografico). Riferimento: `_brief/references/sfondo.jpg`. Ricrearlo in CSS (gradienti radiali/lineari sovrapposti), senza usare l'immagine come file. Deve restare fisso o muoversi pochissimo durante lo scroll, così la pagina sembra un unico ambiente.
-- Logo: `assets/logo/MF-logo-bianco.svg` (bianco, vettoriale). Usarlo grande nell'apertura e piccolo nel menu; usarlo anche per generare la favicon.
-- Tipografia: [da definire: font simili a quelli di synkron.xyz, da Google Fonts o self-hosted].
+- Dal branch `nuova-estetica`: aspetto da videomaker/studio creativo, non da sito tech. Cambiano forme, colori e font; impaginazione, struttura e funzioni restano quelle già costruite.
+- Riferimento per palette, font e grafica dei pulsanti: 1stdecember.com. Riferimento per le foto dei collaboratori: le polaroid di paragonproductions.co. Prendere lo *stile*, non copiare codice, testi o asset.
+- Palette (variabili in `style.css`): grigio scuro `#1E212B` (fondo principale), crema `#F1EDE4` (testi sul fondo scuro e fondo delle sezioni chiare), giallo `#FFC800` (accento: pulsanti, categoria attiva, etichette di sezione), verde salvia `#6BA368` (solo piccoli dettagli).
+- Sul giallo e sul verde solo testo scuro. Mai testo giallo o verde sul crema (contrasto insufficiente).
+- Colori pieni: niente pannelli trasparenti o sfocati (`backdrop-filter`), niente sfumature di sfondo. Unica texture: una grana leggera tipo carta.
+- Forme squadrate: nessun `border-radius` (pulsanti, campi, pannelli e schede sono rettangoli).
+- Sezioni alternate: apertura, Lavori, Collaboration, Clienti e Contatti sul fondo scuro; Services/How I work e About su crema.
+- Font (self-hosted): Instrument Serif per i titoli, Inter Tight per testi e pulsanti, DM Mono maiuscolo per le etichette.
+- Pulsante principale: rettangolo giallo pieno con un quadratino davanti al testo.
+- Dal vecchio sito mantenere: autoplay dei video, carosello di stills, descrizioni e loghi clienti.
+- Logo: `assets/logo/mf-logo-white.webp` (bianco; sulle sezioni chiare viene scurito via CSS). Grande nell'apertura e piccolo nel menu.
 
 ## Qualità del design
 - Il sito è il mio biglietto da visita come videomaker: deve sembrare fatto da uno studio, non da un template.
