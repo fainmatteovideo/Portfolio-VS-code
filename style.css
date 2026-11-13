@@ -4,19 +4,19 @@
    ========================================================================== */
 
 /* --- Font (self-hosted, licenza OFL: vedi assets/fonts/OFL-*.txt) ---
-   Titoli: Instrument Serif · Testo e pulsanti: Inter Tight (variabile 300–700) ·
-   Etichette: DM Mono 500 · Scritte a mano: Reenie Beanie. Riferimento: 1stdecember.com */
+   Titoli: Anton (maiuscolo, stretto e pesante) · Testo e pulsanti: Inter Tight (variabile 300–700) ·
+   Etichette: DM Mono 500 · Scritte a mano: Reenie Beanie. Riferimenti: 1stdecember.com, paragonproductions.co (titoli) */
 @font-face {
-  font-family: "Instrument Serif";
-  src: url("assets/fonts/instrument-serif-latin.woff2") format("woff2");
+  font-family: "Anton";
+  src: url("assets/fonts/anton-latin.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: "Instrument Serif";
-  src: url("assets/fonts/instrument-serif-latin-ext.woff2") format("woff2");
+  font-family: "Anton";
+  src: url("assets/fonts/anton-latin-ext.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -92,7 +92,7 @@
   --grain-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.055 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 
   /* Font */
-  --f-display: "Instrument Serif", "Times New Roman", serif;
+  --f-display: "Anton", "Arial Narrow", Impact, sans-serif;
   --f-sans: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
   --f-mono: "DM Mono", ui-monospace, Menlo, monospace;
   --f-hand: "Reenie Beanie", "Bradley Hand", cursive;
@@ -104,7 +104,7 @@
   --fs-body: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);      /* 16–17px */
   --fs-lead: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
   --fs-h3: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
-  --fs-h2: clamp(2.75rem, 2rem + 3.6vw, 5rem);
+  --fs-h2: clamp(3rem, 2rem + 4.6vw, 6rem);
 
   /* Spaziature */
   --gutter: clamp(16px, 4vw, 64px);
@@ -207,12 +207,13 @@ body::after {
 }
 
 /* --- Tipografia ---------------------------------------------------------- */
-/* Titoli: serif grande e stretto, peso unico */
+/* Titoli: maiuscolo stretto e pesante, peso unico */
 h1, h2 {
   font-family: var(--f-display);
+  text-transform: uppercase;
   font-weight: 400;
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.005em;
 }
 h2 { font-size: var(--fs-h2); }
 h3 {
@@ -509,9 +510,10 @@ h3 {
   padding-block: 0.5rem;
   font-size: clamp(2.4rem, 11vw, 3.4rem);
   font-family: var(--f-display);
+  text-transform: uppercase;
   font-weight: 400;
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.005em;
 }
 
 /* ==========================================================================
@@ -867,9 +869,10 @@ h3 {
 .project__title {
   font-size: clamp(1.9rem, 1.4rem + 1.8vw, 3rem);
   font-family: var(--f-display);
+  text-transform: uppercase;
   font-weight: 400;
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.005em;
 }
 .project__subtitle {
   margin-top: 0.5rem;
@@ -993,8 +996,9 @@ h3 {
 .services__list h3 {
   font-size: clamp(1.6rem, 1.3rem + 1vw, 2.25rem);
   font-family: var(--f-display);
+  text-transform: uppercase;
   font-weight: 400;
-  letter-spacing: -0.015em;
+  letter-spacing: 0.005em;
   line-height: 1.05;
 }
 .services__list p { max-width: 36ch; }
@@ -1044,8 +1048,9 @@ h3 {
 .process__num {
   font-size: clamp(2.25rem, 1.7rem + 2vw, 3.5rem);
   font-family: var(--f-display);
+  text-transform: uppercase;
   font-weight: 400;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.005em;
   line-height: 0.9;
   color: var(--c-text-faint);
   font-variant-numeric: tabular-nums;
@@ -1053,8 +1058,9 @@ h3 {
 .process__text h3 {
   font-size: clamp(1.6rem, 1.3rem + 1vw, 2.25rem);
   font-family: var(--f-display);
+  text-transform: uppercase;
   font-weight: 400;
-  letter-spacing: -0.015em;
+  letter-spacing: 0.005em;
   line-height: 1.1;
   margin-bottom: 0.35rem;
 }
@@ -1116,8 +1122,9 @@ h3 {
   color: var(--c-text);
   font-size: clamp(1.7rem, 1.3rem + 1.5vw, 2.6rem);
   font-family: var(--f-display);
+  text-transform: uppercase;
   font-weight: 400;
-  letter-spacing: -0.015em;
+  letter-spacing: 0.005em;
   line-height: 1.1;
   margin-bottom: 0.5rem;
 }
@@ -1148,8 +1155,9 @@ h3 {
 .partners__title {
   font-size: clamp(2.2rem, 1.6rem + 2vw, 3.2rem);
   font-family: var(--f-display);
+  text-transform: uppercase;
   font-weight: 400;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.005em;
   line-height: 1;
   text-align: center;
   margin-bottom: var(--space-s);
@@ -1193,8 +1201,9 @@ h3 {
 .partner__name {
   font-size: clamp(2.1rem, 1.5rem + 2vw, 3.25rem);
   font-family: var(--f-display);
+  text-transform: uppercase;
   font-weight: 400;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.005em;
   line-height: 1.05;
   margin-bottom: 0.4rem;
 }
