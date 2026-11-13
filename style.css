@@ -50,9 +50,9 @@
 /* --- Variabili ----------------------------------------------------------- */
 :root {
   /* Colori: tinte piene, niente trasparenze (palette: grigio scuro, giallo, verde salvia + crema) */
-  --c-ink: #1e212b;           /* grigio scuro: fondo principale */
-  --c-ink-2: #292d39;         /* pannelli e schede sul fondo scuro */
-  --c-ink-3: #3b404e;         /* stati hover sul fondo scuro */
+  --c-ink: #151412;           /* nero caldo, quasi carbone: fondo principale */
+  --c-ink-2: #23211e;         /* superfici sul fondo scuro (segnaposto di video e foto, pulsante menu) */
+  --c-ink-3: #37342f;         /* stati hover sul fondo scuro */
   --c-paper: #f1ede4;         /* crema: testi sul fondo scuro, fondo delle sezioni chiare */
   --c-paper-2: #e6e0d4;       /* secondo foglio, appena più scuro */
   --c-paper-3: #d8d1c3;       /* pannelli sulle sezioni chiare */
@@ -66,13 +66,13 @@
   --c-panel: var(--c-ink-2);
   --c-text: var(--c-paper);
   --c-text-muted: #a9a7a3;
-  --c-text-faint: #83828a;
-  --c-line: #373b48;
-  --c-line-strong: #565b6b;
+  --c-text-faint: #87837c;
+  --c-line: #2f2c28;
+  --c-line-strong: #57534c;
   --grain: var(--grain-light);
 
   /* Grana tipo carta: puntini chiari per i fondi scuri, scuri per i fondi chiari */
-  --grain-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.17 0 0 0 -0.06'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --grain-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.13 0 0 0 -0.046'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   --grain-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.32 0 0 0 -0.115'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 
   /* Font */
@@ -153,11 +153,23 @@ body::after {
   --c-bg: var(--c-paper);
   --c-panel: var(--c-paper-2);
   --c-text: var(--c-ink);
-  --c-text-muted: #55575f;
-  --c-text-faint: #74757b;
+  --c-text-muted: #55534e;
+  --c-text-faint: #77746d;
   --c-line: #cfc8ba;
   --c-line-strong: #a39d92;
   --grain: var(--grain-dark);
+  color: var(--c-text);
+}
+/* Riquadri crema sul fondo scuro (form di contatto, scheda del progetto): come le polaroid */
+.brief {
+  --c-bg: #faf8f3;
+  --c-panel: var(--c-paper);
+  --c-text: var(--c-ink);
+  --c-text-muted: #55534e;
+  --c-text-faint: #77746d;
+  --c-line: #cfc8ba;
+  --c-line-strong: #a39d92;
+  --c-error: #b23c26;
   color: var(--c-text);
 }
 .about__sheet,
@@ -1461,7 +1473,7 @@ h3 {
   -webkit-appearance: none;
   cursor: pointer;
   /* freccina */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%23a9a7a3' stroke-width='1.4'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%2355534e' stroke-width='1.4'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.95rem center;
   padding-right: 2.25rem;
@@ -1474,7 +1486,7 @@ h3 {
 .brief select:focus,
 .brief textarea:focus {
   outline: none;
-  border-color: var(--c-yellow);
+  border-color: var(--c-text);
 }
 .brief .is-invalid { border-color: var(--c-error) !important; }
 
@@ -1502,10 +1514,10 @@ h3 {
 }
 .brief__consent input:checked {
   background-color: var(--c-yellow);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none' stroke='%231e212b' stroke-width='2'%3E%3Cpath d='M2.5 7.5l3 3 6-7'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none' stroke='%23151412' stroke-width='2'%3E%3Cpath d='M2.5 7.5l3 3 6-7'/%3E%3C/svg%3E");
   border-color: var(--c-yellow);
 }
-.brief__consent input:focus-visible { outline: 2px solid var(--c-yellow); outline-offset: 2px; }
+.brief__consent input:focus-visible { outline: 2px solid var(--c-text); outline-offset: 2px; }
 .brief__consent a { color: var(--c-text); text-decoration: underline; text-underline-offset: 3px; }
 .brief__consent.is-invalid span { color: var(--c-error); }
 
@@ -1900,8 +1912,17 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
     max-height: calc(var(--stage-h, 760px) - 64px);
     overflow-y: auto;
     scrollbar-width: none;
-    background: var(--c-panel);
+    /* riquadro crema con testo scuro */
+    --c-text: var(--c-ink);
+    --c-text-muted: #55534e;
+    --c-text-faint: #77746d;
+    --c-line: #cfc8ba;
+    --c-line-strong: #a39d92;
+    color: var(--c-text);
+    background: var(--c-paper);
   }
+  /* i loghi bianchi dei clienti diventano scuri sul crema */
+  .showcase__stage .project__meta .project__logos img { filter: brightness(0); }
   .showcase__stage .project__meta::-webkit-scrollbar { display: none; }
   .showcase__stage .project__title { font-size: clamp(1.4rem, 1rem + 1vw, 2rem); }
   .showcase__stage .project__subtitle { margin-top: 0.4rem; font-size: var(--fs-small); }
