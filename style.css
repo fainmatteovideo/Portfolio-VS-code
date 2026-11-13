@@ -1091,11 +1091,11 @@ h3 {
 /* foto di Matteo come polaroid, appoggiata sul foglio crema: ombra più morbida e calda */
 .about__photo {
   width: 100%;
-  max-width: 260px;
+  max-width: 300px;
   margin: 0 auto;
 }
 @media (min-width: 900px) {
-  .about__photo { max-width: 340px; }
+  .about__photo { max-width: 400px; }
 }
 .about__photo .polaroid {
   --rot: -3deg;
@@ -1121,7 +1121,7 @@ h3 {
 
 @media (min-width: 900px) {
   .about__grid {
-    grid-template-columns: 340px minmax(0, 1fr);
+    grid-template-columns: 400px minmax(0, 1fr);
     column-gap: var(--space-l);
     align-items: center;
     max-width: 1080px;
@@ -1165,7 +1165,7 @@ h3 {
   --rot: 0deg;
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
-  aspect-ratio: 5 / 6.6;
+  aspect-ratio: 5 / 6.35;
   padding: 7% 7% 0;
   background-color: #f4f0e7;
   /* carta appena ingiallita verso i bordi, come una stampa vera */
@@ -1181,7 +1181,7 @@ h3 {
 .polaroid img { width: 100%; height: 100%; min-height: 0; object-fit: cover; box-shadow: 0 0 0 1px rgba(40, 30, 15, 0.18); }
 .polaroid__caption {
   display: block;
-  padding: 0.45em 0.15em 0.8em;
+  padding: 0.4em 0.15em 0.55em;
   color: var(--c-ink);
   font-family: var(--f-hand);
   font-size: clamp(2.1rem, 1.6rem + 1.8vw, 3.2rem);
@@ -1190,7 +1190,7 @@ h3 {
   transform: rotate(-2deg);
 }
 
-.partner__img { width: min(100%, 300px); }
+.partner__img { width: min(100%, 270px); }
 .partner:nth-child(1) .partner__img { --rot: -6deg; }
 .partner:nth-child(2) .partner__img { --rot: 5deg; }
 .partner:nth-child(3) .partner__img { --rot: -2.5deg; }
@@ -1262,8 +1262,8 @@ h3 {
   place-self: center;
   width: auto;
   /* mai più alta della riga libera tra frase e testo (schermi bassi) */
-  height: min(37vh, 380px, 90%);
-  height: min(37svh, 380px, 90%);
+  height: min(33vh, 340px, 90%);
+  height: min(33svh, 340px, 90%);
   max-width: 100%;
   /* entrano da sinistra e ruotano fino alla loro inclinazione */
   transform:
@@ -1330,7 +1330,7 @@ h3 {
   .is-pinned .partner__info { text-align: left; }
   .is-pinned .partner__text { margin-inline: 0; }
   /* il margine tiene libero lo spazio in cui le polaroid si sparpagliano, così non coprono i testi */
-  .is-pinned .partner__img { height: min(56vh, 540px, 38vw, 86%); margin-inline: clamp(1.5rem, 3.5vw, 3.5rem); }
+  .is-pinned .partner__img { height: min(50vh, 480px, 34vw, 86%); margin-inline: clamp(1.5rem, 3.5vw, 3.5rem); }
   .is-pinned .partner:nth-child(1) .partner__img { --dx: -12%; --dy: 2%; }
   .is-pinned .partner:nth-child(2) .partner__img { --dx: 12%; --dy: -4%; }
   .is-pinned .partner:nth-child(3) .partner__img { --dx: -2%; --dy: 4%; }
