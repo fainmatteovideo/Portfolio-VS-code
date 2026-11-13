@@ -40,7 +40,7 @@ Sostituire il sito attuale (index / work / about / contact separati) con **un'un
 - Colori pieni: niente pannelli trasparenti o sfocati (`backdrop-filter`), niente sfumature di sfondo. Unica texture: una grana leggera tipo carta.
 - Forme squadrate: nessun `border-radius` (pulsanti, campi, pannelli e schede sono rettangoli).
 - Sezioni alternate: apertura, Lavori, Collaboration, Clienti e Contatti sul fondo scuro; Services/How I work e About su crema.
-- Font (self-hosted): Anton per i titoli (maiuscolo, stretto e pesante, sullo stile dei titoli di paragonproductions.co), Inter Tight per testi e pulsanti, DM Mono maiuscolo per le etichette.
+- Font (self-hosted): Anton per i titoli (maiuscolo, stretto e pesante, sullo stile dei titoli di paragonproductions.co), Albert Sans per testi, pulsanti ed etichette (queste in maiuscolo grassetto), come alternativa libera al Roobert di Paragon.
 - Foto dei collaboratori: polaroid con cornice crema, inclinate e sparse una sull'altra, con il nome scritto a mano (font Reenie Beanie, self-hosted, usato solo lì).
 - Pulsante principale: rettangolo giallo pieno con un quadratino davanti al testo.
 - Dal vecchio sito mantenere: autoplay dei video, carosello di stills, descrizioni e loghi clienti.
