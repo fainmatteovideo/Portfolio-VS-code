@@ -41,6 +41,7 @@ Sostituire il sito attuale (index / work / about / contact separati) con **un'un
 - Forme squadrate: nessun `border-radius` (pulsanti, campi, pannelli e schede sono rettangoli).
 - Sezioni alternate: apertura, Lavori, Collaboration, Clienti e Contatti sul fondo scuro; Services/How I work e About su crema.
 - Font (self-hosted): Instrument Serif per i titoli, Inter Tight per testi e pulsanti, DM Mono maiuscolo per le etichette.
+- Foto dei collaboratori: polaroid con cornice crema, inclinate e sparse una sull'altra, con il nome scritto a mano (font Reenie Beanie, self-hosted, usato solo lì).
 - Pulsante principale: rettangolo giallo pieno con un quadratino davanti al testo.
 - Dal vecchio sito mantenere: autoplay dei video, carosello di stills, descrizioni e loghi clienti.
 - Logo: `assets/logo/mf-logo-white.webp` (bianco; sulle sezioni chiare viene scurito via CSS). Grande nell'apertura e piccolo nel menu.

@@ -5,7 +5,7 @@
 
 /* --- Font (self-hosted, licenza OFL: vedi assets/fonts/OFL-*.txt) ---
    Titoli: Instrument Serif · Testo e pulsanti: Inter Tight (variabile 300–700) ·
-   Etichette: DM Mono 500. Riferimento: 1stdecember.com */
+   Etichette: DM Mono 500 · Scritte a mano: Reenie Beanie. Riferimento: 1stdecember.com */
 @font-face {
   font-family: "Instrument Serif";
   src: url("assets/fonts/instrument-serif-latin.woff2") format("woff2");
@@ -54,6 +54,14 @@
   font-display: swap;
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
+/* scritte a mano sulle polaroid dei collaboratori */
+@font-face {
+  font-family: "Reenie Beanie";
+  src: url("assets/fonts/reenie-beanie-latin.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* --- Variabili ----------------------------------------------------------- */
 :root {
@@ -87,6 +95,7 @@
   --f-display: "Instrument Serif", "Times New Roman", serif;
   --f-sans: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
   --f-mono: "DM Mono", ui-monospace, Menlo, monospace;
+  --f-hand: "Reenie Beanie", "Bradley Hand", cursive;
   --w-text: 400;
 
   /* Scala tipografica fluida */
@@ -1124,8 +1133,8 @@ h3 {
 }
 
 /* --- Collaborazioni ------------------------------------------------------ */
-/* Base (senza JS o con "riduci movimento"): elenco con foto incorniciata e testo a fianco.
-   Con .is-pinned (main.js) la sezione si ferma e le foto salgono dal basso una alla volta. */
+/* Base (senza JS o con "riduci movimento"): elenco con le polaroid e il testo a fianco.
+   Con .is-pinned (main.js) la sezione si ferma e le polaroid vengono "lanciate" sul tavolo una alla volta. */
 .partners {
   padding-block: var(--space-l);
   background-color: var(--c-ink);
@@ -1152,20 +1161,33 @@ h3 {
   .partner { grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: var(--space-m); }
 }
 
-/* foto con cornice chiara, come una stampa */
+/* foto come polaroid: cornice crema, striscia larga sotto con il nome scritto a mano */
 .partner__img {
   --rot: 0deg;
-  aspect-ratio: 4 / 5;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  aspect-ratio: 5 / 6.3;
   width: min(100%, 300px);
-  padding: 10px;
-  background: #ece7dd;
+  padding: 4.5% 4.5% 0;
+  background: var(--c-paper);
   box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5), 0 4px 14px rgba(0, 0, 0, 0.3);
   transform: rotate(var(--rot));
 }
-.partner:nth-child(1) .partner__img { --rot: -3deg; }
-.partner:nth-child(2) .partner__img { --rot: 2.5deg; }
-.partner:nth-child(3) .partner__img { --rot: -1.5deg; }
-.partner__img img { width: 100%; height: 100%; object-fit: cover; }
+.partner:nth-child(1) .partner__img { --rot: -6deg; }
+.partner:nth-child(2) .partner__img { --rot: 5deg; }
+.partner:nth-child(3) .partner__img { --rot: -2.5deg; }
+.partner__img img { width: 100%; height: 100%; min-height: 0; object-fit: cover; }
+.partner__caption {
+  display: block;
+  padding: 0.2em 0.15em 0.26em;
+  color: var(--c-ink);
+  font-family: var(--f-hand);
+  font-size: clamp(2rem, 1.6rem + 1.6vw, 2.9rem);
+  line-height: 1;
+  text-align: center;
+  transform: rotate(-2deg);
+}
+.partner:nth-child(2) .partner__caption { transform: rotate(1.5deg); }
 
 .partner__num { margin-bottom: 1rem; }
 .partner__name {
@@ -1222,21 +1244,29 @@ h3 {
 .is-pinned .partners__list,
 .is-pinned .partner { display: contents; }
 
-/* foto: tutte nello stesso punto, salgono dal basso (--e da 0 a 1) e restano impilate */
+/* polaroid: arrivano una alla volta (--e da 0 a 1) e restano sparse una sull'altra,
+   ognuna un po' spostata (--dx, --dy) e inclinata (--rot), come foto buttate su un tavolo */
 .is-pinned .partner__img {
   --e: 0;
+  --dx: 0%;
+  --dy: 0%;
   grid-area: photo;
   place-self: center;
   width: auto;
-  height: min(34vh, 360px);
-  height: min(34svh, 360px);
+  /* mai più alta della riga libera tra frase e testo (schermi bassi) */
+  height: min(37vh, 380px, 90%);
+  height: min(37svh, 380px, 90%);
   max-width: 100%;
   /* entrano da sinistra e ruotano fino alla loro inclinazione */
   transform:
-    translate3d(calc((1 - var(--e)) * -110vw), 0, 0)
+    translate3d(calc(var(--dx) * var(--e) + (1 - var(--e)) * -110vw), calc(var(--dy) * var(--e)), 0)
     rotate(calc(var(--rot) - (1 - var(--e)) * 12deg));
   will-change: transform;
 }
+.is-pinned .partner:nth-child(1) .partner__img { --dx: -9%; --dy: 1%; }
+.is-pinned .partner:nth-child(2) .partner__img { --dx: 9%; --dy: -3%; }
+.is-pinned .partner:nth-child(3) .partner__img { --dx: -1%; --dy: 3%; }
+.is-pinned .partner__caption { font-size: clamp(1.35rem, 4.4vh, 2.9rem); }
 
 /* testo di chi è in primo piano: compare in dissolvenza */
 .is-pinned .partner__info {
@@ -1263,6 +1293,14 @@ h3 {
   .is-pinned .partner__num { margin-bottom: 0.5rem; }
 }
 
+/* telefoni bassi: titolo, frase e spazi più stretti, per lasciare altezza alle polaroid */
+@media (max-width: 899px) and (max-height: 700px) {
+  .is-pinned .partners__pin { gap: 0.75rem; padding-top: calc(var(--nav-h) + 0.25rem); padding-bottom: 1rem; }
+  .is-pinned .partners__title { font-size: 2.25rem; }
+  .is-pinned .partners__intro { font-size: 1rem; line-height: 1.3; }
+  .is-pinned .partner__img { height: min(37vh, 380px, 94%); height: min(37svh, 380px, 94%); }
+}
+
 /* desktop: foto al centro, testo di lato */
 @media (min-width: 900px) {
   .is-pinned .partners__pin {
@@ -1283,7 +1321,11 @@ h3 {
   .is-pinned .partner__img { z-index: 1; }
   .is-pinned .partner__info { text-align: left; }
   .is-pinned .partner__text { margin-inline: 0; }
-  .is-pinned .partner__img { height: min(48vh, 460px); }
+  /* il margine tiene libero lo spazio in cui le polaroid si sparpagliano, così non coprono i testi */
+  .is-pinned .partner__img { height: min(56vh, 540px, 38vw, 86%); margin-inline: clamp(1.5rem, 3.5vw, 3.5rem); }
+  .is-pinned .partner:nth-child(1) .partner__img { --dx: -12%; --dy: 2%; }
+  .is-pinned .partner:nth-child(2) .partner__img { --dx: 12%; --dy: -4%; }
+  .is-pinned .partner:nth-child(3) .partner__img { --dx: -2%; --dy: 4%; }
 }
 
 /* ==========================================================================
