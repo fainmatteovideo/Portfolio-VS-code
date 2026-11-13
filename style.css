@@ -927,6 +927,30 @@ h3 {
   transition: opacity var(--dur-fast) ease;
 }
 .clients__track img:hover { opacity: 1; }
+.clients__link { display: flex; align-items: center; }
+
+/* Etichetta gialla che segue il mouse sopra i loghi con un link (main.js): stesso stile dei pulsanti */
+.cursor-tag {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 8px 12px 8px 10px;
+  background: var(--c-yellow);
+  color: var(--c-ink);
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-fast) ease;
+}
+.cursor-tag::before { content: ""; width: 5px; height: 5px; background: currentColor; }
+.cursor-tag.is-visible { opacity: 1; }
 .clients__track--reverse {
   animation-direction: reverse;
   margin-top: clamp(0.25rem, 0.8vw, 0.75rem);

@@ -781,6 +781,9 @@
           const copy = li.cloneNode(true);
           copy.setAttribute("aria-hidden", "true");
           copy.querySelector("img").alt = "";
+          // le copie non entrano nel giro del tasto Tab: ogni sito si raggiunge una volta sola
+          const a = copy.querySelector("a");
+          if (a) a.tabIndex = -1;
           t.appendChild(copy);
         });
       }
@@ -802,6 +805,21 @@
       }))).then(setSpeed);
     }, { rootMargin: "100% 0px 100% 0px" });
     logosObserver.observe(tracks[0]);
+    // col mouse sopra un logo con il link: etichetta gialla "Visit website" che segue il puntatore
+    // (il carosello intanto si ferma, vedi CSS)
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      const marquee = document.querySelector(".clients__marquee");
+      const tag = document.createElement("span");
+      tag.className = "cursor-tag";
+      tag.setAttribute("aria-hidden", "true");
+      tag.textContent = "Visit website";
+      document.body.appendChild(tag);
+      marquee.addEventListener("pointermove", (e) => {
+        tag.classList.toggle("is-visible", !!e.target.closest(".clients__link"));
+        tag.style.transform = `translate3d(${e.clientX + 16}px, ${e.clientY + 18}px, 0)`;
+      });
+      marquee.addEventListener("pointerleave", () => tag.classList.remove("is-visible"));
+    }
     // fuori dallo schermo l'animazione si ferma
     new IntersectionObserver(([e]) => tracks.forEach((t) => t.classList.toggle("is-paused", !e.isIntersecting))).observe(tracks[0]);
   }
