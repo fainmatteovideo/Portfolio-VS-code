@@ -57,7 +57,6 @@
   --c-paper-2: #e6e0d4;       /* secondo foglio, appena più scuro */
   --c-paper-3: #d8d1c3;       /* pannelli sulle sezioni chiare */
   --c-yellow: #ffc800;        /* accento: pulsanti, categoria attiva, etichette di sezione */
-  --c-green: #6ba368;         /* accento secondario, solo nei dettagli */
   --c-error: #e0816f;
 
   /* Colori di contesto: questi valgono sul fondo scuro; le sezioni chiare li ridefiniscono

@@ -35,8 +35,8 @@ Sostituire il sito attuale (index / work / about / contact separati) con **un'un
 ## Estetica
 - Dal branch `nuova-estetica`: aspetto da videomaker/studio creativo, non da sito tech. Cambiano forme, colori e font; impaginazione, struttura e funzioni restano quelle già costruite.
 - Riferimento per palette, font e grafica dei pulsanti: 1stdecember.com. Riferimento per le foto dei collaboratori: le polaroid di paragonproductions.co. Prendere lo *stile*, non copiare codice, testi o asset.
-- Palette (variabili in `style.css`): nero caldo `#151412` (fondo principale; niente grigi freddi o bluastri), crema `#F1EDE4` (testi sul fondo scuro e fondo delle sezioni chiare), giallo `#FFC800` (accento: pulsanti, categoria attiva, etichette di sezione), verde salvia `#6BA368` (solo piccoli dettagli).
-- Sul giallo e sul verde solo testo scuro. Mai testo giallo o verde sul crema (contrasto insufficiente).
+- Palette (variabili in `style.css`): nero caldo `#151412` (fondo principale; niente grigi freddi o bluastri), crema `#F1EDE4` (testi sul fondo scuro e fondo delle sezioni chiare), giallo `#FFC800` (accento: pulsanti, categoria attiva, etichette di sezione).
+- Sul giallo solo testo scuro. Mai testo giallo sul crema (contrasto insufficiente).
 - Riquadri sul fondo scuro (form di contatto, scheda del progetto): crema pieno con testo scuro, come le polaroid, mai scuro su scuro.
 - Colori pieni: niente pannelli trasparenti o sfocati (`backdrop-filter`), niente sfumature di sfondo. Unica texture: una grana leggera tipo carta, solo sui fondi (non su riquadri, schede e polaroid).
 - Forme squadrate: nessun `border-radius` (pulsanti, campi, pannelli e schede sono rettangoli).
