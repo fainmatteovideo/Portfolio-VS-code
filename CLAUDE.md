@@ -37,7 +37,7 @@ Sostituire il sito attuale (index / work / about / contact separati) con **un'un
 - Riferimento per palette, font e grafica dei pulsanti: 1stdecember.com. Riferimento per le foto dei collaboratori: le polaroid di paragonproductions.co. Prendere lo *stile*, non copiare codice, testi o asset.
 - Palette (variabili in `style.css`): nero caldo `#151412` (fondo principale; niente grigi freddi o bluastri), crema `#F1EDE4` (testi sul fondo scuro e fondo delle sezioni chiare), giallo `#FFC800` (accento: pulsanti, categoria attiva, etichette di sezione).
 - Sul giallo solo testo scuro. Mai testo giallo sul crema (contrasto insufficiente).
-- Riquadri sul fondo scuro (form di contatto, scheda del progetto): crema pieno con testo scuro, come le polaroid, mai scuro su scuro.
+- Riquadri sul fondo scuro: niente riempimento, solo un bordo sottile (1px) color panna attenuato, con testi panna. Vale per la scheda del progetto e per i campi del form (il form non ha un riquadro esterno). Niente blocchi crema pieni accanto ai video: gli unici elementi chiari pieni sul nero sono le polaroid.
 - Colori pieni: niente pannelli trasparenti o sfocati (`backdrop-filter`), niente sfumature di sfondo. Unica texture: una grana leggera tipo carta, solo sui fondi (non su riquadri, schede e polaroid).
 - Forme squadrate: nessun `border-radius` (pulsanti, campi, pannelli e schede sono rettangoli).
 - Sezioni alternate: apertura, Lavori, Collaboration, Clienti e Contatti sul fondo scuro; Services/How I work e About su crema.
