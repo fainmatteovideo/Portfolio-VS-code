@@ -68,10 +68,10 @@
   <link rel="preconnect" href="https://f.vimeocdn.com">
   <link rel="preload" href="assets/logo/mf-logo-white.webp" as="image" type="image/webp">
   <link rel="preload" href="assets/posters/showreel.webp" as="image" type="image/webp">
-  <link rel="stylesheet" href="style.css?v=20261113l">
+  <link rel="stylesheet" href="style.css?v=20261113m">
   <script src="https://player.vimeo.com/api/player.js" defer></script>
   <!-- ?v=: cambiare la data quando si aggiornano CSS o JS, così i browser non usano la copia vecchia -->
-  <script src="main.js?v=20261113l" defer></script>
+  <script src="main.js?v=20261113m" defer></script>
 </head>
 <body>
   <a class="skip-link label" href="#work">Skip to content</a>
@@ -350,32 +350,37 @@
 
   <!-- Carosello loghi clienti (main.js duplica la fila per lo scorrimento continuo) -->
   <section class="clients" id="clients" aria-labelledby="clients-title">
-    <!-- l'etichetta sta sopra la linea; le linee racchiudono le due file di loghi
-         (la seconda fila, che scorre al contrario, la crea main.js) -->
+    <!-- l'etichetta sta sopra la linea; le linee racchiudono le due file di loghi.
+         Ogni logo sta in una sola fila, così le due file non mostrano mai lo stesso cliente.
+         Ordine = importanza: i primi di ogni fila sono quelli visibili all'arrivo.
+         La prima fila scorre verso sinistra (dopo i primi entrano i successivi dell'elenco);
+         la seconda verso destra (dopo i primi entrano gli ultimi dell'elenco, a ritroso). -->
     <div class="container">
       <p class="label faint" id="clients-title">Clients &amp; partners I've worked with</p>
     </div>
     <div class="clients__marquee">
       <ul class="clients__track">
         <li><img data-src="assets/logos/swisscom.webp" alt="Swisscom" decoding="async"></li>
-        <li><img data-src="assets/logos/stories.webp" alt="Stories AG" decoding="async"></li>
-        <li><img data-src="assets/logos/trees.webp" alt="Trees for the Future" decoding="async"></li>
-        <li><img data-src="assets/logos/hope.webp" alt="Hope Group" decoding="async"></li>
-        <li><img data-src="assets/logos/byd.webp" alt="BYD" decoding="async"></li>
-        <li><img data-src="assets/logos/mcqueen.webp" alt="McQueen" decoding="async"></li>
-        <li><img data-src="assets/logos/zt.webp" alt="Zurich Together" decoding="async"></li>
-        <li><img data-src="assets/logos/ost.webp" alt="OST" decoding="async"></li>
-        <li><img data-src="assets/logos/btry.webp" alt="BTRY" decoding="async"></li>
-        <li><img data-src="assets/logos/anybotics.webp" alt="ANYbotics" decoding="async"></li>
-        <li><img data-src="assets/logos/nordstern.webp" alt="Nordstern Basel" decoding="async"></li>
-        <li><img data-src="assets/logos/corintis.webp" alt="Corintis" decoding="async"></li>
-        <li><img data-src="assets/logos/impact-build.webp" alt="Impact Build" decoding="async"></li>
         <li><img data-src="assets/logos/esa.webp" alt="ESA – European Space Agency" decoding="async"></li>
-        <li><img data-src="assets/logos/aceli.webp" alt="Aceli Africa" decoding="async"></li>
-        <li><img data-src="assets/logos/raiffeisen.webp" alt="Raiffeisen" decoding="async"></li>
-        <li><img data-src="assets/logos/kordial.webp" alt="Kordial" decoding="async"></li>
+        <li><img data-src="assets/logos/stories.webp" alt="Stories AG" decoding="async"></li>
+        <li><img data-src="assets/logos/anybotics.webp" alt="ANYbotics" decoding="async"></li>
         <li><img data-src="assets/logos/gs1.webp" alt="GS1" decoding="async"></li>
+        <li><img data-src="assets/logos/kordial.webp" alt="Kordial" decoding="async"></li>
+        <li><img data-src="assets/logos/btry.webp" alt="BTRY" decoding="async"></li>
+        <li><img data-src="assets/logos/aceli.webp" alt="Aceli Africa" decoding="async"></li>
+        <li><img data-src="assets/logos/impact-build.webp" alt="Impact Build" decoding="async"></li>
+        <li><img data-src="assets/logos/zt.webp" alt="Zurich Together" decoding="async"></li>
+      </ul>
+      <ul class="clients__track clients__track--reverse">
+        <li><img data-src="assets/logos/raiffeisen.webp" alt="Raiffeisen" decoding="async"></li>
+        <li><img data-src="assets/logos/byd.webp" alt="BYD" decoding="async"></li>
+        <li><img data-src="assets/logos/corintis.webp" alt="Corintis" decoding="async"></li>
+        <li><img data-src="assets/logos/ost.webp" alt="OST" decoding="async"></li>
+        <li><img data-src="assets/logos/mcqueen.webp" alt="McQueen" decoding="async"></li>
+        <li><img data-src="assets/logos/nordstern.webp" alt="Nordstern Basel" decoding="async"></li>
         <li><img data-src="assets/logos/sgaim.webp" alt="SGAIM" decoding="async"></li>
+        <li><img data-src="assets/logos/hope.webp" alt="Hope Group" decoding="async"></li>
+        <li><img data-src="assets/logos/trees.webp" alt="Trees for the Future" decoding="async"></li>
       </ul>
     </div>
   </section>

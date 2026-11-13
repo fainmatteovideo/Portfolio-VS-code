@@ -45,7 +45,7 @@ Sostituire il sito attuale (index / work / about / contact separati) con **un'un
 - Foto dei collaboratori: polaroid con cornice crema, inclinate e sparse una sull'altra, con il nome scritto a mano (font Reenie Beanie, self-hosted, usato solo lì).
 - Pulsante principale: rettangolo giallo pieno con un quadratino davanti al testo.
 - Menu (riferimento: weisslameraner.com): barra in alto con logo a sinistra, voci in fila al centro e "Let's talk" a destra; sotto la barra una linea che avanza con lo scorrimento. Su telefono e tablet le voci sono nel menu a tutto schermo.
-- Carosello loghi: i loghi sfumano ai due bordi laterali.
+- Carosello loghi: i loghi sfumano ai due bordi laterali. Due file con loghi diversi (ogni cliente sta in una sola fila, scritta in `index.html`), in ordine di importanza: i più noti per primi, così sono quelli visibili all'arrivo.
 - Dal vecchio sito mantenere: autoplay dei video, carosello di stills, descrizioni e loghi clienti.
 - Logo: `assets/logo/mf-logo-white.webp` (bianco; sulle sezioni chiare viene scurito via CSS). Grande nell'apertura e piccolo nel menu.
 

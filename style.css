@@ -934,9 +934,11 @@ h3 {
 .clients__marquee:hover .clients__track { animation-play-state: paused; }
 .clients__track.is-paused { animation-play-state: paused; }
 
+/* Ogni fila ha quattro copie dei loghi (main.js): si parte dalla seconda copia, spostata di poco
+   verso destra, così il primo logo dell'elenco è subito visibile e non sotto la sfumatura */
 @keyframes marquee {
-  from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-50%, 0, 0); }
+  from { transform: translate3d(calc(-25% + 10vw), 0, 0); }
+  to   { transform: translate3d(calc(-75% + 10vw), 0, 0); }
 }
 
 /* Movimento ridotto: niente scorrimento, loghi in una griglia ordinata */
@@ -948,8 +950,7 @@ h3 {
     animation: none;
     padding-inline: var(--gutter);
   }
-  .clients__track li[aria-hidden],
-  .clients__track--reverse { display: none; }
+  .clients__track li[aria-hidden] { display: none; }
 }
 
 /* Pallino separatore (es. "Video production • Zurich") */

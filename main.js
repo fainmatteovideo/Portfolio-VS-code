@@ -769,37 +769,24 @@
   });
 
   /* --- Carosello loghi clienti ------------------------------------------ */
-  const track = document.querySelector(".clients__track");
-  if (track) {
-    // seconda copia della fila: con translateX(-50%) lo scorrimento è continuo
-    [...track.children].forEach((li) => {
-      const copy = li.cloneNode(true);
-      copy.setAttribute("aria-hidden", "true");
-      copy.querySelector("img").alt = "";
-      track.appendChild(copy);
-    });
+  const tracks = [...document.querySelectorAll(".clients__track")];
+  if (tracks.length) {
     const logoBase = window.matchMedia("(min-width: 768px)").matches ? 70 : 50;
-    // fascia sottile: anche i loghi verticali non superano ~1,1 volte la base
-    track.querySelectorAll("img").forEach((img) => sizeLogo(img, logoBase, 1.1));
-    // seconda fila: stessi loghi in un ordine mescolato (fisso, così nessuna coppia di vicini
-    // si ripete rispetto alla prima fila) e scorre nel verso opposto
-    const originals = [...track.children].filter((li) => !li.hasAttribute("aria-hidden"));
-    const SHUFFLE = [7, 2, 12, 0, 10, 5, 14, 3, 9, 1, 13, 6, 11, 4, 8];
-    const order = SHUFFLE.filter((i) => i < originals.length);
-    originals.forEach((_, i) => { if (!order.includes(i)) order.push(i); });
-    const reverse = document.createElement("ul");
-    reverse.className = "clients__track clients__track--reverse";
-    reverse.setAttribute("aria-hidden", "true");
-    [...order, ...order].forEach((i) => {
-      const li = originals[i].cloneNode(true);
-      const img = li.querySelector("img");
-      img.alt = "";
-      img.style.height = "";
-      sizeLogo(img, logoBase, 1.1);
-      reverse.appendChild(li);
+    tracks.forEach((t) => {
+      // quattro copie di ogni fila: metà fila (due copie) è sempre più larga dello schermo,
+      // e scorrendo di metà fila (vedi @keyframes marquee) il giro è continuo
+      const originals = [...t.children];
+      for (let n = 0; n < 3; n++) {
+        originals.forEach((li) => {
+          const copy = li.cloneNode(true);
+          copy.setAttribute("aria-hidden", "true");
+          copy.querySelector("img").alt = "";
+          t.appendChild(copy);
+        });
+      }
+      // fascia sottile: anche i loghi verticali non superano ~1,1 volte la base
+      t.querySelectorAll("img").forEach((img) => sizeLogo(img, logoBase, 1.1));
     });
-    track.after(reverse);
-    const tracks = [track, reverse];
     // velocità costante (~35 px/s) qualunque sia la larghezza dei loghi
     const setSpeed = () => tracks.forEach((t) => t.style.setProperty("--marquee-duration", (t.scrollWidth / 2 / 35) + "s"));
     // i loghi si scaricano solo quando la fascia si avvicina; poi si ricalcola la velocità
@@ -814,9 +801,9 @@
         img.removeAttribute("data-src");
       }))).then(setSpeed);
     }, { rootMargin: "100% 0px 100% 0px" });
-    logosObserver.observe(track);
+    logosObserver.observe(tracks[0]);
     // fuori dallo schermo l'animazione si ferma
-    new IntersectionObserver(([e]) => tracks.forEach((t) => t.classList.toggle("is-paused", !e.isIntersecting))).observe(track);
+    new IntersectionObserver(([e]) => tracks.forEach((t) => t.classList.toggle("is-paused", !e.isIntersecting))).observe(tracks[0]);
   }
 
   /* --- Form "Send brief": compone l'email nell'app di posta ------------- */
