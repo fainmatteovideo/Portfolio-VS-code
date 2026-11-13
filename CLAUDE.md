@@ -42,7 +42,7 @@ Sostituire il sito attuale (index / work / about / contact separati) con **un'un
 - Forme squadrate: nessun `border-radius` (pulsanti, campi, pannelli e schede sono rettangoli).
 - Sezioni alternate: apertura, Lavori, Collaboration, Clienti e Contatti sul fondo scuro; Services/How I work e About su crema.
 - Font (self-hosted): Anton per i titoli (maiuscolo, stretto e pesante, sullo stile dei titoli di paragonproductions.co), Albert Sans per testi, pulsanti ed etichette (queste in maiuscolo grassetto), come alternativa libera al Roobert di Paragon.
-- Foto dei collaboratori: polaroid con cornice crema, inclinate e sparse una sull'altra, con il nome scritto a mano (font Reenie Beanie, self-hosted, usato solo lì).
+- Polaroid (collaboratori e foto di Matteo in About, classe `.polaroid`): cornice di carta spessa con bordo del cartoncino visibile, striscia larga sotto con il nome scritto a mano (font Reenie Beanie, self-hosted, usato solo lì), inclinate; i collaboratori sparsi uno sull'altro.
 - Pulsante principale: rettangolo giallo pieno con un quadratino davanti al testo.
 - Menu (riferimento: weisslameraner.com): barra in alto con logo a sinistra, voci in fila al centro e "Let's talk" a destra; sotto la barra una linea che avanza con lo scorrimento. Su telefono e tablet le voci sono nel menu a tutto schermo.
 - Carosello loghi: i loghi sfumano ai due bordi laterali. Due file con loghi diversi (ogni cliente sta in una sola fila, scritta in `index.html`), in ordine di importanza: i più noti per primi, così sono quelli visibili all'arrivo.

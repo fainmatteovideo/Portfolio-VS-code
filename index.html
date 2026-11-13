@@ -68,10 +68,10 @@
   <link rel="preconnect" href="https://f.vimeocdn.com">
   <link rel="preload" href="assets/logo/mf-logo-white.webp" as="image" type="image/webp">
   <link rel="preload" href="assets/posters/showreel.webp" as="image" type="image/webp">
-  <link rel="stylesheet" href="style.css?v=20261113q">
+  <link rel="stylesheet" href="style.css?v=20261113r">
   <script src="https://player.vimeo.com/api/player.js" defer></script>
   <!-- ?v=: cambiare la data quando si aggiornano CSS o JS, così i browser non usano la copia vecchia -->
-  <script src="main.js?v=20261113q" defer></script>
+  <script src="main.js?v=20261113r" defer></script>
 </head>
 <body>
   <a class="skip-link label" href="#work">Skip to content</a>
@@ -294,7 +294,10 @@
 
       <div class="about__grid">
         <figure class="about__photo reveal">
-          <img src="assets/prof-pic.webp" alt="Matteo Fain with a camera" width="900" height="900" loading="lazy" decoding="async">
+          <div class="polaroid">
+            <img src="assets/prof-pic.webp" alt="Matteo Fain with a camera" width="900" height="900" loading="lazy" decoding="async">
+            <span class="polaroid__caption" aria-hidden="true">Matteo</span>
+          </div>
         </figure>
         <div class="about__text reveal">
           <p class="about__lead">Hi, I'm Matteo, a video editor and filmmaker based in Zurich.</p>
@@ -315,7 +318,7 @@
           <p class="partners__intro muted">As a freelancer, many projects are built on collaboration. When a scope requires more expertise, I bring in a trusted team.</p>
           <ul class="partners__list">
             <li class="partner">
-              <div class="partner__img"><img src="assets/people/kordial.webp" alt="The Kordial team in the studio" loading="lazy" decoding="async"><span class="partner__caption" aria-hidden="true">Kordial</span></div>
+              <div class="partner__img polaroid"><img src="assets/people/kordial.webp" alt="The Kordial team in the studio" loading="lazy" decoding="async"><span class="polaroid__caption" aria-hidden="true">Kordial</span></div>
               <div class="partner__info">
                 <p class="partner__num label faint">01 / 03</p>
                 <h4 class="partner__name">Kordial</h4>
@@ -324,7 +327,7 @@
               </div>
             </li>
             <li class="partner">
-              <div class="partner__img"><img src="assets/people/franz.webp" alt="Franz Thiel" loading="lazy" decoding="async"><span class="partner__caption" aria-hidden="true">Franz</span></div>
+              <div class="partner__img polaroid"><img src="assets/people/franz.webp" alt="Franz Thiel" loading="lazy" decoding="async"><span class="polaroid__caption" aria-hidden="true">Franz</span></div>
               <div class="partner__info">
                 <p class="partner__num label faint">02 / 03</p>
                 <h4 class="partner__name">Franz</h4>
@@ -333,7 +336,7 @@
               </div>
             </li>
             <li class="partner">
-              <div class="partner__img"><img src="assets/people/girts.webp" alt="Girts" loading="lazy" decoding="async"><span class="partner__caption" aria-hidden="true">Girts</span></div>
+              <div class="partner__img polaroid"><img src="assets/people/girts.webp" alt="Girts" loading="lazy" decoding="async"><span class="polaroid__caption" aria-hidden="true">Girts</span></div>
               <div class="partner__info">
                 <p class="partner__num label faint">03 / 03</p>
                 <h4 class="partner__name">Girts</h4>

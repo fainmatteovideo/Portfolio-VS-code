@@ -1088,18 +1088,24 @@ h3 {
   display: grid;
   gap: var(--space-l);
 }
+/* foto di Matteo come polaroid, appoggiata sul foglio crema: ombra più morbida e calda */
 .about__photo {
-  aspect-ratio: 4 / 5;
-  overflow: hidden;
-  background-color: var(--c-panel);
   width: 100%;
-  max-width: 240px;
-  margin-inline: auto;
+  max-width: 260px;
+  margin: 0 auto;
 }
 @media (min-width: 900px) {
   .about__photo { max-width: 340px; }
 }
-.about__photo img { width: 100%; height: 100%; object-fit: cover; object-position: 42% center; }
+.about__photo .polaroid {
+  --rot: -3deg;
+  box-shadow:
+    1px 1px 0 #dcd5c6,
+    2px 2px 0 #cdc5b4,
+    0 24px 48px rgba(60, 45, 20, 0.28),
+    0 5px 12px rgba(60, 45, 20, 0.2);
+}
+.about__photo img { object-position: 42% center; }
 
 .about__text { display: grid; gap: 1.25rem; max-width: 58ch; color: var(--c-text-muted); }
 .about__lead {
@@ -1153,33 +1159,42 @@ h3 {
   .partner { grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: var(--space-m); }
 }
 
-/* foto come polaroid: cornice crema, striscia larga sotto con il nome scritto a mano */
-.partner__img {
+/* Polaroid (collaboratori e About): cornice di carta spessa, striscia larga sotto con il nome
+   scritto a mano. Il bordo inferiore e destro un po' più scuro dà lo spessore del cartoncino. */
+.polaroid {
   --rot: 0deg;
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
-  aspect-ratio: 5 / 6.3;
-  width: min(100%, 300px);
-  padding: 4.5% 4.5% 0;
-  background: var(--c-paper);
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5), 0 4px 14px rgba(0, 0, 0, 0.3);
+  aspect-ratio: 5 / 6.6;
+  padding: 7% 7% 0;
+  background-color: #f4f0e7;
+  /* carta appena ingiallita verso i bordi, come una stampa vera */
+  background-image: radial-gradient(130% 110% at 50% 40%, transparent 55%, rgba(120, 100, 60, 0.1) 100%);
+  box-shadow:
+    1px 1px 0 #dcd5c6,
+    2px 2px 0 #cdc5b4,
+    0 30px 60px rgba(0, 0, 0, 0.45),
+    0 6px 16px rgba(0, 0, 0, 0.28);
   transform: rotate(var(--rot));
 }
-.partner:nth-child(1) .partner__img { --rot: -6deg; }
-.partner:nth-child(2) .partner__img { --rot: 5deg; }
-.partner:nth-child(3) .partner__img { --rot: -2.5deg; }
-.partner__img img { width: 100%; height: 100%; min-height: 0; object-fit: cover; }
-.partner__caption {
+/* la foto è leggermente incassata nella cornice */
+.polaroid img { width: 100%; height: 100%; min-height: 0; object-fit: cover; box-shadow: 0 0 0 1px rgba(40, 30, 15, 0.18); }
+.polaroid__caption {
   display: block;
-  padding: 0.2em 0.15em 0.26em;
+  padding: 0.45em 0.15em 0.8em;
   color: var(--c-ink);
   font-family: var(--f-hand);
-  font-size: clamp(2rem, 1.6rem + 1.6vw, 2.9rem);
+  font-size: clamp(2.1rem, 1.6rem + 1.8vw, 3.2rem);
   line-height: 1;
   text-align: center;
   transform: rotate(-2deg);
 }
-.partner:nth-child(2) .partner__caption { transform: rotate(1.5deg); }
+
+.partner__img { width: min(100%, 300px); }
+.partner:nth-child(1) .partner__img { --rot: -6deg; }
+.partner:nth-child(2) .partner__img { --rot: 5deg; }
+.partner:nth-child(3) .partner__img { --rot: -2.5deg; }
+.partner:nth-child(2) .polaroid__caption { transform: rotate(1.5deg); }
 
 .partner__num { margin-bottom: 1rem; }
 .partner__name {
@@ -1259,7 +1274,7 @@ h3 {
 .is-pinned .partner:nth-child(1) .partner__img { --dx: -9%; --dy: 1%; }
 .is-pinned .partner:nth-child(2) .partner__img { --dx: 9%; --dy: -3%; }
 .is-pinned .partner:nth-child(3) .partner__img { --dx: -1%; --dy: 3%; }
-.is-pinned .partner__caption { font-size: clamp(1.35rem, 4.4vh, 2.9rem); }
+.is-pinned .polaroid__caption { font-size: clamp(1.5rem, 5.2vh, 3.3rem); }
 
 /* testo di chi è in primo piano: compare in dissolvenza */
 .is-pinned .partner__info {
