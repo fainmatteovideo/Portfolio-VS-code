@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 64" preserveAspectRatio="none">
+  <!-- scotch di carta giallo (giallo della palette #FFC800): bordi corti strappati, fibre della carta e una piega -->
+  <defs>
+    <filter id="paper" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9 0.35" numOctaves="3" seed="4" result="noise"/>
+      <feColorMatrix in="noise" values="0 0 0 0 0.45  0 0 0 0 0.32  0 0 0 0 0  0 0 0 0.9 -0.32" result="specks"/>
+      <feComposite in="specks" in2="SourceGraphic" operator="in" result="fibres"/>
+      <feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="fibres"/></feMerge>
+    </filter>
+    <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.18"/>
+      <stop offset="0.5" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#7a5a00" stop-opacity="0.12"/>
+    </linearGradient>
+    <clipPath id="shape">
+      <path id="tape" d="M9 3 L120 1 L216 3 L291 4 L289 9 L295 13 L290 18 L293 24 L288 29 L296 35 L289 40 L292 47 L287 52 L294 57 L290 62 L180 63 L80 61 L7 62 L10 56 L4 51 L9 46 L2 40 L8 34 L3 28 L9 22 L4 16 L10 11 L5 6 Z"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#shape)">
+    <rect width="300" height="64" fill="#ffc800" fill-opacity="0.88" filter="url(#paper)"/>
+    <rect width="300" height="64" fill="url(#shade)"/>
+    <!-- piega: ombra e riflesso che corrono di traverso -->
+    <path d="M118 0 C 121 14, 114 26, 120 38 S 117 56, 123 64" fill="none" stroke="#8a6400" stroke-opacity="0.32" stroke-width="1.4"/>
+    <path d="M120.6 0 C 123.6 14, 116.6 26, 122.6 38 S 119.6 56, 125.6 64" fill="none" stroke="#fff" stroke-opacity="0.35" stroke-width="1.2"/>
+  </g>
+</svg>
