@@ -1122,7 +1122,11 @@
         il bordo diagonale si raddrizza mentre sale */
   const act = document.getElementById("act");
   // i lavori si fermano quando il loro fondo tocca il fondo dello schermo
-  const pinWork = () => work.style.setProperty("--work-top", Math.min(0, window.innerHeight - work.offsetHeight) + "px");
+  // computer: punto di fermo in pixel; telefono: il CSS lo calcola in svh partendo da --work-h
+  const pinWork = () => {
+    work.style.setProperty("--work-top", Math.min(0, window.innerHeight - work.offsetHeight) + "px");
+    work.style.setProperty("--work-h", work.offsetHeight + "px");
+  };
   if ("ResizeObserver" in window) new ResizeObserver(pinWork).observe(work);
   window.addEventListener("resize", pinWork);
   pinWork();
@@ -1140,7 +1144,11 @@
   const about = document.getElementById("about");
   // stessa condizione del CSS: con mouse e schermo largo lavori e pannello restano agganciati
   const pinnedMQ = window.matchMedia("(min-width: 1024px) and (hover: hover)");
-  const pinAct = () => act && act.style.setProperty("--act-top", Math.min(0, window.innerHeight - act.offsetHeight) + "px");
+  const pinAct = () => {
+    if (!act) return;
+    act.style.setProperty("--act-top", Math.min(0, window.innerHeight - act.offsetHeight) + "px");
+    act.style.setProperty("--act-h", act.offsetHeight + "px");
+  };
   if (act && "ResizeObserver" in window) new ResizeObserver(pinAct).observe(act);
   window.addEventListener("resize", pinAct);
   pinAct();

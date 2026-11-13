@@ -2195,11 +2195,17 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   padding-bottom: calc(var(--space-m) + 15vh);
 }
 .work.is-covered { visibility: hidden; opacity: 0; }
-/* telefono e tablet: niente aggancio (la barra degli indirizzi che compare/scompare cambia
-   l'altezza dello schermo e faceva saltare le sezioni). Il pannello crema e About salgono
-   comunque con il taglio diagonale, scorrendo normalmente. */
+/* telefono e tablet: stesso aggancio del computer, ma il punto di fermo è calcolato in svh
+   (altezza dello schermo con la barra degli indirizzi visibile, che non cambia mentre si scorre)
+   e con l'altezza della sezione misurata da main.js (--work-h). Così il fermo lo gestisce il
+   browser, senza calcoli durante lo scroll: con innerHeight le sezioni saltavano. */
 @media (max-width: 1023px), (hover: none) {
-  .work { position: relative; top: auto; padding-bottom: calc(var(--space-l) + 19vh); }
+  .work {
+    top: min(0px, calc(100vh - var(--work-h, 0px)));
+    top: min(0px, calc(100svh - var(--work-h, 0px)));
+    padding-bottom: calc(var(--space-l) + 12vh);
+  }
+  /* l'inclinazione resta fissa: nel triangolo in alto a sinistra del crema si vedono ancora i lavori */
   .work.is-covered { visibility: visible; opacity: 1; }
 }   /* opacity: anche la slide attiva (visibility: visible) sparisce */
 
@@ -2218,10 +2224,12 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 /* coperto da About: sparisce */
 .act.is-covered { visibility: hidden; opacity: 0; }
 @media (max-width: 1023px), (hover: none) {
-  /* telefono e tablet: niente aggancio (vedi .work). Il pannello sale sopra la fine dei lavori
-     e About sopra la fine del pannello: nei tagli diagonali si vede la sezione precedente */
-  .act { position: relative; top: auto; margin-top: -14vh; padding-bottom: 14vh; }
-  .about { margin-top: -14vh; }
+  /* telefono e tablet: aggancio in svh come per .work; About sale sopra il pannello fermo */
+  .act {
+    top: min(0px, calc(100vh - var(--act-h, 0px)));
+    top: min(0px, calc(100svh - var(--act-h, 0px)));
+  }
+  .act.is-covered { visibility: visible; opacity: 1; }
 }
 /* mentre si calcola la posizione vera delle sezioni (link del menu) niente sticky */
 .is-measuring .work,
