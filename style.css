@@ -1112,14 +1112,14 @@ h3 {
 .about__photo .polaroid::before {
   content: "";
   position: absolute;
-  top: -22px;
+  top: -34px;
   left: 50%;
   width: 52%;
-  height: 46px;
+  height: 40px;
   background-color: rgba(255, 200, 0, 0.78);
   box-shadow: 0 1px 3px rgba(60, 45, 20, 0.18);
-  /* dritto rispetto alla polaroid: segue la sua inclinazione */
-  transform: translateX(-50%);
+  /* appena inclinato nel verso opposto alla polaroid; resta sopra la cornice, mai sulla foto */
+  transform: translateX(-50%) rotate(5deg);
   clip-path: polygon(
     0 6%, 3% 0, 97% 4%, 100% 0, 98% 22%, 100% 40%, 97% 60%, 100% 80%, 98% 100%,
     4% 96%, 0 100%, 2% 78%, 0 58%, 3% 40%, 0 20%);
@@ -2274,3 +2274,74 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 .mobile-menu,
 .player-modal,
 .lightbox { background-image: var(--grain-light); }
+
+/* Scheda progetto come polaroid (per ora solo Chris, "card": "polaroid" in projects.json):
+   nella parte della foto titolo e logo sul nero, nella striscia sotto i crediti scritti a mano.
+   L'inclinazione usa "rotate" e non "transform", così l'animazione d'entrata non la cancella. */
+.project .project__meta--polaroid {
+  --rot: 0deg;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  gap: 0;
+  aspect-ratio: auto;
+  width: min(100%, 300px);
+  margin: var(--space-m) auto 0;
+  padding: 5.5% 5.5% 0;
+  transform: none;
+  rotate: -2deg;
+}
+.project .project__meta--polaroid .project__head {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  padding: 1.25rem 1rem;
+  text-align: center;
+  color: var(--c-paper);
+  background-color: var(--c-ink);
+  background-image: var(--grain-light);
+  box-shadow: 0 0 0 1px rgba(40, 30, 15, 0.18);
+}
+.project .project__meta--polaroid .project__num {
+  position: absolute;
+  top: 0.8rem;
+  left: 0.9rem;
+  margin: 0;
+}
+.project .project__meta--polaroid .project__title { font-size: clamp(2rem, 1.4rem + 1.6vw, 2.75rem); }
+.project .project__meta--polaroid .project__subtitle { margin-top: 0.35rem; font-size: var(--fs-small); }
+.project .project__meta--polaroid .project__logos { justify-content: center; margin-top: 1.1rem; }
+.project .project__meta--polaroid .project__credits {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0.9rem 0.25rem 1.1rem;
+  border-top: 0;
+  color: var(--c-ink);
+  font-family: var(--f-hand);
+  font-size: 1.5rem;
+  line-height: 1;
+  text-align: center;
+}
+.project .project__meta--polaroid .project__credits span {
+  margin-bottom: 0.1rem;
+  color: #77746d;
+  font-family: var(--f-sans);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+@media (min-width: 1024px) {
+  .showcase__stage .project .project__meta--polaroid {
+    width: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 5.5% 5.5% 0;
+    overflow: visible;
+    border: 0;
+  }
+}

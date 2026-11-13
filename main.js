@@ -202,9 +202,12 @@
     const logos = p.logos.map((l) =>
       `<img data-src="${esc(l.src)}" alt="${esc(l.alt)}" decoding="async">`).join("");
 
+    // "card": "polaroid" in projects.json: la scheda diventa una polaroid (titolo e loghi nella
+    // parte della foto, crediti nella striscia sotto)
+    const metaClass = p.card === "polaroid" ? "project__meta project__meta--polaroid polaroid" : "project__meta";
     return `<article class="project slide" data-category="${esc(p.category)}" data-name="${esc(p.title)}" id="project-${esc(p.id)}">
       ${videoHTML(p.vimeo, "", p.title, p.thumbnail, p.crop)}
-      <div class="project__meta">
+      <div class="${metaClass}">
         <div class="project__head">
           <span class="project__num slide__num label"></span>
           <h3 class="project__title">${esc(p.title)}</h3>
