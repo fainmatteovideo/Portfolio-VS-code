@@ -52,7 +52,7 @@ Sostituire il sito attuale (index / work / about / contact separati) con **un'un
 ## Qualità del design
 - Il sito è il mio biglietto da visita come videomaker: deve sembrare fatto da uno studio, non da un template.
 - Cura tipografia (gerarchie chiare, spaziature generose, maiuscole/tracking dove serve), ritmo verticale e allineamenti.
-- Animazioni sobrie e cinematografiche: comparse morbide allo scroll, transizioni lente. Niente effetti vistosi. Rispetta `prefers-reduced-motion`.
+- Animazioni sobrie e cinematografiche: comparse morbide allo scroll, transizioni lente. Niente effetti vistosi. Le animazioni sono sempre complete: per scelta di Matteo il sito NON segue l'impostazione "riduci movimento" (`prefers-reduced-motion`).
 - Prima di costruire una sezione, proponimi la direzione visiva a parole (o 2 alternative). Dopo averla costruita, fai uno screenshot desktop e mobile, valuta tu stesso cosa non funziona e correggilo prima di mostrarmela.
 
 ## Privacy (Svizzera / UE)

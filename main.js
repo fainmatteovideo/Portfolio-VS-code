@@ -177,7 +177,8 @@
   /* ======================================================================
      Lavori (generati da projects.json)
      ====================================================================== */
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Scelta di Matteo: animazioni sempre complete, anche se il dispositivo chiede "riduci movimento"
+  const reducedMotion = false;
   const work = document.getElementById("work");
   const list = document.getElementById("work-list");
   const intro = document.getElementById("work-intro");
@@ -1149,14 +1150,17 @@
     const slantFor = (top, vh) => {
       if (reducedMotion) return 0;
       const p = Math.min(1, Math.max(0, 1 - top / vh));
-      // desktop: da ripido a dritto. Telefono/tablet: resta sempre un po' obliquo, entro la
-      // sovrapposizione delle sezioni (14vh)
-      return pinnedMQ.matches ? (1 - p) * vh * 0.24 : vh * (0.04 + 0.1 * (1 - p));
+      // desktop: da ripido a dritto. Telefono/tablet: inclinazione fissa, entro la sovrapposizione
+      // delle sezioni (14vh). Cambiarla mentre si scorre la faceva andare a scatti su iPhone: il
+      // calcolo arriva sempre un attimo dopo lo scorrimento nativo.
+      return pinnedMQ.matches ? (1 - p) * vh * 0.24 : vh * 0.09;
     };
-    const setEdge = (el, slant, top, vh, width) => {
-      el.style.setProperty("--slant", slant.toFixed(1) + "px");
+    // scrive solo se il valore cambia: con l'inclinazione fissa non si tocca più lo stile durante lo scroll
+    const setEdge = (el, slant, width) => {
+      const value = slant.toFixed(1) + "px";
+      if (el.style.getPropertyValue("--slant") === value) return;
+      el.style.setProperty("--slant", value);
       el.style.setProperty("--angle", (-Math.atan2(slant, width) * 180 / Math.PI).toFixed(3) + "deg");
-      el.style.setProperty("--edge", (0.3 + 0.7 * Math.min(1, Math.max(0, top / vh))).toFixed(2));
     };
     onFrame(() => {
       // prima tutte le letture, poi le scritture (niente ricalcoli del layout a metà)
@@ -1166,8 +1170,8 @@
       const aboutTop = about.getBoundingClientRect().top;
       const sheetBottom = sheet ? sheet.getBoundingClientRect().bottom : aboutTop;
       const navH = nav.offsetHeight;
-      setEdge(act, slantFor(actTop, vh), actTop, vh, width);
-      setEdge(about, slantFor(aboutTop, vh), aboutTop, vh, width);
+      setEdge(act, slantFor(actTop, vh), width);
+      setEdge(about, slantFor(aboutTop, vh), width);
       act.classList.toggle("is-covered", aboutTop <= 0);
       // il menu prende il colore del pannello chiaro che ha sotto (crema, poi il foglio di About)
       nav.classList.toggle("is-light", actTop < navH && aboutTop > navH);
@@ -1184,6 +1188,28 @@
     partners.style.setProperty("--count", n);
     partners.classList.add("is-pinned");
     const imgs = cards.map((c) => c.querySelector(".partner__img"));
+    // telefono: la polaroid prende tutta l'altezza libera tra la frase e il testo del collaboratore
+    // (la riga "photo" della griglia), così non resta piccola sugli schermi alti
+    const pin = partners.querySelector(".partners__pin");
+    let fitWidth = 0;
+    const fitPhotos = () => {
+      if (window.innerWidth >= 900) { partners.style.removeProperty("--photo-w"); return; }
+      partners.style.removeProperty("--photo-w");
+      // riga "photo": la seconda su telefono (titolo, foto, testo)
+      const rowH = parseFloat(getComputedStyle(pin).gridTemplateRows.split(" ")[1]) || 0;
+      // la polaroid è alta circa 1,22 volte la sua larghezza; un po' di margine per inclinazione e spostamenti
+      const w = Math.min(320, pin.clientWidth * 0.8, (rowH * 0.88) / 1.22);
+      if (w > 120) partners.style.setProperty("--photo-w", Math.round(w) + "px");
+    };
+    fitPhotos();
+    if (document.fonts) document.fonts.ready.then(fitPhotos);
+    window.addEventListener("resize", () => {
+      // solo i cambi di larghezza: la barra degli indirizzi non cambia la scena (alta 100svh)
+      if (window.innerWidth === fitWidth) return;
+      fitWidth = window.innerWidth;
+      fitPhotos();
+    });
+    fitWidth = window.innerWidth;
     // lo scroll dà la posizione "obiettivo"; le foto la raggiungono con un'inerzia morbida
     // (niente scatti con la rotella del mouse)
     const target = cards.map(() => 0);
