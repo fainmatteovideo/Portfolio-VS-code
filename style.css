@@ -1106,6 +1106,23 @@ h3 {
     0 5px 12px rgba(60, 45, 20, 0.2);
 }
 .about__photo img { object-position: 42% center; }
+/* striscia di scotch giallo che tiene la polaroid sul foglio: leggermente trasparente come lo
+   scotch vero, con i bordi corti strappati */
+.about__photo .polaroid { position: relative; }
+.about__photo .polaroid::before {
+  content: "";
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  width: 40%;
+  height: 34px;
+  background-color: rgba(255, 200, 0, 0.78);
+  box-shadow: 0 1px 3px rgba(60, 45, 20, 0.18);
+  transform: translateX(-50%) rotate(9deg);
+  clip-path: polygon(
+    0 6%, 3% 0, 97% 4%, 100% 0, 98% 22%, 100% 40%, 97% 60%, 100% 80%, 98% 100%,
+    4% 96%, 0 100%, 2% 78%, 0 58%, 3% 40%, 0 20%);
+}
 
 .about__text { display: grid; gap: 1.25rem; max-width: 58ch; color: var(--c-text-muted); }
 .about__lead {
