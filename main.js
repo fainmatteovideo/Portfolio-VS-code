@@ -945,8 +945,7 @@
           const address = document.createElement("strong");
           address.textContent = sentTo;
           status.textContent = "";
-          status.append("Thanks! Your brief has been sent. I'll reply to ", address,
-            ". If that address isn't right, please send the form again with the correct one.");
+          status.append("Thanks! Your brief has been sent. I'll reply to ", address, ".");
         })
         .catch(() => {
           status.textContent = "Sending failed. Your email app will open instead.";
