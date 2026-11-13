@@ -68,10 +68,10 @@
   <link rel="preconnect" href="https://f.vimeocdn.com">
   <link rel="preload" href="assets/logo/mf-logo-white.webp" as="image" type="image/webp">
   <link rel="preload" href="assets/posters/showreel.webp" as="image" type="image/webp">
-  <link rel="stylesheet" href="style.css?v=20261113n">
+  <link rel="stylesheet" href="style.css?v=20261113o">
   <script src="https://player.vimeo.com/api/player.js" defer></script>
   <!-- ?v=: cambiare la data quando si aggiornano CSS o JS, così i browser non usano la copia vecchia -->
-  <script src="main.js?v=20261113n" defer></script>
+  <script src="main.js?v=20261113o" defer></script>
 </head>
 <body>
   <a class="skip-link label" href="#work">Skip to content</a>
@@ -402,7 +402,9 @@
           </label>
           <label class="brief__field">
             <span class="visually-hidden">Email</span>
-            <input type="email" name="email" placeholder="Email" autocomplete="email" required>
+            <input type="email" name="email" placeholder="Email" autocomplete="email" required aria-describedby="email-hint">
+            <!-- proposta di correzione per i domini scritti male (es. gmial.com), riempita da main.js -->
+            <span class="brief__hint" id="email-hint" aria-live="polite"></span>
           </label>
           <label class="brief__field">
             <span class="visually-hidden">Company / brand</span>

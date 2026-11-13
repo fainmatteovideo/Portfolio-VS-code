@@ -812,9 +812,65 @@
   // Se l'invio fallisce (o la chiave è vuota) si apre l'app di posta con il messaggio già scritto.
   const WEB3FORMS_KEY = "e4b78b84-0fa2-4cbc-a929-d1050e0f663c";
 
+  // Domini email più comuni: se il visitatore ne scrive uno quasi uguale (gmial.com, hotmial.com,
+  // gmail.con…) il form propone la correzione, così la risposta non finisce a un indirizzo sbagliato
+  const COMMON_DOMAINS = [
+    "gmail.com", "googlemail.com", "hotmail.com", "hotmail.it", "hotmail.ch", "outlook.com", "live.com",
+    "msn.com", "yahoo.com", "yahoo.it", "icloud.com", "me.com", "aol.com", "proton.me", "protonmail.com",
+    "gmx.ch", "gmx.net", "gmx.de", "bluewin.ch", "sunrise.ch", "hispeed.ch", "web.de", "libero.it",
+  ];
+  // distanza fra due parole contando anche le lettere scambiate di posto (ia/ai)
+  function editDistance(a, b) {
+    const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
+    for (let j = 1; j <= b.length; j++) d[0][j] = j;
+    for (let i = 1; i <= a.length; i++) {
+      for (let j = 1; j <= b.length; j++) {
+        const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+        d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost);
+        if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+      }
+    }
+    return d[a.length][b.length];
+  }
+  // indirizzo corretto da proporre, oppure null (dominio già giusto, sconosciuto o ambiguo)
+  function suggestEmail(email) {
+    const at = email.lastIndexOf("@");
+    if (at < 1) return null;
+    const domain = email.slice(at + 1).toLowerCase();
+    if (!domain || COMMON_DOMAINS.includes(domain)) return null;
+    // domini corti: solo un errore di battitura (gmx.at non deve diventare gmx.ch)
+    const max = domain.length >= 9 ? 2 : 1;
+    const ranked = COMMON_DOMAINS.map((c) => [c, editDistance(domain, c)]).sort((x, y) => x[1] - y[1]);
+    const [best, dist] = ranked[0];
+    if (dist > max || ranked[1][1] === dist) return null;
+    return email.slice(0, at + 1) + best;
+  }
+
   const brief = document.getElementById("brief-form");
   if (brief) {
     const status = document.getElementById("brief-status");
+    const hint = document.getElementById("email-hint");
+    const emailField = brief.elements.email;
+    // quando la proposta è stata mostrata all'invio, il secondo "Send" manda l'indirizzo così com'è
+    let typoChecked = false;
+    function showHint() {
+      const suggestion = suggestEmail(emailField.value.trim());
+      hint.textContent = "";
+      typoChecked = false;
+      if (!suggestion) return null;
+      const fix = document.createElement("button");
+      fix.type = "button";
+      fix.textContent = suggestion;
+      fix.addEventListener("click", () => {
+        emailField.value = suggestion;
+        hint.textContent = "";
+        emailField.focus();
+      });
+      hint.append("Did you mean ", fix, "?");
+      return suggestion;
+    }
+    emailField.addEventListener("blur", showHint);
+    emailField.addEventListener("input", () => { hint.textContent = ""; typoChecked = false; });
     brief.addEventListener("submit", (e) => {
       e.preventDefault();
       const f = brief.elements;
@@ -829,6 +885,13 @@
       if (firstBad) {
         status.textContent = "Please fill in your name, a valid email, your project and accept the privacy policy.";
         (firstBad[0].matches("label") ? f.consent : firstBad[0]).focus();
+        return;
+      }
+      // possibile errore nel dominio: si ferma una volta sola, poi invia comunque
+      if (!typoChecked && (hint.textContent || showHint())) {
+        typoChecked = true;
+        status.textContent = "Please check your email address above. If it's correct, press Send again.";
+        emailField.focus();
         return;
       }
       const v = (k) => f[k].value.trim();
@@ -873,9 +936,17 @@
         .then((r) => r.json())
         .then((res) => {
           if (!res.success) throw new Error(res.message);
+          const sentTo = v("email");
           brief.reset();
           markEmpty();
-          status.textContent = "Thanks! Your brief has been sent. I'll get back to you soon.";
+          hint.textContent = "";
+          typoChecked = false;
+          // l'indirizzo in chiaro: il visitatore lo rilegge e, se è sbagliato, se ne accorge subito
+          const address = document.createElement("strong");
+          address.textContent = sentTo;
+          status.textContent = "";
+          status.append("Thanks! Your brief has been sent. I'll reply to ", address,
+            ". If that address isn't right, please send the form again with the correct one.");
         })
         .catch(() => {
           status.textContent = "Sending failed. Your email app will open instead.";
