@@ -2191,13 +2191,16 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 .work {
   position: sticky;
   top: var(--work-top, 0px);
+  /* spazio sotto "Let's talk": quando i lavori si fermano il pulsante sta a metà schermo circa,
+     e il pannello crema che sale ci arriva solo dopo un tratto di scorrimento */
+  padding-bottom: calc(var(--space-m) + 28vh);
 }
 .work.is-covered { visibility: hidden; opacity: 0; }
 /* telefono e tablet: niente aggancio (la barra degli indirizzi che compare/scompare cambia
    l'altezza dello schermo e faceva saltare le sezioni). Il pannello crema e About salgono
    comunque con il taglio diagonale, scorrendo normalmente. */
 @media (max-width: 1023px), (hover: none) {
-  .work { position: relative; top: auto; padding-bottom: calc(var(--space-l) + 14vh); }
+  .work { position: relative; top: auto; padding-bottom: calc(var(--space-l) + 24vh); }
   .work.is-covered { visibility: visible; opacity: 1; }
 }   /* opacity: anche la slide attiva (visibility: visible) sparisce */
 
