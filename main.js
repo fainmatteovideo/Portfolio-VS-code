@@ -207,9 +207,11 @@
   function projectHTML(p) {
     const credits = p.credits.map((c) => {
       const i = c.indexOf(":");
+      // il credito con il mio nome è in evidenza
+      const me = c.includes("Matteo Fain") ? ' class="is-me"' : "";
       return i > 0
-        ? `<li><span>${esc(c.slice(0, i))}</span>${esc(c.slice(i + 1).trim())}</li>`
-        : `<li>${esc(c)}</li>`;
+        ? `<li${me}><span>${esc(c.slice(0, i))}</span>${esc(c.slice(i + 1).trim())}</li>`
+        : `<li${me}>${esc(c)}</li>`;
     }).join("");
     const logos = p.logos.map((l) =>
       `<img data-src="${esc(l.src)}" alt="${esc(l.alt)}" decoding="async">`).join("");
@@ -652,6 +654,7 @@
       intro.textContent = category ? category.intro : "";
       clampIntro(false);
       if (photoBox) photoBox.hidden = cat !== "photo";
+      if (alsoBox) alsoBox.hidden = cat !== "startup";
     };
 
     if (!animate || reducedMotion) { swap(); return; }
@@ -665,6 +668,10 @@
       requestAnimationFrame(() => work.classList.remove("is-filtering"));
     }, 450);
   }
+
+  // Start-up: loghi delle altre startup, alla stessa altezza visiva di quelli dei progetti
+  const alsoBox = document.getElementById("work-also");
+  if (alsoBox) alsoBox.querySelectorAll("img").forEach((img) => sizeLogo(img, window.matchMedia("(min-width: 768px)").matches ? 56 : 40));
 
   /* --- Foto e stills: tre file che scorrono in orizzontale con la pagina -- */
   const photoBox = document.getElementById("photo-box");
@@ -831,11 +838,14 @@
       tag.setAttribute("aria-hidden", "true");
       tag.textContent = "Visit website";
       document.body.appendChild(tag);
-      marquee.addEventListener("pointermove", (e) => {
-        tag.classList.toggle("is-visible", !!e.target.closest(".clients__link"));
-        tag.style.transform = `translate3d(${e.clientX + 16}px, ${e.clientY + 18}px, 0)`;
+      // anche sui loghi delle startup nella categoria Start-up
+      [marquee, document.getElementById("work-also")].filter(Boolean).forEach((area) => {
+        area.addEventListener("pointermove", (e) => {
+          tag.classList.toggle("is-visible", !!e.target.closest(".clients__link, .work__also-link"));
+          tag.style.transform = `translate3d(${e.clientX + 16}px, ${e.clientY + 18}px, 0)`;
+        });
+        area.addEventListener("pointerleave", () => tag.classList.remove("is-visible"));
       });
-      marquee.addEventListener("pointerleave", () => tag.classList.remove("is-visible"));
     }
     // fuori dallo schermo l'animazione si ferma
     new IntersectionObserver(([e]) => tracks.forEach((t) => t.classList.toggle("is-paused", !e.isIntersecting))).observe(tracks[0]);

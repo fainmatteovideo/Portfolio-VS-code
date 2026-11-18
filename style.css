@@ -853,6 +853,23 @@ h3 {
   color: var(--c-text-muted);
 }
 .project__credits span { display: block; color: var(--c-text-faint); }
+/* il mio ruolo nel progetto: in evidenza */
+.project__credits li.is-me { color: var(--c-text); font-weight: 600; }
+.project__credits li.is-me span { font-weight: 400; }
+
+/* Start-up: le altre startup con cui ho lavorato, prima di "Let's talk" */
+.work__also { margin-top: var(--space-l); text-align: center; }
+.work__also-logos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem clamp(2rem, 5vw, 4rem);
+  margin-top: 1.25rem;
+}
+.work__also-link { display: flex; align-items: center; }
+.work__also-logos img { width: auto; opacity: 0.75; transition: opacity var(--dur-fast) ease; }
+.work__also-link:hover img { opacity: 1; }
 
 .project__logos {
   display: flex;

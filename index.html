@@ -68,10 +68,10 @@
   <link rel="preconnect" href="https://f.vimeocdn.com">
   <link rel="preload" href="assets/logo/mf-logo-white.webp" as="image" type="image/webp">
   <link rel="preload" href="assets/posters/showreel.webp" as="image" type="image/webp">
-  <link rel="stylesheet" href="style.css?v=20261114f">
+  <link rel="stylesheet" href="style.css?v=20261118a">
   <script src="https://player.vimeo.com/api/player.js" defer></script>
   <!-- ?v=: cambiare la data quando si aggiornano CSS o JS, così i browser non usano la copia vecchia -->
-  <script src="main.js?v=20261114f" defer></script>
+  <script src="main.js?v=20261118a" defer></script>
 </head>
 <body>
   <a class="skip-link label" href="#work">Skip to content</a>
@@ -170,6 +170,16 @@
     <div class="photo" id="photo-box" hidden>
       <div class="photo__wall" id="photo-wall" aria-label="Photos and stills"></div>
       <p class="photo__hint label faint container">Open any frame to see it larger</p>
+    </div>
+    <!-- solo nella categoria Start-up: le startup con cui ho lavorato, con il link al loro sito (main.js) -->
+    <div class="work__also container" id="work-also" hidden>
+      <p class="label faint">Also worked with</p>
+      <ul class="work__also-logos">
+        <li><a class="work__also-link" href="https://www.anybotics.com" target="_blank" rel="noopener"><img src="assets/logos/anybotics.webp" alt="ANYbotics" loading="lazy" decoding="async"></a></li>
+        <li><a class="work__also-link" href="https://btry.ch" target="_blank" rel="noopener"><img src="assets/logos/btry.webp" alt="BTRY" loading="lazy" decoding="async"></a></li>
+        <li><a class="work__also-link" href="https://www.corintis.com" target="_blank" rel="noopener"><img src="assets/logos/corintis.webp" alt="Corintis" loading="lazy" decoding="async"></a></li>
+        <li><a class="work__also-link" href="https://www.impactbuild.ch" target="_blank" rel="noopener"><img src="assets/logos/impact-build.webp" alt="Impact Build" loading="lazy" decoding="async"></a></li>
+      </ul>
     </div>
     <!-- invito al contatto alla fine dei lavori -->
     <p class="work__cta container">
