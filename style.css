@@ -2597,7 +2597,6 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   .photo__item:hover .photo__caption { opacity: 1; transform: none; }
 }
 .photo__item:focus-visible { outline: 1px solid var(--c-text); outline-offset: 2px; }
-.photo__hint { margin-top: var(--space-s); text-align: center; }
 
 /* movimento ridotto: le file si scorrono a mano */
 .photo__wall.is-static .photo__row { width: auto; overflow-x: auto; scrollbar-width: none; }
