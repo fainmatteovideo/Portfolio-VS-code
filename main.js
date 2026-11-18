@@ -143,6 +143,27 @@
     root.classList.remove("is-measuring");
     return y - (parseFloat(getComputedStyle(el).scrollMarginTop) || 0);
   }
+  const dip = document.createElement("div");
+  dip.className = "page-dip";
+  dip.setAttribute("aria-hidden", "true");
+  document.body.appendChild(dip);
+  let dipping = false;
+  function dipTo(y) {
+    if (dipping) return;
+    dipping = true;
+    dip.classList.add("is-on");
+    setTimeout(() => {
+      const root = document.documentElement;
+      root.style.scrollBehavior = "auto";
+      window.scrollTo(0, y);
+      root.style.scrollBehavior = "";
+      // due fotogrammi per far assestare sezioni ferme e animazioni, poi si riapre
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        dip.classList.remove("is-on");
+        setTimeout(() => { dipping = false; }, 500);
+      }));
+    }, 320);
+  }
   document.addEventListener("click", (e) => {
     const a = e.target.closest('a[href^="#"]');
     if (!a || e.defaultPrevented) return;
@@ -151,7 +172,10 @@
     if (!target || (data && data.categories.some((c) => c.id === id))) return; // i filtri usano l'hash
     e.preventDefault();
     const y = id === "top" ? 0 : sectionY(target);
-    window.scrollTo({ top: y, behavior: reducedMotion ? "auto" : "smooth" });
+    // sezione lontana: stacco a nero come nel montaggio (lo schermo sfuma, la pagina salta, poi
+    // riappare) invece di far sfrecciare tutte le sezioni in mezzo. Vicina: scorrimento normale.
+    if (!reducedMotion && Math.abs(y - window.scrollY) > window.innerHeight * 1.5) dipTo(y);
+    else window.scrollTo({ top: y, behavior: reducedMotion ? "auto" : "smooth" });
     // "Skip to content": anche il focus della tastiera passa ai lavori
     if (a.classList.contains("skip-link")) { target.tabIndex = -1; target.focus({ preventScroll: true }); }
   });

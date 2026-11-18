@@ -206,6 +206,24 @@ body::after {
   color: var(--c-text);
 }
 
+/* stacco a nero tra sezioni lontane (link del menu, main.js): copre tutto tranne il menu */
+.page-dip {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  background-color: var(--c-ink);
+  background-image: var(--grain-light);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.45s ease, visibility 0s linear 0.45s;
+}
+.page-dip.is-on {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease, visibility 0s;
+}
+
 ::selection { background: var(--c-yellow); color: var(--c-ink); }
 
 /* "Skip to content": compare solo quando riceve il focus da tastiera */
