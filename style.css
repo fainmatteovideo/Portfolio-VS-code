@@ -858,7 +858,13 @@ h3 {
 .project__credits li.is-me span { font-weight: 400; }
 
 /* Start-up: le altre startup con cui ho lavorato, prima di "Let's talk" */
-.work__also { margin-top: var(--space-l); text-align: center; }
+.work__also { margin-top: var(--space-m); text-align: center; }
+/* dopo i loghi più respiro prima di "Let's talk" */
+.work__also:not([hidden]) + .work__cta { margin-top: clamp(3rem, 2rem + 6vh, 6rem); }
+/* schermo largo: i loghi salgono verso il video (sotto lo showcase c'è già spazio vuoto) */
+@media (min-width: 1024px) and (hover: hover) {
+  .work__also { margin-top: -7vh; }
+}
 .work__also-logos {
   display: flex;
   flex-wrap: wrap;
@@ -868,7 +874,8 @@ h3 {
   margin-top: 1.25rem;
 }
 .work__also-link { display: flex; align-items: center; }
-.work__also-logos img { width: auto; opacity: 0.75; transition: opacity var(--dur-fast) ease; }
+/* max-width: i loghi molto larghi (Debrunner Bewetec) non dominano la fila */
+.work__also-logos img { width: auto; max-width: min(200px, 60vw); object-fit: contain; opacity: 0.75; transition: opacity var(--dur-fast) ease; }
 .work__also-link:hover img { opacity: 1; }
 
 .project__logos {
