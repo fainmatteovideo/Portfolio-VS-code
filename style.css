@@ -2102,21 +2102,6 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 /* passaggio a Selected works: il video si chiude dall'alto e dal basso come un sipario (--hero-cut
    da main.js); la banda di sotto segue esattamente la sezione che sale */
 .hero { clip-path: inset(var(--hero-cut-top, 0px) 0 var(--hero-cut, 0px) 0); }
-/* fili gialli sui due bordi del sipario, come nelle altre transizioni (compaiono appena si chiude) */
-.hero__edge {
-  position: absolute;
-  left: 0;
-  right: 0;
-  z-index: 3;
-  height: 1.5px;   /* metà dei fili delle altre transizioni: alla chiusura i due si uniscono in uno */
-  background: var(--c-yellow);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-.hero__edge--top { top: var(--hero-cut-top, 0px); }
-.hero__edge--bottom { bottom: var(--hero-cut, 0px); }
-.hero.is-closing .hero__edge { opacity: 1; }
 
 .hero__video { transform: scale(calc(1 + var(--hero-p) * 0.08)); }
 /* mentre il sipario si chiude il video si sfoca e si scurisce: alla chiusura (--hero-p ~0,6) è al massimo */
