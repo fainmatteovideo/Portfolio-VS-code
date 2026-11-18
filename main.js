@@ -49,6 +49,31 @@
     nav.classList.toggle("is-scrolled", window.scrollY > 4);
   });
 
+  // Scorrendo verso il basso il menu si nasconde, appena si torna su ricompare.
+  // Resta sempre visibile in cima alla pagina, con il menu a tutto schermo aperto e mentre si usa
+  // la tastiera dentro il menu. Piccoli movimenti (meno di 8 px) non cambiano niente.
+  let lastY = window.scrollY;
+  onFrame(() => {
+    const y = window.scrollY;
+    const delta = y - lastY;
+    const keep = y < nav.offsetHeight * 2 || nav.classList.contains("is-menu-open") ||
+      nav.contains(document.activeElement) || document.body.style.overflow === "hidden";
+    if (keep) {
+      setNavHidden(false);
+      lastY = y;
+      return;
+    }
+    if (Math.abs(delta) < 8) return;
+    setNavHidden(delta > 0);
+    lastY = y;
+  });
+  function setNavHidden(hidden) {
+    nav.classList.toggle("is-hidden", hidden);
+    document.documentElement.classList.toggle("nav-hidden", hidden);
+  }
+  // con la tastiera il menu riappare appena ci si entra
+  nav.addEventListener("focusin", () => setNavHidden(false));
+
   // altezza del piè di pagina: Contatti + piè di pagina riempiono esattamente lo schermo, così in fondo
   // "07 — Contact" arriva appena sotto il menu
   const footer = document.querySelector(".site-footer");
@@ -1258,7 +1283,9 @@
       const cta = document.querySelector(".work__cta");
       const also = document.getElementById("work-also");
       if (filtersBox) onFrame(() => {
-        filtersBox.classList.toggle("is-stuck", filtersBox.getBoundingClientRect().top <= nav.offsetHeight + 1);
+        const stuck = filtersBox.getBoundingClientRect().top <= nav.offsetHeight + 1;
+        filtersBox.classList.toggle("is-stuck", stuck);
+        work.classList.toggle("has-stuck-filters", stuck);
         const end = also && !also.hidden ? also : cta;
         if (!end) return;
         const vh = viewH();
