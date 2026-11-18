@@ -1357,12 +1357,12 @@
         if (el.style.transform !== shift) el.style.transform = shift;
         if (el.style.opacity !== op) el.style.opacity = op;
       });
-      // dalla banda bassa sale solo il video: la frase della categoria e i pallini compaiono
-      // nell'ultimo tratto, quando il sipario si sta chiudendo
+      // anche la banda bassa (video, scheda, frase della categoria e pallini) compare in dissolvenza
+      // nell'ultimo tratto, quando il sipario si sta chiudendo: come il blocco che scende dall'alto
       const run = viewH() - meet;
       const show = c.closed ? 1 : Math.max(0, Math.min(1, (window.scrollY - run * 0.7) / (run * 0.3)));
       const value = show >= 1 ? "" : show.toFixed(3);
-      document.querySelectorAll("#work-intro, #work-intro-more, .showcase__dots").forEach((el) => {
+      document.querySelectorAll("#work-intro, #work-intro-more, .showcase__dots, .showcase__stage, .showcase__note, #photo-box").forEach((el) => {
         if (el.style.opacity !== value) el.style.opacity = value;
       });
     });
