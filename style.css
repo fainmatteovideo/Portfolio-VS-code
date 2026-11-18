@@ -1018,7 +1018,7 @@ h3 {
   position: absolute;
   top: -20px;
   left: 50%;
-  width: 44%;
+  width: min(44%, 132px);   /* stessa misura su tutti i biglietti, anche quelli larghi (Social, Photo) */
   height: 30px;
   /* stessa striscia della polaroid, resa bianca e trasparente */
   background: url("assets/textures/tape.svg") center / 100% 100% no-repeat;
