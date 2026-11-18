@@ -439,6 +439,10 @@
     v._leaveTimer = setTimeout(() => v.classList.remove("is-leaving"), 700);
   });
 
+  // logo dell'apertura: apre lo showreel completo, con l'audio
+  const heroPlay = document.querySelector(".hero__play");
+  if (heroPlay) heroPlay.addEventListener("click", () => openPlayer(heroPlay));
+
   // Click sul pulsante con le barre = audio sul posto; click sul resto del video = player completo
   work.addEventListener("click", (e) => {
     const v = e.target.closest(".video");
@@ -1131,8 +1135,21 @@
 
       // la barra si ferma sotto il menu: compare il fondo sfocato
       const filtersBox = document.getElementById("filters");
+      // alla fine dei lavori la barra si dissolve: inizia quando ciò che segue l'ultimo video
+      // ("Also worked with" o "Let's talk") entra dal basso ed è sparita prima che i lavori si
+      // fermino (lì "Let's talk" resta a circa tre quarti dello schermo)
+      const cta = document.querySelector(".work__cta");
+      const also = document.getElementById("work-also");
       if (filtersBox) onFrame(() => {
         filtersBox.classList.toggle("is-stuck", filtersBox.getBoundingClientRect().top <= nav.offsetHeight + 1);
+        const end = also && !also.hidden ? also : cta;
+        if (!end) return;
+        const vh = viewH();
+        const top = end.getBoundingClientRect().top;
+        const out = Math.min(1, Math.max(0, (vh * 1.05 - top) / (vh * 0.25)));
+        const value = out.toFixed(3);
+        if (filtersBox.style.getPropertyValue("--filters-out") !== value) filtersBox.style.setProperty("--filters-out", value);
+        filtersBox.classList.toggle("is-leaving", out > 0.5);
       });
 
       list.innerHTML = `<div class="showcase">
@@ -1169,6 +1186,8 @@
     onFrame(() => {
       const p = Math.min(1, Math.max(0, window.scrollY / (hero.offsetHeight * 0.8)));
       hero.style.setProperty("--hero-p", p.toFixed(3));
+      // sipario: alto e basso si chiudono insieme, chiuso quando Selected works è a metà schermo
+      hero.style.setProperty("--hero-cut", Math.min(window.scrollY, hero.offsetHeight / 2).toFixed(1) + "px");
       // coperta del tutto: si nasconde (è ferma dietro a tutta la pagina)
       hero.classList.toggle("is-past", window.scrollY > hero.offsetHeight * 1.05);
     });

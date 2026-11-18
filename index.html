@@ -68,10 +68,10 @@
   <link rel="preconnect" href="https://f.vimeocdn.com">
   <link rel="preload" href="assets/logo/mf-logo-white.webp" as="image" type="image/webp">
   <link rel="preload" href="assets/posters/showreel.webp" as="image" type="image/webp">
-  <link rel="stylesheet" href="style.css?v=20261118r">
+  <link rel="stylesheet" href="style.css?v=20261118u">
   <script src="https://player.vimeo.com/api/player.js" defer></script>
   <!-- ?v=: cambiare la data quando si aggiornano CSS o JS, così i browser non usano la copia vecchia -->
-  <script src="main.js?v=20261118r" defer></script>
+  <script src="main.js?v=20261118u" defer></script>
 </head>
 <body>
   <a class="skip-link label" href="#work">Skip to content</a>
@@ -130,7 +130,11 @@
     </div>
     <div class="hero__content">
       <h1 class="hero__logo">
-        <img src="assets/logo/mf-logo-white.webp" alt="Matteo Fain" width="717" height="1034" fetchpriority="high">
+        <!-- logo semitrasparente: col mouse sopra diventa bianco pieno; il clic apre lo showreel con l'audio -->
+        <button class="hero__play" type="button" data-vimeo="1172567953" data-title="Showreel">
+          <img src="assets/logo/mf-logo-white.webp" alt="Matteo Fain" width="717" height="1034" fetchpriority="high">
+          <span class="hero__play-label label"><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M3 1.6v6.8L8.6 5z"/></svg>Play showreel</span>
+        </button>
       </h1>
       <p class="hero__tagline label">Video <span class="dot" aria-hidden="true"></span> Photo <span class="dot" aria-hidden="true"></span> Editing</p>
     </div>
@@ -339,8 +343,8 @@
       <div class="partners" id="collaborators">
         <div class="partners__pin">
           <div class="partners__head">
-            <p class="label faint partners__label">05 — Team</p>
-            <h3 class="partners__title">Collaboration</h3>
+            <p class="label faint partners__label">05 — Collaborators</p>
+            <h3 class="partners__title">Team</h3>
           </div>
           <p class="partners__intro muted">As a freelancer, many projects are built on collaboration. When a scope requires more expertise, I bring in a trusted team.</p>
           <ul class="partners__list">
@@ -390,7 +394,7 @@
       <div class="section-head clients__head">
         <p class="label faint">06 — Clients</p>
         <h2>Who I work with</h2>
-        <p class="lead muted">I work as a freelancer, on my own or with a small team of trusted creatives, depending on the project. My clients are as varied as the work: start-ups and tech companies, universities, commercial agencies in Zurich, big brands and small local businesses. Some need a full production, others an edit, a series of reels for social media or photos from an event.</p>
+        <p class="lead muted">With Kordial, the creative agency I work with most, we make films for institutions, universities and tech companies. As a freelancer I mostly work with event organisers, from conferences to clubs and meetup communities like Zurich Together, and I join agencies such as Stories AG on single productions. Big brands or small local businesses: every project gets the same care.</p>
       </div>
       <p class="label faint" id="clients-title">Some of the clients &amp; partners I've worked with</p>
     </div>
