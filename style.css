@@ -182,8 +182,9 @@ body::after {
     radial-gradient(ellipse 46% 32% at 30% 30%, rgba(255, 253, 247, 0.75), transparent 72%),
     radial-gradient(ellipse 36% 28% at 74% 76%, rgba(255, 253, 247, 0.6), transparent 72%),
     radial-gradient(ellipse 38% 28% at 84% 22%, rgba(95, 72, 38, 0.26), transparent 72%),
-    radial-gradient(ellipse 36% 30% at 14% 80%, rgba(95, 72, 38, 0.24), transparent 72%);
-  --shade-sides: linear-gradient(90deg, rgba(95, 72, 38, 0.3), transparent 24%, transparent 76%, rgba(95, 72, 38, 0.3));
+    radial-gradient(ellipse 36% 30% at 14% 80%, rgba(95, 72, 38, 0.13), transparent 72%);
+  /* lato sinistro più leggero del destro: con la macchia in basso a sinistra risultava troppo scuro */
+  --shade-sides: linear-gradient(90deg, rgba(95, 72, 38, 0.17), transparent 22%, transparent 76%, rgba(95, 72, 38, 0.3));
   color: var(--c-text);
 }
 /* About (e menu quando ci passa sopra): verde bottiglia, testi panna come sul fondo scuro */
