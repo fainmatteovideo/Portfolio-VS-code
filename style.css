@@ -73,8 +73,18 @@
   --grain: var(--grain-light);
 
   /* Grana tipo carta: puntini chiari per i fondi scuri, scuri per i fondi chiari */
-  --grain-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.13 0 0 0 -0.046'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  --grain-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.32 0 0 0 -0.115'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --grain-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.26 0 0 0 -0.095'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --grain-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.42 0 0 0 -0.16'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  /* Chiaroscuro dei fondi (riferimento: jjettas.com): macchie di luce morbide e bordi in ombra.
+     --shade-spots si ripete ogni ~1,3 schermi sui pannelli lunghi; ogni contesto ha i suoi colori */
+  --shade-spots:
+    radial-gradient(ellipse 48% 34% at 28% 32%, rgba(255, 232, 196, 0.085), transparent 72%),
+    radial-gradient(ellipse 38% 30% at 76% 74%, rgba(255, 232, 196, 0.06), transparent 72%),
+    radial-gradient(ellipse 34% 26% at 82% 18%, rgba(0, 0, 0, 0.32), transparent 72%),
+    radial-gradient(ellipse 34% 28% at 16% 82%, rgba(0, 0, 0, 0.3), transparent 72%);
+  --shade-sides: linear-gradient(90deg, rgba(0, 0, 0, 0.42), transparent 24%, transparent 76%, rgba(0, 0, 0, 0.42));
+  --shade-vignette: radial-gradient(ellipse 90% 85% at 50% 48%, transparent 45%, rgba(0, 0, 0, 0.5) 100%);
 
   /* Font */
   --f-display: "Anton", "Arial Narrow", Impact, sans-serif;
@@ -135,7 +145,16 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Grana leggera, fissa dietro a tutto: dà al colore pieno una texture "carta/pellicola" */
+/* Luci e ombre fisse dietro a tutto: il fondo scuro non è mai piatto */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--shade-spots), var(--shade-vignette);
+}
+/* Grana, fissa dietro a tutto: dà al colore pieno una texture "carta/pellicola" */
 body::after {
   content: "";
   position: fixed;
@@ -157,6 +176,12 @@ body::after {
   --c-line: #cfc8ba;
   --c-line-strong: #a39d92;
   --grain: var(--grain-dark);
+  --shade-spots:
+    radial-gradient(ellipse 46% 32% at 30% 30%, rgba(255, 253, 247, 0.6), transparent 72%),
+    radial-gradient(ellipse 36% 28% at 74% 76%, rgba(255, 253, 247, 0.45), transparent 72%),
+    radial-gradient(ellipse 36% 26% at 84% 22%, rgba(95, 72, 38, 0.13), transparent 72%),
+    radial-gradient(ellipse 34% 28% at 14% 80%, rgba(95, 72, 38, 0.12), transparent 72%);
+  --shade-sides: linear-gradient(90deg, rgba(95, 72, 38, 0.16), transparent 22%, transparent 78%, rgba(95, 72, 38, 0.16));
   color: var(--c-text);
 }
 /* About (e menu quando ci passa sopra): verde bottiglia, testi panna come sul fondo scuro */
@@ -170,6 +195,12 @@ body::after {
   --c-line: #35564a;
   --c-line-strong: #4f7264;
   --grain: var(--grain-light);
+  --shade-spots:
+    radial-gradient(ellipse 46% 34% at 70% 30%, rgba(214, 238, 200, 0.09), transparent 72%),
+    radial-gradient(ellipse 38% 30% at 24% 72%, rgba(214, 238, 200, 0.06), transparent 72%),
+    radial-gradient(ellipse 34% 28% at 12% 20%, rgba(0, 0, 0, 0.28), transparent 72%),
+    radial-gradient(ellipse 34% 28% at 86% 84%, rgba(0, 0, 0, 0.26), transparent 72%);
+  --shade-sides: linear-gradient(90deg, rgba(0, 0, 0, 0.34), transparent 24%, transparent 76%, rgba(0, 0, 0, 0.34));
   color: var(--c-text);
 }
 
@@ -1046,14 +1077,32 @@ h3 {
 /* ==========================================================================
    3. Come lavoro – step numerati (riferimento: amazeproduction.ch)
    ========================================================================== */
-.process__list { border-top: 1px solid var(--c-line); }
+/* Gli step sono fogli di carta a zig-zag (uno a sinistra, uno a destra, appena inclinati);
+   un sentiero tratteggiato passa sotto i fogli e si disegna scorrendo, con il quadratino giallo
+   in testa (main.js: .process__trail, .process__marker, .is-reached sugli step raggiunti) */
+.process__route { position: relative; padding-block: clamp(2.5rem, 1.5rem + 3vw, 4.5rem) 4rem; }
+.process__list {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: clamp(3rem, 2rem + 4vw, 5.5rem);
+}
 .process__step {
+  --tilt: -1deg;
+  width: 86%;
   display: grid;
   gap: 0.6rem;
-  padding-block: 1.25rem 1.5rem;
-  border-bottom: 1px solid var(--c-line);
+  padding: clamp(1.25rem, 1rem + 1.2vw, 2rem) clamp(1.25rem, 1rem + 1.5vw, 2.25rem);
+  background-color: #faf8f2;
+  box-shadow:
+    1px 1px 0 #ddd6c7,
+    0 18px 40px rgba(40, 30, 15, 0.16),
+    0 4px 10px rgba(40, 30, 15, 0.1);
+  rotate: var(--tilt);
 }
+.process__step:nth-child(even) { --tilt: 1.2deg; justify-self: end; }
 .process__num {
+  justify-self: start;
   font-size: clamp(2.25rem, 1.7rem + 2vw, 3.5rem);
   font-family: var(--f-display);
   text-transform: uppercase;
@@ -1062,7 +1111,13 @@ h3 {
   line-height: 0.9;
   color: var(--c-text-faint);
   font-variant-numeric: tabular-nums;
+  /* evidenziatore giallo che si stende sotto il numero quando il sentiero arriva allo step */
+  padding: 0.08em 0.12em 0;
+  margin-left: -0.12em;
+  background: linear-gradient(var(--c-yellow), var(--c-yellow)) left bottom / 0% 45% no-repeat;
+  transition: color 0.5s ease, background-size 0.6s var(--ease) 0.1s;
 }
+.process__step.is-reached .process__num { color: var(--c-ink); background-size: 100% 45%; }
 .process__text h3 {
   font-size: clamp(1.6rem, 1.3rem + 1vw, 2.25rem);
   font-family: var(--f-display);
@@ -1095,13 +1150,47 @@ h3 {
   background: var(--c-text-faint);
 }
 
+/* sentiero: sotto i fogli. La maschera (un tratto pieno che si allunga) svela il tratteggio */
+.process__trail {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.process__dash {
+  fill: none;
+  stroke: var(--c-ink);
+  stroke-width: 2;
+  stroke-dasharray: 9 9;
+  stroke-linecap: butt;
+}
+.process__reveal { fill: none; stroke: #fff; stroke-width: 8; }
+.process__marker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  background: var(--c-yellow);
+  outline: 2px solid var(--c-ink);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.process__route.is-drawn .process__marker { opacity: 1; }
+
 @media (min-width: 900px) {
+  .process__list { gap: clamp(1.5rem, 4vw, 4rem); }
   .process__step {
-    grid-template-columns: minmax(5rem, 0.4fr) minmax(0, 1.2fr) minmax(0, 1fr);
-    column-gap: var(--space-l);
+    width: 58%;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 1.5rem;
     align-items: start;
-    padding-block: 1.5rem;
   }
+  .process__num { grid-row: span 2; }
   .process__points { padding-top: 0.3rem; }
 }
 
@@ -1175,7 +1264,9 @@ h3 {
 .partners {
   padding-block: var(--space-l);
   background-color: var(--c-ink);
-  background-image: var(--grain-light);
+  background-image: var(--grain-light), var(--shade-spots), var(--shade-sides);
+  background-size: auto, 100% 130vh, auto;
+  background-size: auto, 100% 130svh, auto;
 }
 .partners__pin {
   max-width: var(--max-width);
@@ -2269,7 +2360,9 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   inset: 0;
   z-index: -1;
   background-color: var(--c-paper);
-  background-image: var(--grain-dark);
+  background-image: var(--grain-dark), var(--shade-spots), var(--shade-sides);
+  background-size: auto, 100% 130vh, auto;
+  background-size: auto, 100% 130svh, auto;
 }
 /* filo giallo lungo il taglio dei due pannelli che salgono */
 .act::after,
@@ -2299,7 +2392,9 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 .about__sheet {
   padding-block: var(--space-xl);
   background-color: var(--c-green);
-  background-image: var(--grain-light);
+  background-image: var(--grain-light), var(--shade-spots), var(--shade-sides);
+  background-size: auto, 100% 130vh, auto;
+  background-size: auto, 100% 130svh, auto;
 }
 
 /* Grana anche sui fondi delle schermate a tutto schermo. Solo fondi: riquadri, schede e polaroid restano lisci */

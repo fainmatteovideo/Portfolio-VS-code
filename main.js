@@ -1197,6 +1197,102 @@
     });
   }
 
+  /* 6. How I work: un sentiero tratteggiato serpeggia da uno step all'altro (fogli a zig-zag)
+        e si disegna scorrendo; il quadratino giallo in testa segue una linea di lettura sullo schermo */
+  const route = document.querySelector(".process__route");
+  if (route) {
+    const svg = route.querySelector(".process__trail");
+    const dash = route.querySelector(".process__dash");
+    const reveal = route.querySelector(".process__reveal");
+    const marker = route.querySelector(".process__marker");
+    const steps = [...route.querySelectorAll(".process__step")];
+    let samples = [], total = 0, entries = [], lastLen = -1;
+
+    // il sentiero entra in ogni foglio dal centro del lato alto ed esce dal lato libero (verso il
+    // margine vuoto), poi curva fino al foglio successivo; passa sotto i fogli
+    const buildTrail = () => {
+      const W = route.clientWidth, H = route.clientHeight;
+      if (!W || !steps.length) return;
+      const list = steps[0].offsetParent;   // l'elenco (posizionato) dentro il percorso
+      const ox = list.offsetLeft, oy = list.offsetTop;
+      const box = steps.map((el) => ({ x: ox + el.offsetLeft, y: oy + el.offsetTop, w: el.offsetWidth, h: el.offsetHeight }));
+      const r = (n) => n.toFixed(1);
+      entries = box.map((b) => b.y);
+      let d = "";
+      box.forEach((b, i) => {
+        const onLeft = b.x + b.w / 2 < W / 2;
+        const free = onLeft ? W - (b.x + b.w) : b.x;            // spazio vuoto a lato del foglio
+        const reach = Math.max(18, free * 0.55);
+        const inX = b.x + b.w / 2, inY = b.y;
+        if (i === 0) {
+          // parte dal centro, sotto il titolo, e scende nel primo foglio
+          d += `M${r(W / 2)} 0 C${r(W / 2)} ${r(inY * 0.55)} ${r(inX)} ${r(inY * 0.45)} ${r(inX)} ${r(inY)}`;
+        }
+        const outX = onLeft ? b.x + b.w : b.x, outY = b.y + b.h / 2;
+        const side = onLeft ? 1 : -1;
+        const next = box[i + 1];
+        if (next) {
+          const nX = next.x + next.w / 2, nY = next.y;
+          d += ` M${r(outX)} ${r(outY)} C${r(outX + side * reach)} ${r(outY)} ${r(nX)} ${r(nY - (nY - outY) * 0.55)} ${r(nX)} ${r(nY)}`;
+        } else {
+          // ultimo foglio: il sentiero scende ancora un po' e si ferma
+          const endX = outX + side * reach * 0.7;
+          d += ` M${r(outX)} ${r(outY)} C${r(outX + side * reach)} ${r(outY)} ${r(endX)} ${r(outY + (H - outY) * 0.4)} ${r(endX)} ${r(H - 8)}`;
+        }
+      });
+      svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+      dash.setAttribute("d", d);
+      reveal.setAttribute("d", d);
+      total = dash.getTotalLength();
+      reveal.style.strokeDasharray = `${total} ${total}`;
+      // campioni lungo il sentiero: per trovare in fretta il punto all'altezza della linea di lettura
+      samples = [];
+      const N = 360;
+      for (let k = 0; k <= N; k++) {
+        const len = (total * k) / N;
+        const pt = dash.getPointAtLength(len);
+        samples.push({ len, x: pt.x, y: pt.y });
+      }
+      lastLen = -1;
+      drawTrail();
+    };
+
+    const drawTrail = () => {
+      if (!samples.length) return;
+      const vh = viewH();
+      const top = route.getBoundingClientRect().top;
+      // linea di lettura a 65% dello schermo; verso la fine scende fino in fondo, così il sentiero
+      // è completo prima che il pannello si fermi e About ci salga sopra
+      const bottom = top + route.offsetHeight;
+      const f = 0.65 + 0.35 * Math.min(1, Math.max(0, (vh * 1.35 - bottom) / (vh * 0.4)));
+      const target = vh * f - top;   // altezza della linea di lettura dentro il percorso
+      // primo campione sotto la linea (le y crescono lungo il sentiero)
+      let lo = 0, hi = samples.length - 1;
+      while (lo < hi) { const mid = (lo + hi) >> 1; if (samples[mid].y < target) lo = mid + 1; else hi = mid; }
+      let len;
+      if (lo === 0) len = 0;
+      else if (samples[lo].y < target) len = total;
+      else {
+        const a = samples[lo - 1], b = samples[lo];
+        const t = b.y > a.y ? (target - a.y) / (b.y - a.y) : 1;
+        len = a.len + (b.len - a.len) * t;
+      }
+      if (Math.abs(len - lastLen) < 0.5) return;
+      lastLen = len;
+      reveal.style.strokeDashoffset = (total - len).toFixed(1);
+      const pt = dash.getPointAtLength(len);
+      marker.style.transform = `translate(${pt.x.toFixed(1)}px, ${pt.y.toFixed(1)}px)`;
+      route.classList.toggle("is-drawn", len > 2);
+      steps.forEach((el, i) => el.classList.toggle("is-reached", target >= entries[i] + 4));
+    };
+
+    if ("ResizeObserver" in window) new ResizeObserver(buildTrail).observe(route);
+    window.addEventListener("resize", buildTrail);
+    if (document.fonts) document.fonts.ready.then(buildTrail);
+    buildTrail();
+    onFrame(drawTrail);
+  }
+
   /* 7. Collaborazioni: la sezione si ferma e le foto salgono dal basso una alla volta;
         il testo di chi è in primo piano compare in dissolvenza */
   const partners = document.querySelector(".partners");
