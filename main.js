@@ -1276,9 +1276,9 @@
       }
       blockShift = dy;
       const shift = dy > -0.5 ? "" : `translate3d(0, ${dy.toFixed(1)}px, 0)`;
-      // e compare in dissolvenza mentre scende, come i testi della banda bassa
+      // e compare solo nell'ultimo tratto, quando il sipario si sta chiudendo (prima non si vede)
       const runTop = viewH() - meet;
-      const fade = Math.max(0, Math.min(1, window.scrollY / (runTop * 0.75)));
+      const fade = Math.max(0, Math.min(1, (window.scrollY - runTop * 0.7) / (runTop * 0.3)));
       const op = fade >= 1 ? "" : fade.toFixed(3);
       topBlock.forEach((el) => {
         if (el.style.transform !== shift) el.style.transform = shift;
