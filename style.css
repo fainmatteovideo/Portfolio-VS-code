@@ -2349,37 +2349,39 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   }
 }
 
-/* Social, col mouse: i reel verticali sono una fila a fisarmonica (riferimento: waverunmedia.com,
-   "We move with the people"). Quello sotto il mouse si allarga a poco più del doppio, gli altri si
-   stringono per fargli posto; il video dentro riempie sempre il riquadro (tagliato, mai a bande). */
-@media (hover: hover) and (pointer: fine) and (min-width: 1024px) {
-  .slide[data-category="social"] .slide__grid--v {
-    --tile-h: min(calc(var(--stage-h, 760px) - var(--note-h, 0px) - 10rem), 600px);
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 10px;
-    width: 100%;
-    height: var(--tile-h);
+/* Social, col mouse: il cursore diventa una lente e il reel sotto si ingrandisce sul posto
+   (l'origine dell'ingrandimento verso l'interno della griglia arriva da main.js) */
+@media (hover: hover) and (pointer: fine) {
+  .slide[data-category="social"] .slide__grid .video {
+    z-index: 0;
+    cursor: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='34'%20height='34'%20viewBox='0%200%2034%2034'%3E%3Cg%20fill='none'%20stroke-linecap='round'%3E%3Ccircle%20cx='14'%20cy='14'%20r='9'%20stroke='rgba(0,0,0,0.35)'%20stroke-width='3.6'/%3E%3Cpath%20d='M20.6%2020.6%2028%2028'%20stroke='rgba(0,0,0,0.35)'%20stroke-width='4.2'/%3E%3Ccircle%20cx='14'%20cy='14'%20r='9'%20stroke='white'%20stroke-width='1.8'%20fill='rgba(255,255,255,0.14)'/%3E%3Cpath%20d='M20.6%2020.6%2028%2028'%20stroke='white'%20stroke-width='2.4'/%3E%3C/g%3E%3C/svg%3E") 14 14, zoom-in;
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 0.5s ease;
   }
-  .slide[data-category="social"] .slide__grid--v .video {
-    flex: 0.9 1 0;
-    min-width: 0;
-    height: 100%;
-    aspect-ratio: auto;
-    transition: flex-grow 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  /* reel appena lasciato: sopra gli altri finché si rimpicciolisce, sotto quello sotto la lente */
+  .slide[data-category="social"] .slide__grid .video.is-leaving { z-index: 4; }
+  /* cornice bianca sottile, come una lente sopra il fotogramma */
+  .slide[data-category="social"] .slide__grid .video::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    border: 2px solid var(--c-yellow);
+    opacity: 0;
+    transition: opacity 0.45s ease;
+    pointer-events: none;
   }
-  .slide[data-category="social"] .slide__grid--v .video:hover { flex-grow: 2.026; }
-  /* il video copre il riquadro qualunque sia la sua larghezza (come object-fit: cover) */
-  .slide[data-category="social"] .slide__grid--v .video iframe {
-    top: 50%;
-    left: 50%;
-    width: max(100%, calc(var(--tile-h) * 0.5625));
-    height: auto;
-    aspect-ratio: 9 / 16;
-    transform: translate(-50%, -50%);
+  .slide[data-category="social"] .slide__grid .video:hover::after { opacity: 1; }
+  /* gli altri reel si abbassano un poco: l'occhio va su quello sotto la lente */
+  .slide[data-category="social"] .slide__grid:hover .video:not(:hover) { filter: brightness(0.5) saturate(0.8); }
+  .slide[data-category="social"] .slide__grid .video__open { cursor: inherit; }
+  .slide[data-category="social"] .slide__grid .video:hover {
+    z-index: 5;
+    transform: scale(1.45);
+    box-shadow: 0 0 0 5px var(--c-ink), 0 34px 90px rgba(0, 0, 0, 0.7);
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 0.5s ease, z-index 0s;
   }
-  .slide[data-category="social"] .slide__grid--v .video__poster { transition: opacity 2s var(--ease), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
-  .slide[data-category="social"] .slide__grid--v .video:hover .video__poster { transform: scale(1.06); }
 }
 
 @media (min-width: 1024px) {
