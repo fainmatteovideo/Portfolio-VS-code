@@ -814,7 +814,12 @@ h3 {
 /* alla fine dei lavori (quando arrivano "Also worked with" e "Let's talk") la barra scivola in alto
    fuori dallo schermo, come il menu quando si nasconde (niente dissolvenza: nessuno strato a metà
    trasparenza sopra la transizione successiva). Doppia classe: vince sulla regola del menu nascosto */
-.filters.is-leaving.is-leaving { translate: 0 calc(-100% - var(--nav-h) - 12px); pointer-events: none; }
+.filters.is-leaving.is-leaving {
+  translate: 0 calc(-100% - var(--nav-h) - 12px);
+  pointer-events: none;
+  /* uscita lenta e morbida: parte piano, accelera e rallenta di nuovo (prima era rapida e sembrava sparire) */
+  transition: translate 1.1s cubic-bezier(0.45, 0, 0.2, 1);
+}
 
 /* segnaposto vuoto prima della barra (serve solo alle misure in main.js) */
 .filters__hint { height: 0; margin: 0 0 var(--space-s); }
