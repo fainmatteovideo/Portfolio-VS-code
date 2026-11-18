@@ -2102,7 +2102,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   left: 0;
   right: 0;
   z-index: 3;
-  height: 3px;
+  height: 1.5px;   /* metà dei fili delle altre transizioni: alla chiusura i due si uniscono in uno */
   background: var(--c-yellow);
   pointer-events: none;
   opacity: 0;
@@ -2432,7 +2432,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   /* progetto: scheda a sinistra, video grande a destra */
   .showcase__stage .project {
     display: grid;
-    grid-template-columns: minmax(240px, 290px) minmax(0, 1fr);
+    grid-template-columns: minmax(260px, 330px) minmax(0, 1fr);
     grid-template-areas: "meta video";
     column-gap: clamp(1.5rem, 3vw, 3rem);
     align-items: center;
@@ -2457,9 +2457,10 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   .showcase__stage .project__title { font-size: clamp(1.4rem, 1rem + 1vw, 2rem); }
   .showcase__stage .project__subtitle { margin-top: 0.4rem; font-size: var(--fs-small); }
   .showcase__stage .project__logos { margin-top: 1.25rem; gap: 1rem 1.5rem; }
+  /* crediti su due colonne: le schede con molte persone restano corte */
   .showcase__stage .project__credits {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem 1rem;
     margin-top: 1.5rem;
   }
   /* la scheda entra con un piccolo movimento quando il progetto diventa attivo */
