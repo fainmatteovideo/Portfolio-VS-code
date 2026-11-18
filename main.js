@@ -55,6 +55,23 @@
   footerH();
   window.addEventListener("resize", footerH);
 
+  /* --- "Let's talk" che chiama ------------------------------------------- */
+  // dopo 40 secondi sul sito il pulsante del menu si illumina tre volte, una sola volta per visita;
+  // non succede se la persona è già arrivata ai Contatti o ha già cliccato il pulsante
+  let contactSeen = false;
+  const navCta = document.querySelector(".cta--nav");
+  if (navCta) {
+    let called = false;
+    try { called = sessionStorage.getItem("cta-called") === "1"; } catch (e) { /* niente memoria: va bene lo stesso */ }
+    navCta.addEventListener("click", () => { contactSeen = true; });
+    if (!called) setTimeout(() => {
+      if (contactSeen || document.hidden) return;
+      navCta.classList.add("is-calling");
+      navCta.addEventListener("animationend", () => navCta.classList.remove("is-calling"), { once: true });
+      try { sessionStorage.setItem("cta-called", "1"); } catch (e) { /* idem */ }
+    }, 40000);
+  }
+
   /* --- Menu mobile ------------------------------------------------------- */
   const toggle = document.getElementById("menu-toggle");
   const menu = document.getElementById("mobile-menu");
@@ -157,6 +174,7 @@
     if (menu.hidden) setLabel(currentLabel);
     // "Let's talk" nel menu: nella sezione Contact non serve
     nav.classList.toggle("is-at-contact", !!current && current.id === "contact");
+    if (current && current.id === "contact") contactSeen = true;
   }
   onFrame(updateActive);
 
@@ -1280,6 +1298,7 @@
   window.addEventListener("resize", pinAct);
   pinAct();
   const sheet = document.querySelector(".about__sheet");
+  const contact = document.getElementById("contact");
   let sheetFade = 0;
   const measureFade = () => { if (sheet) sheetFade = parseFloat(getComputedStyle(sheet).paddingBottom) || 0; };
   measureFade();
@@ -1312,13 +1331,16 @@
       const navH = nav.offsetHeight;
       setEdge(act, slantFor(actTop, vh), width);
       setEdge(about, slantFor(aboutTop, vh), width);
+      // Contatti: stesso taglio, inclinato al contrario
+      const contactTop = contact ? contact.getBoundingClientRect().top : vh;
+      if (contact) setEdge(contact, slantFor(contactTop, vh), width);
       act.classList.toggle("is-covered", aboutTop <= 0);
       // About copre tutto (anche il triangolo del taglio diagonale): sotto non serve più niente
       const gone = aboutTop <= -vh * 0.25;
       act.classList.toggle("is-gone", gone);
       work.classList.toggle("is-gone", gone);
       // il menu prende il colore del pannello chiaro che ha sotto (crema, poi il foglio di About)
-      nav.classList.toggle("is-light", actTop < navH && aboutTop > navH);
+      nav.classList.toggle("is-light", (actTop < navH && aboutTop > navH) || contactTop < navH);
       nav.classList.toggle("is-light-2", aboutTop <= navH && sheetBottom > navH);
     });
   }

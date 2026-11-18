@@ -167,6 +167,8 @@ body::after {
 /* Sezioni chiare (pannello Services/How I work, menu quando ci passa sopra):
    stessi componenti, colori di contesto invertiti */
 .act,
+.contact,
+.site-footer,
 .site-nav.is-light {
   --c-bg: var(--c-paper);
   --c-panel: var(--c-paper-2);
@@ -393,6 +395,13 @@ h3 {
 }
 @media (min-width: 768px) {
   .cta--nav { display: inline-flex; }
+}
+/* dopo 40 secondi sul sito "Let's talk" chiama, una volta sola: tre aloni gialli morbidi (main.js) */
+.cta--nav.is-calling { animation: cta-call 1.9s ease-out 3; }
+@keyframes cta-call {
+  0%   { box-shadow: 0 0 0 0 rgba(255, 200, 0, 0.65); background-color: #ffe27a; }
+  35%  { background-color: #ffe27a; }
+  100% { box-shadow: 0 0 0 16px rgba(255, 200, 0, 0); background-color: var(--c-yellow); }
 }
 /* nella sezione Contact (e sotto il menu a tutto schermo) non serve */
 .is-at-contact .cta--nav,
@@ -1012,31 +1021,6 @@ h3 {
   position: relative;
   padding-block: clamp(1.1rem, 0.8rem + 0.8vw, 1.6rem);
 }
-/* testina gialla di una timeline di montaggio, ferma al centro: i loghi le scorrono sotto come clip */
-.clients__marquee::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  margin-left: -1px;
-  background: var(--c-yellow);
-  pointer-events: none;
-}
-.clients__marquee::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 0;
-  z-index: 1;
-  width: 14px;
-  height: 10px;
-  margin-left: -7px;
-  background: var(--c-yellow);
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  pointer-events: none;
-}
 .clients__track {
   display: flex;
   align-items: center;
@@ -1426,7 +1410,7 @@ h3 {
   background: var(--c-yellow);
   color: var(--c-ink);
 }
-.is-pinned .partners__head { grid-area: title; margin: 0; gap: 0.6rem; }
+.is-pinned .partners__head { grid-area: title; margin: 0; }
 .partners__intro { max-width: 46ch; margin: 0 auto var(--space-l); text-align: center; }
 .partners__list { display: grid; gap: var(--space-l); }
 .partner { display: grid; gap: 1.5rem; align-items: center; }
@@ -1629,14 +1613,47 @@ h3 {
 /* compatti: tutto in una schermata, fino alle icone dei social */
 /* alta almeno uno schermo: in fondo alla pagina si può scorrere finché "07 — Contact" arriva
    appena sotto il menu, con aria intorno */
+/* Contatti: si torna al crema. Il bordo alto è inclinato al contrario di About (più alto a sinistra),
+   con il filo giallo; il fondo crema continua sotto il piè di pagina (--slant e --angle da main.js) */
 .contact {
+  --slant: 0px;
+  --angle: 0deg;
+  position: relative;
+  isolation: isolate;
+  color: var(--c-text);
+  clip-path: polygon(0 0, 100% var(--slant), 100% calc(100% + var(--footer-h, 5rem)), 0 calc(100% + var(--footer-h, 5rem)));
   min-height: calc(100vh - var(--footer-h, 5rem));
   min-height: calc(100svh - var(--footer-h, 5rem));
-  padding-top: calc(var(--nav-h) + clamp(1.5rem, 5vh, 4rem));
-  padding-bottom: var(--space-l);
+  padding-top: calc(var(--nav-h) + clamp(1rem, 4vh, 3rem));
   text-align: center;
 }
-.contact .section-head { gap: 0.6rem; margin-bottom: clamp(1rem, 3vh, 2rem); }
+.contact::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: calc(100% + var(--footer-h, 5rem));
+  z-index: -1;
+  background-color: var(--c-paper);
+  background-image: var(--grain-dark), var(--shade-spots), var(--shade-sides);
+  background-size: auto, 100% 130vh, auto;
+  background-size: auto, 100% 130svh, auto;
+}
+.contact::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 101%;
+  height: 3px;
+  transform-origin: 0 0;
+  transform: rotate(calc(var(--angle) * -1));
+  background: var(--c-yellow);
+  pointer-events: none;
+}
+/* il piè di pagina sta sopra il fondo crema dei Contatti */
+.site-footer { position: relative; z-index: 1; color: var(--c-text-muted); }
 
 .contact__email {
   display: inline-block;
@@ -1924,7 +1941,14 @@ h3 {
   to   { opacity: 1; transform: none; }
 }
 
-.contact__or { margin-bottom: 0.25rem; font-size: var(--fs-small); }
+/* la sezione riempie lo schermo: form in alto, contatti diretti spinti in fondo */
+.contact { display: flex; flex-direction: column; padding-bottom: var(--space-m); }
+.contact > .container { flex: 1; display: flex; flex-direction: column; }
+.contact__direct { margin-top: auto; padding-top: var(--space-m); }
+/* targhetta e titolo con la distanza standard; sotto il titolo un po' meno aria, così tutta la sezione
+   sta in uno schermo */
+.contact .section-head { margin-bottom: var(--space-m); }
+.contact__or { margin-bottom: 0.35rem; font-size: var(--fs-body); }
 
 @media (max-width: 699px) {
   /* telefono: azienda e servizio uno sopra l'altro (il testo del menu non finisce sotto la freccia),
@@ -1932,7 +1956,6 @@ h3 {
   /* telefono: un campo per riga (16px: iPhone non ingrandisce la pagina quando si tocca un campo) */
   .brief__grid { grid-template-columns: 1fr; gap: 1.25rem; }
   .brief__consent { font-size: 0.75rem; }
-  .contact .section-head { margin-bottom: 0.9rem; }
   .contact__links { flex-wrap: nowrap; gap: 1.25rem; }
   .contact__links .label { letter-spacing: 0.12em; }
 }
