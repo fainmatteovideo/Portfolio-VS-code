@@ -1102,6 +1102,7 @@
           on = false;
           clearTimeout(timer);
           filterList.querySelectorAll(".is-poked").forEach((b) => b.classList.remove("is-poked"));
+          setTimeout(() => filterList.querySelectorAll(".is-breathing").forEach((b) => b.classList.remove("is-breathing")), 1200);
         };
         ["pointerdown", "keydown"].forEach((ev) => filterList.addEventListener(ev, end, { once: true }));
         const glow = () => {
@@ -1115,10 +1116,11 @@
           if (btns.length) {
             const b = btns[Math.floor(Math.random() * btns.length)];
             lastBtn = b;
-            b.classList.add("is-poked");
-            setTimeout(() => b.classList.remove("is-poked"), 900);
+            b.classList.add("is-breathing", "is-poked");
+            setTimeout(() => b.classList.remove("is-poked"), 1500);
+            setTimeout(() => b.classList.remove("is-breathing"), 2700);
           }
-          later(glow, 1700);
+          later(glow, 3000);
         };
         new IntersectionObserver(([e]) => {
           seen = e.isIntersecting;

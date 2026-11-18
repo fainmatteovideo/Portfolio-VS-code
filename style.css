@@ -745,7 +745,9 @@ h3 {
 }
 
 /* invito a scegliere: il bordo di una categoria si accende di giallo (main.js) */
-.filter.is-poked { color: var(--c-text); border-color: var(--c-yellow); transition-duration: 0.35s, 0.5s, 0.35s; }
+.filter.is-poked { color: var(--c-text); border-color: var(--c-yellow); }
+/* accensione e spegnimento lenti e morbidi, come un respiro (non un lampeggio) */
+.filter.is-breathing { transition: color 1.1s ease-in-out, border-color 1.1s ease-in-out, background-color var(--dur-fast) ease; }
 
 /* quando la barra si ferma sotto il menu compare un fondo sfocato: i video e i testi che ci
    passano sotto non disturbano le categorie */
@@ -1333,6 +1335,21 @@ h3 {
   text-align: center;
   margin-bottom: var(--space-s);
 }
+/* targhetta gialla sopra il titolo, come nelle altre sezioni */
+.partners__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-s);
+  margin-bottom: var(--space-s);
+}
+.partners__head .partners__title { margin-bottom: 0; }
+.partners__label {
+  padding: 6px 10px;
+  background: var(--c-yellow);
+  color: var(--c-ink);
+}
+.is-pinned .partners__head { grid-area: title; margin: 0; gap: 0.6rem; }
 .partners__intro { max-width: 46ch; margin: 0 auto var(--space-l); text-align: center; }
 .partners__list { display: grid; gap: var(--space-l); }
 .partner { display: grid; gap: 1.5rem; align-items: center; }
@@ -1518,7 +1535,7 @@ h3 {
     align-items: center;
     padding: calc(var(--nav-h) + 2rem) var(--gutter) 2.5rem;
   }
-  .is-pinned .partners__title { justify-self: center; }
+  .is-pinned .partners__head { justify-self: center; }
   /* frase a sinistra della foto, testo del collaboratore a destra */
   .is-pinned .partners__intro { align-self: center; justify-self: end; text-align: right; margin: 0; max-width: 26ch; }
   .is-pinned .partner__info { align-self: center; }
