@@ -2807,13 +2807,15 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
     width: min(100%, calc((var(--stage-h, 760px) - 64px - 15rem) * 16 / 9));
     justify-self: end;
   }
+  /* a tutta larghezza, centrata, con i loghi della misura di sempre */
   .showcase > .work__also {
     position: absolute;
+    left: 0;
+    right: 0;
     z-index: 2;
     margin: 0;
     text-align: center;
   }
-  .showcase > .work__also .work__also-logos { flex-wrap: nowrap; justify-content: space-between; margin-top: 0.7rem; gap: 1rem; }
-  /* loghi più bassi qui, così stanno tutti su una riga, larga quanto il video */
-  .showcase > .work__also .work__also-logos img { max-height: 34px; max-width: 132px; }
+  .showcase > .work__also .work__also-logos { flex-wrap: nowrap; margin-top: 0.8rem; gap: clamp(2rem, 4vw, 4rem); }
+  .showcase > .work__also .work__also-logos img { max-height: 48px; }
 }

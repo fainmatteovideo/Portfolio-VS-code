@@ -806,8 +806,8 @@
 
   // Start-up: loghi delle altre startup, alla stessa altezza visiva di quelli dei progetti
   const alsoBox = document.getElementById("work-also");
-  // Start-up, computer: la fila "Also worked with" entra nella scena ferma dei lavori, subito sotto
-  // il video, e resta visibile mentre si scorrono i progetti. Telefono: resta sotto il carosello.
+  // Start-up, computer: la fila "Also worked with" entra nella scena ferma dei lavori, sotto il video
+  // e a tutta larghezza, e resta visibile mentre si scorrono i progetti. Telefono: resta sotto il carosello.
   const alsoHome = alsoBox && { parent: alsoBox.parentNode, next: alsoBox.nextSibling };
   function placeAlso() {
     if (!alsoBox || !showcase) return;
@@ -821,8 +821,7 @@
     if (!v) return;
     const sr = showcase.getBoundingClientRect();
     const r = v.getBoundingClientRect();
-    alsoBox.style.left = Math.round(r.left - sr.left) + "px";
-    alsoBox.style.width = Math.round(r.width) + "px";
+    // a tutta larghezza (CSS), subito sotto il video
     alsoBox.style.top = Math.round(r.bottom - sr.top + 22) + "px";
   }
   window.addEventListener("resize", () => requestAnimationFrame(placeAlso));
@@ -855,11 +854,23 @@
     // file alterne: una verso sinistra, una verso destra, a velocità più bassa dello scroll
     const rowEls = [...photoWall.querySelectorAll(".photo__row")];
     let wallInView = false;
+    // quando la sezione dei lavori si ferma (sticky) la parete non si sposta più sullo schermo: lo
+    // scroll fatto nel frattempo (extra) viene sommato, così le file continuano a scorrere
+    let lastY = window.scrollY, lastTop = null, extra = 0;
     const drift = () => {
-      if (!wallInView) return;
+      if (photoBox && photoBox.hidden) { lastTop = null; extra = 0; return; }
       const r = photoWall.getBoundingClientRect();
+      const y = window.scrollY;
+      if (lastTop !== null) {
+        const dy = y - lastY, dt = r.top - lastTop;
+        if (Math.abs(dy) > 0.5 && Math.abs(dt) < 0.5) extra = Math.max(0, extra + dy);
+      }
+      lastY = y;
+      lastTop = r.top;
+      if (!wallInView) return;
       const vh = viewH();
-      const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
+      const top = r.top - extra;
+      const p = Math.min(1, Math.max(0, (vh - top) / (vh + r.height)));
       rowEls.forEach((row, i) => {
         const travel = Math.min(Math.max(0, row.scrollWidth - photoWall.clientWidth), (vh + r.height) * 0.45);
         const x = i % 2 ? -travel * (1 - p) : -travel * p;
