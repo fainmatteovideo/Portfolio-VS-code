@@ -706,6 +706,7 @@
       note.querySelector(".showcase__note-label").textContent = category ? category.label : "";
       note.querySelector(".showcase__note-text").textContent = category ? category.intro : "";
       note.hidden = !category || !category.intro;
+      note.dataset.cat = category ? category.id : "";
     });
     measureNote();
   }

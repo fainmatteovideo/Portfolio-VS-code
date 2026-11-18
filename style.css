@@ -978,6 +978,8 @@ h3 {
 /* cosa ho fatto nel dettaglio, sotto il mio credito */
 .project__detail { flex-basis: 100%; font-size: var(--fs-small); font-weight: 300; color: var(--c-text-muted); }
 
+/* texture di carta stropicciata (luce e ombra da un rumore frattale) */
+:root { --paper-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.011 0.019' numOctaves='5' seed='7'/%3E%3CfeDiffuseLighting lighting-color='%23ffffff' surfaceScale='3.2'%3E%3CfeDistantLight azimuth='225' elevation='52'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E"); }
 /* Foglietto con la descrizione della categoria (solo computer, vedi lo showcase più sotto):
    carta come le polaroid, appena stropicciata */
 .showcase__note { display: none; }
@@ -985,7 +987,7 @@ h3 {
   padding: 1.15rem 1.2rem 1.05rem;
   background-color: #f4f0e7;
   /* texture di carta stropicciata, molto leggera (velo color carta sopra la luce/ombra) */
-  background-image: linear-gradient(rgba(244, 240, 231, 0.62), rgba(244, 240, 231, 0.62)), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.011 0.019' numOctaves='5' seed='7'/%3E%3CfeDiffuseLighting lighting-color='%23ffffff' surfaceScale='3.2'%3E%3CfeDistantLight azimuth='225' elevation='52'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+  background-image: linear-gradient(rgba(244, 240, 231, 0.62), rgba(244, 240, 231, 0.62)), var(--paper-texture);
   background-size: auto, 320px 320px;
   background-blend-mode: normal, multiply;
   color: var(--c-ink);
@@ -994,6 +996,20 @@ h3 {
     1px 1px 0 #dcd5c6,
     0 14px 30px rgba(0, 0, 0, 0.38),
     0 3px 8px rgba(0, 0, 0, 0.22);
+}
+/* prova (solo Commercial & Corporate): carta più scura, del crema delle sezioni chiare, con i bordi
+   in penombra come se il foglio fosse in parte nell'ombra: stacca meno dal nero */
+.showcase__note[data-cat="commercial"] {
+  background-color: #ddd5c5;
+  background-image:
+    radial-gradient(ellipse 90% 85% at 45% 40%, transparent 45%, rgba(40, 30, 15, 0.32) 100%),
+    linear-gradient(rgba(221, 213, 197, 0.55), rgba(221, 213, 197, 0.55)),
+    var(--paper-texture);
+  background-size: auto, auto, 320px 320px;
+  background-blend-mode: normal, normal, multiply;
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.45),
+    0 3px 8px rgba(0, 0, 0, 0.25);
 }
 .showcase__note-label { color: var(--c-ink); font-weight: 800; margin-bottom: 0.45rem; }
 .showcase__note-text { font-size: var(--fs-small); line-height: 1.55; color: #37342f; }
