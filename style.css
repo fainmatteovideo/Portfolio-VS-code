@@ -1567,11 +1567,16 @@ h3 {
   line-height: 0.98;
 }
 /* frase introduttiva in evidenza */
-/* stesso testo dei paragrafi di About e dei collaboratori: corpo normale, colore attenuato */
+/* frase grande, come una citazione (senza virgolette): corpo medio e leggero, color panna */
 .is-pinned .partners__intro {
   grid-area: intro;
   margin: 0 auto;
   max-width: 34ch;
+  color: var(--c-text);
+  font-size: clamp(1.3rem, 0.95rem + 1.1vw, 1.85rem);
+  font-weight: 300;
+  line-height: 1.32;
+  letter-spacing: -0.012em;
 }
 .is-pinned .partners__list,
 .is-pinned .partner { display: contents; }
@@ -1652,7 +1657,7 @@ h3 {
   }
   .is-pinned .partners__head { justify-self: center; }
   /* frase a sinistra della foto, testo del collaboratore a destra */
-  .is-pinned .partners__intro { align-self: center; justify-self: end; text-align: right; margin: 0; max-width: 26ch; }
+  .is-pinned .partners__intro { align-self: center; justify-self: end; text-align: right; margin: 0; max-width: 20ch; }
   .is-pinned .partner__info { align-self: center; }
   /* le foto entrano da sinistra passando sopra la frase */
   .is-pinned .partner__img { z-index: 1; }
