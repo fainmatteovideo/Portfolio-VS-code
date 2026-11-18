@@ -45,7 +45,8 @@
 
   // l'apertura resta ferma (sticky): conta quanto si è scorso, non se è ancora sullo schermo
   onFrame(() => {
-    nav.classList.toggle("is-scrolled", window.scrollY > (hero ? hero.offsetHeight * 0.6 : 0));
+    // appena si inizia a scorrere: il blocco dei lavori che scende passa sotto il menu, sfocato
+    nav.classList.toggle("is-scrolled", window.scrollY > 4);
   });
 
   // altezza del piè di pagina: Contatti + piè di pagina riempiono esattamente lo schermo, così in fondo
@@ -855,6 +856,28 @@
       }))).then(setSpeed);
     }, { rootMargin: "100% 0px 100% 0px" });
     logosObserver.observe(tracks[0]);
+    // il carosello segue lo scroll: scorrendo i loghi accelerano (verso il basso nel loro verso,
+    // verso l'alto al contrario), poi tornano piano alla velocità normale
+    if (!reducedMotion && "getAnimations" in Element.prototype) {
+      let rate = 1, lastY = window.scrollY, lastT = performance.now(), boost = 0, running = false, onScreen = false;
+      const spin = (t) => {
+        const dt = Math.max(1, t - lastT);
+        const y = window.scrollY;
+        const v = (y - lastY) / dt;           // px al millisecondo, con il segno
+        lastY = y; lastT = t;
+        boost += (Math.max(-6, Math.min(6, v * 2.2)) - boost) * 0.15;
+        const target = 1 + boost;
+        rate += (target - rate) * 0.2;
+        if (Math.abs(rate) < 0.2) rate = rate < 0 ? -0.2 : 0.2;   // mai fermo del tutto
+        tracks.forEach((tr) => tr.getAnimations().forEach((a) => { a.playbackRate = rate; }));
+        if (onScreen || Math.abs(rate - 1) > 0.01) requestAnimationFrame(spin);
+        else running = false;
+      };
+      new IntersectionObserver(([e]) => {
+        onScreen = e.isIntersecting;
+        if (onScreen && !running) { running = true; lastY = window.scrollY; lastT = performance.now(); requestAnimationFrame(spin); }
+      }).observe(tracks[0].parentElement);
+    }
     // col mouse sopra un logo con il link: etichetta gialla "Visit website" che segue il puntatore
     // (il carosello intanto si ferma, vedi CSS)
     if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
@@ -1210,6 +1233,7 @@
   const workHint = document.querySelector(".filters__hint");
   const workFilters = document.getElementById("filters");
   const topBlock = [workHead, workHint, workFilters].filter(Boolean);
+  let blockShift = 0;
   const pullHead = () => {
     if (!workHead || !workFilters || !workHint) return;
     const current = parseFloat(workHead.style.marginTop) || 0;
@@ -1240,7 +1264,13 @@
       // il blocco iniziale scende intero insieme al bordo della banda alta: il suo fondo (le categorie)
       // coincide sempre con quel bordo, quindi non viene mai tagliato a metà; a sipario chiuso torna
       // nella sua posizione normale (spostamento 0)
-      const dy = c.closed ? 0 : c.top - (viewH() - window.scrollY);
+      // (misurato sul fondo reale delle categorie, tolto lo spostamento già applicato)
+      let dy = 0;
+      if (!c.closed && workFilters) {
+        const natural = workFilters.getBoundingClientRect().bottom - blockShift;
+        dy = Math.min(0, c.top - natural);
+      }
+      blockShift = dy;
       const shift = dy === 0 ? "" : `translate3d(0, ${dy.toFixed(1)}px, 0)`;
       topBlock.forEach((el) => { if (el.style.transform !== shift) el.style.transform = shift; });
       // dalla banda bassa sale solo il video: la frase della categoria e i pallini compaiono
@@ -1300,6 +1330,11 @@
   pinAct();
   const sheet = document.querySelector(".about__sheet");
   const contact = document.getElementById("contact");
+  const clientsBox = document.getElementById("clients");
+  const pinClients = () => clientsBox && clientsBox.style.setProperty("--clients-h", clientsBox.offsetHeight + "px");
+  if (clientsBox && "ResizeObserver" in window) new ResizeObserver(pinClients).observe(clientsBox);
+  window.addEventListener("resize", pinClients);
+  pinClients();
   let sheetFade = 0;
   const measureFade = () => { if (sheet) sheetFade = parseFloat(getComputedStyle(sheet).paddingBottom) || 0; };
   measureFade();

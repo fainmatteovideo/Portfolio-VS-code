@@ -1008,6 +1008,15 @@ h3 {
   padding-block: calc(var(--space-xl) + 2rem) var(--space-xl);
   scroll-margin-top: calc(var(--nav-h) - var(--space-xl) - 2rem + 1.5rem);
 }
+/* i clienti si fermano quando il loro fondo tocca il fondo dello schermo e il crema dei Contatti ci
+   sale sopra, come nelle altre transizioni (--clients-h da main.js; svh: niente salti su telefono) */
+.clients {
+  position: sticky;
+  top: min(0px, calc(100vh - var(--clients-h, 0px)));
+  top: min(0px, calc(100svh - var(--clients-h, 0px)));
+  z-index: 0;
+}
+.contact { z-index: 1; }
 .clients__head { margin-bottom: var(--space-l); }
 /* paragrafo come quelli di About: corpo normale, colore attenuato */
 .clients__text { max-width: 62ch; }
@@ -2581,7 +2590,8 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 .act.is-gone { visibility: hidden; opacity: 0; }
 /* mentre si calcola la posizione vera delle sezioni (link del menu) niente sticky */
 .is-measuring .work,
-.is-measuring .act { position: relative !important; top: 0 !important; }
+.is-measuring .act,
+.is-measuring .clients { position: relative !important; top: 0 !important; }
 /* pannello crema pieno, con grana scura tipo carta */
 .act::before {
   content: "";
