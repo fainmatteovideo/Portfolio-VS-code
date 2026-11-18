@@ -1246,13 +1246,15 @@
     meet = Math.min(vh * 0.8, Math.max(vh * 0.5, depth + nav.offsetHeight + 24));
   };
   let meet = window.innerHeight / 2;
-  // sipario: banda bassa = inizio dei lavori che sale (scrollY); la banda alta scende più o meno in
-  // fretta perché le due si incontrino all'altezza "meet"
+  // sipario: banda bassa = inizio dei lavori che sale (scrollY); la banda alta scende e le due si
+  // incontrano all'altezza "meet"
   const curtain = () => {
     const vh = viewH();
     const s = window.scrollY;
-    const k = meet / (vh - meet);
-    return { top: Math.min(s * k, meet), bottom: Math.min(s, vh - meet), closed: s >= vh - meet };
+    // la banda alta rallenta fino a fermarsi alla chiusura (ease-out): il blocco dei lavori che la
+    // segue non inverte di colpo la direzione quando il sipario si chiude
+    const t = Math.min(1, s / (vh - meet));
+    return { top: meet * (1 - (1 - t) * (1 - t)), bottom: Math.min(s, vh - meet), closed: t >= 1 };
   };
   pullHead();
   window.addEventListener("resize", pullHead);
@@ -1265,14 +1267,23 @@
       // coincide sempre con quel bordo, quindi non viene mai tagliato a metà; a sipario chiuso torna
       // nella sua posizione normale (spostamento 0)
       // (misurato sul fondo reale delle categorie, tolto lo spostamento già applicato)
+      // Niente salto alla chiusura: lo spostamento si annulla da solo quando il blocco raggiunge la
+      // sua posizione naturale (min 0), senza scattare a 0 nel momento in cui il sipario si chiude
       let dy = 0;
-      if (!c.closed && workFilters) {
+      if (workFilters) {
         const natural = workFilters.getBoundingClientRect().bottom - blockShift;
         dy = Math.min(0, c.top - natural);
       }
       blockShift = dy;
-      const shift = dy === 0 ? "" : `translate3d(0, ${dy.toFixed(1)}px, 0)`;
-      topBlock.forEach((el) => { if (el.style.transform !== shift) el.style.transform = shift; });
+      const shift = dy > -0.5 ? "" : `translate3d(0, ${dy.toFixed(1)}px, 0)`;
+      // e compare in dissolvenza mentre scende, come i testi della banda bassa
+      const runTop = viewH() - meet;
+      const fade = Math.max(0, Math.min(1, window.scrollY / (runTop * 0.75)));
+      const op = fade >= 1 ? "" : fade.toFixed(3);
+      topBlock.forEach((el) => {
+        if (el.style.transform !== shift) el.style.transform = shift;
+        if (el.style.opacity !== op) el.style.opacity = op;
+      });
       // dalla banda bassa sale solo il video: la frase della categoria e i pallini compaiono
       // nell'ultimo tratto, quando il sipario si sta chiudendo
       const run = viewH() - meet;
