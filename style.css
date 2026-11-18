@@ -2349,18 +2349,18 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   }
 }
 
-/* Social, col mouse: il cursore diventa una lente e il reel sotto si ingrandisce sul posto
+/* Social, col mouse: il reel sotto il cursore si ingrandisce sul posto (cursore normale, niente lente)
    (l'origine dell'ingrandimento verso l'interno della griglia arriva da main.js) */
 @media (hover: hover) and (pointer: fine) {
   .slide[data-category="social"] .slide__grid .video {
     z-index: 0;
-    cursor: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='34'%20height='34'%20viewBox='0%200%2034%2034'%3E%3Cg%20fill='none'%20stroke-linecap='round'%3E%3Ccircle%20cx='14'%20cy='14'%20r='9'%20stroke='rgba(0,0,0,0.35)'%20stroke-width='3.6'/%3E%3Cpath%20d='M20.6%2020.6%2028%2028'%20stroke='rgba(0,0,0,0.35)'%20stroke-width='4.2'/%3E%3Ccircle%20cx='14'%20cy='14'%20r='9'%20stroke='white'%20stroke-width='1.8'%20fill='rgba(255,255,255,0.14)'/%3E%3Cpath%20d='M20.6%2020.6%2028%2028'%20stroke='white'%20stroke-width='2.4'/%3E%3C/g%3E%3C/svg%3E") 14 14, zoom-in;
+    cursor: pointer;
     transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.7s cubic-bezier(0.22, 1, 0.36, 1),
       filter 0.5s ease;
   }
-  /* reel appena lasciato: sopra gli altri finché si rimpicciolisce, sotto quello sotto la lente */
+  /* reel appena lasciato: sopra gli altri finché si rimpicciolisce, sotto quello nuovo */
   .slide[data-category="social"] .slide__grid .video.is-leaving { z-index: 4; }
-  /* cornice bianca sottile, come una lente sopra il fotogramma */
+  /* cornice sottile attorno al reel ingrandito */
   .slide[data-category="social"] .slide__grid .video::after {
     content: "";
     position: absolute;
@@ -2372,7 +2372,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
     pointer-events: none;
   }
   .slide[data-category="social"] .slide__grid .video:hover::after { opacity: 1; }
-  /* gli altri reel si abbassano un poco: l'occhio va su quello sotto la lente */
+  /* gli altri reel si abbassano un poco: l'occhio va su quello ingrandito */
   .slide[data-category="social"] .slide__grid:hover .video:not(:hover) { filter: brightness(0.5) saturate(0.8); }
   .slide[data-category="social"] .slide__grid .video__open { cursor: inherit; }
   .slide[data-category="social"] .slide__grid .video:hover {
