@@ -1041,15 +1041,11 @@ h3 {
   line-height: 1.05;
 }
 .services__list p { max-width: 36ch; }
-/* numero a sinistra, piccola icona al tratto a destra (nera come i testi) */
-.services__top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 0.35rem;
-}
+/* piccola icona al tratto sopra il titolo (nera come i testi), al posto del numero */
 .services__icon {
-  width: clamp(30px, 2.2rem, 38px);
+  margin-bottom: 0.6rem;
+  width: clamp(38px, 2.8rem, 46px);
+  color: var(--c-text);
   height: auto;
   fill: none;
   stroke: var(--c-text);
@@ -1084,11 +1080,9 @@ h3 {
   }
   .services__list h3,
   .services__list p { transition: transform 0.6s var(--ease), color 0.4s ease; }
-  .services__list .label { transition: color 0.4s ease; }
   .services__list li:hover::after { transform: scaleX(1); }
   .services__list li:hover h3 { transform: translateX(8px); }
   .services__list li:hover p { transform: translateX(8px); color: var(--c-text); transition-delay: 0.04s; }
-  .services__list li:hover .label { color: var(--c-text); }
   /* l'icona fa un piccolo salto */
   .services__icon { transition: transform 0.5s var(--ease); }
   .services__list li:hover .services__icon { transform: translateY(-3px) rotate(-4deg); }
