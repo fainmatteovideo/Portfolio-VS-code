@@ -68,10 +68,10 @@
   <link rel="preconnect" href="https://f.vimeocdn.com">
   <link rel="preload" href="assets/logo/mf-logo-white.webp" as="image" type="image/webp">
   <link rel="preload" href="assets/posters/showreel.webp" as="image" type="image/webp">
-  <link rel="stylesheet" href="style.css?v=20261119a">
+  <link rel="stylesheet" href="style.css?v=20261119e">
   <script src="https://player.vimeo.com/api/player.js" defer></script>
   <!-- ?v=: cambiare la data quando si aggiornano CSS o JS, così i browser non usano la copia vecchia -->
-  <script src="main.js?v=20261119a" defer></script>
+  <script src="main.js?v=20261119e" defer></script>
 </head>
 <body>
   <a class="skip-link label" href="#work">Skip to content</a>
@@ -146,8 +146,8 @@
   <!-- 2. Lavori -->
   <!-- I progetti vengono generati da projects.json (vedi main.js) -->
   <section id="work" class="section work">
-    <!-- il titolo sta sopra l'inizio della sezione: compare nella banda alta del sipario dell'apertura,
-         mentre categorie e lavori salgono da sotto (main.js) -->
+    <!-- titolo, descrizione e categorie stanno sopra l'inizio della sezione: compaiono nella banda alta
+         del sipario dell'apertura, mentre i lavori salgono da sotto (main.js) -->
     <div class="container work__head">
       <div class="section-head">
         <p class="label faint">01 — Work</p>
@@ -435,33 +435,40 @@
       </div>
       <!-- Il form invia il messaggio con Web3Forms, che lo inoltra per email (main.js); se l'invio fallisce apre l'app di posta -->
       <form class="brief" id="brief-form" novalidate>
-        <!-- il form è una frase da completare: ogni campo è uno spazio sottolineato dentro il testo
-             (la larghezza dei campi segue il testo, main.js) -->
-        <p class="brief__sentence">
-          Hi Matteo, my name is
-          <label class="brief__blank"><span class="visually-hidden">Your name</span><input type="text" name="name" placeholder="your name" autocomplete="name" required></label>
-          from
-          <span class="brief__nb"><label class="brief__blank"><span class="visually-hidden">Company / brand</span><input type="text" name="company" placeholder="company / brand" autocomplete="organization"></label>.</span>
-          I need
-          <label class="brief__blank brief__blank--select"><span class="visually-hidden">What do you need?</span><select name="service">
-              <option value="">something</option>
-              <option value="Video production">a video production</option>
-              <option value="Video consulting &amp; strategy">some video strategy</option>
-              <option value="Social media content">social media content</option>
-              <option value="Photography">photos</option>
-              <option value="Editing">an editor</option>
-              <option value="Motion graphics">motion graphics</option>
-              <option value="Something else">something else</option>
-            </select></label>
-          and you can reach me at
-          <span class="brief__nb"><label class="brief__blank brief__blank--email"><span class="visually-hidden">Email</span><input type="email" name="email" placeholder="your email" autocomplete="email" required aria-describedby="email-hint"></label>.</span>
-        </p>
-        <!-- proposta di correzione per i domini scritti male (es. gmial.com), riempita da main.js -->
-        <p class="brief__hint" id="email-hint" aria-live="polite"></p>
-        <label class="brief__more">
-          <span class="visually-hidden">Your project</span>
-          <textarea name="message" rows="3" placeholder="Tell me more: goal, deliverables, length, platform, timeline, budget range…" required></textarea>
-        </label>
+        <!-- campi senza riquadro: solo una linea sotto, con l'etichetta piccola sopra -->
+        <div class="brief__grid">
+          <label class="brief__field">
+            <span class="brief__label">Name</span>
+            <input type="text" name="name" placeholder="Your name" autocomplete="name" required>
+          </label>
+          <label class="brief__field">
+            <span class="brief__label">Email</span>
+            <input type="email" name="email" placeholder="you@company.com" autocomplete="email" required aria-describedby="email-hint">
+            <!-- proposta di correzione per i domini scritti male (es. gmial.com), riempita da main.js -->
+            <span class="brief__hint" id="email-hint" aria-live="polite"></span>
+          </label>
+          <label class="brief__field">
+            <span class="brief__label">Company</span>
+            <input type="text" name="company" placeholder="Company / brand" autocomplete="organization">
+          </label>
+          <label class="brief__field">
+            <span class="brief__label">Service</span>
+            <select name="service">
+              <option value="">What do you need?</option>
+              <option>Video production</option>
+              <option>Video consulting &amp; strategy</option>
+              <option>Social media content</option>
+              <option>Photography</option>
+              <option>Editing</option>
+              <option>Motion graphics</option>
+              <option>Something else</option>
+            </select>
+          </label>
+          <label class="brief__field brief__field--full">
+            <span class="brief__label">Project</span>
+            <textarea name="message" rows="3" placeholder="Goal, deliverables, length, platform, timeline, budget range and anything I should know." required></textarea>
+          </label>
+        </div>
         <div class="brief__foot">
         <label class="brief__consent">
           <input type="checkbox" name="consent" required>
@@ -500,7 +507,7 @@
       </div>
       <div class="site-footer__group">
         <p>Based in Zurich — working across Switzerland &amp; worldwide</p>
-        <a href="#top">Back to top <svg class="arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 10V2M2.5 5.5L6 2l3.5 3.5"/></svg></a>
+        <a class="site-footer__top" href="#top">Back to top <svg class="arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 10V2M2.5 5.5L6 2l3.5 3.5"/></svg></a>
       </div>
     </div>
   </footer>

@@ -358,7 +358,7 @@
         "Editor: Matteo Fain",
         "Platform: YouTube"
       ],
-      "logos": [],
+      "logos": [{"src": "assets/logos/ninna-matti.webp", "alt": "Ninna e Matti"}],
       "thumbnail": "assets/posters/challenge.webp"
     },
     {
@@ -373,7 +373,7 @@
         "Editor: Matteo Fain",
         "Platform: YouTube"
       ],
-      "logos": [],
+      "logos": [{"src": "assets/logos/ninna-matti.webp", "alt": "Ninna e Matti"}],
       "thumbnail": "assets/posters/gelato.webp"
     }
   ],

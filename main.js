@@ -48,6 +48,13 @@
     nav.classList.toggle("is-scrolled", window.scrollY > (hero ? hero.offsetHeight * 0.6 : 0));
   });
 
+  // altezza del piè di pagina: Contatti + piè di pagina riempiono esattamente lo schermo, così in fondo
+  // "07 — Contact" arriva appena sotto il menu
+  const footer = document.querySelector(".site-footer");
+  const footerH = () => footer && document.documentElement.style.setProperty("--footer-h", footer.offsetHeight + "px");
+  footerH();
+  window.addEventListener("resize", footerH);
+
   /* --- Menu mobile ------------------------------------------------------- */
   const toggle = document.getElementById("menu-toggle");
   const menu = document.getElementById("mobile-menu");
@@ -1023,22 +1030,6 @@
     const markEmpty = () => service.classList.toggle("is-empty", service.value === "");
     service.addEventListener("change", markEmpty);
     markEmpty();
-    // i campi della frase sono larghi quanto il testo scritto (o il suggerimento, se vuoti)
-    const blanks = [...brief.querySelectorAll(".brief__sentence input, .brief__sentence select")];
-    const ruler = document.createElement("canvas").getContext("2d");
-    const fit = (el) => {
-      const cs = getComputedStyle(el);
-      ruler.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
-      const text = el.tagName === "SELECT" ? el.options[el.selectedIndex].text : (el.value || el.placeholder);
-      const pad = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
-      el.style.width = Math.ceil(ruler.measureText(text).width + pad + 4) + "px";
-    };
-    const fitAll = () => blanks.forEach(fit);
-    blanks.forEach((el) => el.addEventListener(el.tagName === "SELECT" ? "change" : "input", () => fit(el)));
-    brief.addEventListener("reset", () => setTimeout(() => { markEmpty(); fitAll(); }));
-    window.addEventListener("resize", fitAll);
-    if (document.fonts) document.fonts.ready.then(fitAll);
-    fitAll();
     // l'errore sparisce appena il campo viene corretto
     brief.addEventListener("input", (e) => e.target.classList.remove("is-invalid"));
     brief.addEventListener("change", (e) => { if (e.target.name === "consent") e.target.closest("label").classList.remove("is-invalid"); });
@@ -1194,31 +1185,61 @@
      ====================================================================== */
 
   /* 2. Scorrendo, logo e frase dell'apertura si allontanano e il video si scurisce */
-  // il titolo dei lavori (01 — Work, Selected works) sta appena sopra l'inizio della sezione e si
-  // vede solo nella banda alta del sipario: scende da sopra mentre le categorie salgono da sotto
+  // il blocco iniziale dei lavori (01 — Work, titolo, descrizione e categorie) sta appena sopra
+  // l'inizio della sezione e si vede solo nella banda alta del sipario dell'apertura: scende da
+  // sopra, mentre dalla banda bassa salgono i video
   const workHead = document.querySelector(".work__head");
+  const workHint = document.querySelector(".filters__hint");
+  const workFilters = document.getElementById("filters");
+  const topBlock = [workHead, workHint, workFilters].filter(Boolean);
   const pullHead = () => {
-    if (!workHead) return;
-    const pad = parseFloat(getComputedStyle(work).paddingTop) || 0;
-    workHead.style.marginTop = -(pad + workHead.offsetHeight) + "px";
+    if (!workHead || !workFilters || !workHint) return;
+    const current = parseFloat(workHead.style.marginTop) || 0;
+    const mb = parseFloat(getComputedStyle(workHint).marginBottom) || 0;
+    // distanza dall'inizio della sezione al fondo delle categorie, senza lo spostamento attuale
+    const depth = workHint.offsetTop - current + workHint.offsetHeight + mb + workFilters.offsetHeight;
+    workHead.style.marginTop = -depth + "px";
+    // il sipario si chiude dove c'è posto per tutto il blocco sotto il menu (almeno a metà schermo)
+    const vh = viewH();
+    meet = Math.min(vh * 0.8, Math.max(vh * 0.5, depth + nav.offsetHeight + 24));
+  };
+  let meet = window.innerHeight / 2;
+  // sipario: banda bassa = inizio dei lavori che sale (scrollY); la banda alta scende più o meno in
+  // fretta perché le due si incontrino all'altezza "meet"
+  const curtain = () => {
+    const vh = viewH();
+    const s = window.scrollY;
+    const k = meet / (vh - meet);
+    return { top: Math.min(s * k, meet), bottom: Math.min(s, vh - meet), closed: s >= vh - meet };
   };
   pullHead();
   window.addEventListener("resize", pullHead);
   if (document.fonts) document.fonts.ready.then(pullHead);
   if (!reducedMotion && hero) {
     onFrame(() => {
-      if (!workHead) return;
       // bordo inferiore della banda alta (finché l'apertura non è chiusa del tutto)
-      const cut = Math.min(window.scrollY, hero.offsetHeight / 2);
-      const closed = window.scrollY >= hero.offsetHeight / 2;
-      const hide = closed ? 0 : Math.max(0, workHead.getBoundingClientRect().bottom - cut);
-      workHead.style.clipPath = hide > 0 ? `inset(0 0 ${hide.toFixed(1)}px 0)` : "";
+      const c = curtain();
+      topBlock.forEach((el) => {
+        const hide = c.closed ? 0 : Math.max(0, el.getBoundingClientRect().bottom - c.top);
+        const value = hide > 0 ? `inset(0 0 ${hide.toFixed(1)}px 0)` : "";
+        if (el.style.clipPath !== value) el.style.clipPath = value;
+      });
+      // dalla banda bassa sale solo il video: la frase della categoria e i pallini compaiono
+      // nell'ultimo tratto, quando il sipario si sta chiudendo
+      const run = viewH() - meet;
+      const show = c.closed ? 1 : Math.max(0, Math.min(1, (window.scrollY - run * 0.55) / (run * 0.45)));
+      const value = show >= 1 ? "" : show.toFixed(3);
+      document.querySelectorAll("#work-intro, #work-intro-more, .showcase__dots").forEach((el) => {
+        if (el.style.opacity !== value) el.style.opacity = value;
+      });
     });
     onFrame(() => {
       const p = Math.min(1, Math.max(0, window.scrollY / (hero.offsetHeight * 0.8)));
       hero.style.setProperty("--hero-p", p.toFixed(3));
       // sipario: alto e basso si chiudono insieme, chiuso quando Selected works è a metà schermo
-      hero.style.setProperty("--hero-cut", Math.min(window.scrollY, hero.offsetHeight / 2).toFixed(1) + "px");
+      const c = curtain();
+      hero.style.setProperty("--hero-cut-top", c.top.toFixed(1) + "px");
+      hero.style.setProperty("--hero-cut", c.bottom.toFixed(1) + "px");
       // coperta del tutto: si nasconde (è ferma dietro a tutta la pagina)
       hero.classList.toggle("is-past", window.scrollY > hero.offsetHeight * 1.05);
     });
@@ -1406,7 +1427,8 @@
       box.forEach((b, i) => {
         const onLeft = b.x + b.w / 2 < W / 2;
         const free = onLeft ? W - (b.x + b.w) : b.x;            // spazio vuoto a lato del foglio
-        const reach = Math.max(18, free * 0.55);
+        // su schermi stretti il sentiero usa quasi tutto il margine libero, così si vede bene
+        const reach = Math.max(24, free * (W < 600 ? 0.8 : 0.55));
         const inX = b.x + b.w / 2, inY = b.y;
         if (i === 0) {
           // parte dal centro, sotto il titolo, e scende nel primo foglio
@@ -1465,6 +1487,33 @@
       route.classList.toggle("is-drawn", len > 2);
       steps.forEach((el, i) => el.classList.toggle("is-reached", pt.y >= entries[i] + 4));
     };
+
+    // telefono: fogli compatti, l'elenco puntato si apre toccando il foglio
+    const compactMQ = window.matchMedia("(max-width: 899px)");
+    const setupCompact = () => steps.forEach((el) => {
+      if (compactMQ.matches) {
+        el.setAttribute("role", "button");
+        el.tabIndex = 0;
+        el.setAttribute("aria-expanded", String(el.classList.contains("is-open")));
+      } else {
+        el.removeAttribute("role");
+        el.removeAttribute("tabindex");
+        el.removeAttribute("aria-expanded");
+      }
+    });
+    const toggleStep = (el) => {
+      if (!compactMQ.matches) return;
+      const open = el.classList.toggle("is-open");
+      el.setAttribute("aria-expanded", String(open));
+    };
+    steps.forEach((el) => {
+      el.addEventListener("click", () => toggleStep(el));
+      el.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleStep(el); }
+      });
+    });
+    setupCompact();
+    compactMQ.addEventListener("change", setupCompact);
 
     // i fogli si riempiono appena entrano nello schermo, prima che arrivi il sentiero
     steps.forEach((el) => maskText(el, ".process__num, .process__text h3, .process__text p, .process__points li"));
