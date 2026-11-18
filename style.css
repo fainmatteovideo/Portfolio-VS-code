@@ -997,9 +997,9 @@ h3 {
     0 14px 30px rgba(0, 0, 0, 0.38),
     0 3px 8px rgba(0, 0, 0, 0.22);
 }
-/* prova (solo con Security - Office in primo piano): biglietto di carta scura, appena stropicciata,
-   inclinato verso destra, scritta chiara, tenuto da uno scotch bianco semitrasparente */
-.showcase__note[data-project="project-security-office"] {
+/* biglietto di carta scura, appena stropicciata, inclinato verso destra, scritta chiara,
+   tenuto da uno scotch bianco semitrasparente (vale per tutte le categorie) */
+.showcase__note.showcase__note {
   background-color: #2d2a26;
   background-image: linear-gradient(rgba(45, 42, 38, 0.7), rgba(45, 42, 38, 0.7)), var(--paper-texture);
   background-size: auto, 320px 320px;
@@ -1011,9 +1011,9 @@ h3 {
     0 16px 34px rgba(0, 0, 0, 0.55),
     0 3px 8px rgba(0, 0, 0, 0.35);
 }
-.showcase__note[data-project="project-security-office"] .showcase__note-label { color: var(--c-paper); }
-.showcase__note[data-project="project-security-office"] .showcase__note-text { color: #cfc9bd; }
-.showcase__note[data-project="project-security-office"]::before {
+.showcase__note .showcase__note-label { color: var(--c-paper); }
+.showcase__note .showcase__note-text { color: #cfc9bd; }
+.showcase__note::before {
   content: "";
   position: absolute;
   top: -20px;
@@ -1265,10 +1265,20 @@ h3 {
   gap: 0.6rem;
   padding: clamp(1.25rem, 1rem + 1.2vw, 2rem) clamp(1.25rem, 1rem + 1.5vw, 2.25rem);
   background-color: #faf8f2;
+  /* carta: texture stropicciata appena accennata e bordi leggermente ingialliti */
+  background-image:
+    radial-gradient(130% 110% at 50% 40%, transparent 60%, rgba(120, 100, 60, 0.08) 100%),
+    linear-gradient(rgba(250, 248, 242, 0.8), rgba(250, 248, 242, 0.8)),
+    var(--paper-texture);
+  background-size: auto, auto, 320px 320px;
+  background-blend-mode: normal, normal, multiply;
+  border-radius: 3px;
+  /* spessore del cartoncino, come le polaroid */
   box-shadow:
-    1px 1px 0 #ddd6c7,
-    0 18px 40px rgba(40, 30, 15, 0.16),
-    0 4px 10px rgba(40, 30, 15, 0.1);
+    1px 1px 0 #e3dccd,
+    2px 2px 0 #d6cebe,
+    0 18px 40px rgba(40, 30, 15, 0.18),
+    0 4px 10px rgba(40, 30, 15, 0.12);
   rotate: var(--tilt);
 }
 .process__step:nth-child(even) { --tilt: 1.2deg; justify-self: end; }
@@ -1372,6 +1382,8 @@ h3 {
 /* sentiero: sotto i fogli. La maschera (un tratto pieno che si allunga) svela il tratteggio */
 /* l'altezza la scrive main.js: il sentiero continua fino al fondo del pannello crema */
 .process__trail {
+  /* il tratteggio ha un'ombra leggera, come se fosse disegnato sopra la carta del pannello */
+  filter: drop-shadow(1px 2px 1.5px rgba(40, 30, 15, 0.28));
   position: absolute;
   top: 0;
   left: 0;
@@ -1397,6 +1409,7 @@ h3 {
   margin: -7px 0 0 -7px;
   background: var(--c-yellow);
   outline: 2px solid var(--c-ink);
+  box-shadow: 2px 3px 3px rgba(40, 30, 15, 0.3);
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
@@ -2477,12 +2490,12 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   /* reel (Social): foglietto centrato in alto, la griglia sotto usa tutta la larghezza */
   .showcase.is-reels .showcase__note {
     left: 50%;
-    top: calc(var(--slide-pad) + 1.75rem);
+    top: calc(var(--slide-pad) + 4rem);
     width: min(64ch, 70%);
     transform: translateX(-50%);
     text-align: center;
   }
-  .showcase__stage .slide--reels { padding-top: calc(var(--slide-pad) + 1.75rem + var(--note-h, 0px) + 1.25rem); }
+  .showcase__stage .slide--reels { padding-top: calc(var(--slide-pad) + 4rem + var(--note-h, 0px) + 1.25rem); }
   /* foto: foglietto centrato sopra la parete, più largo */
   .photo__note {
     display: block;
@@ -2539,7 +2552,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   .slide__grid .video__sound i { transform: none; }
   /* la griglia è larga quanto serve perché tutte le file stiano nell'altezza della scena */
   .slide__grid {
-    width: min(100%, calc((var(--stage-h, 760px) - 110px - var(--note-h, 0px) - 3rem - (var(--rows) - 1) * var(--gap)) / var(--rows) * var(--ar) * var(--cols) + (var(--cols) - 1) * var(--gap)));
+    width: min(100%, calc((var(--stage-h, 760px) - 110px - var(--note-h, 0px) - 5.25rem - (var(--rows) - 1) * var(--gap)) / var(--rows) * var(--ar) * var(--cols) + (var(--cols) - 1) * var(--gap)));
   }
 }
 
