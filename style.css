@@ -2078,6 +2078,9 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 .hero { clip-path: inset(var(--hero-cut-top, 0px) 0 var(--hero-cut, 0px) 0); }
 
 .hero__video { transform: scale(calc(1 + var(--hero-p) * 0.08)); }
+/* mentre il sipario si chiude il video si sfoca e si scurisce: alla chiusura (--hero-p ~0,6) è al massimo */
+.hero__video iframe,
+.hero__poster { filter: blur(calc(min(1, var(--hero-p) * 1.7) * 10px)); }
 /* velo che diventa lo sfondo della pagina (stesso nero, luci, ombre e grana del fondo fisso):
    quando è pieno l'apertura non si distingue più dallo sfondo */
 .hero__video::before {
@@ -2087,7 +2090,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   z-index: 2;
   background-color: var(--c-ink);
   background-image: var(--grain-light), var(--shade-spots), var(--shade-vignette);
-  opacity: calc(var(--hero-p) * 0.45);
+  opacity: calc(min(1, var(--hero-p) * 1.7) * 0.6);
   pointer-events: none;
 }
 .hero.is-past { visibility: hidden; }
