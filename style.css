@@ -443,16 +443,16 @@ h3 {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 13px 18px 13px 15px;
+  /* direttamente nella barra, senza riquadro di fondo */
+  padding: 13px 0 13px 15px;
   color: var(--c-text);
-  background-color: var(--c-panel);
-  transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease;
+  background-color: transparent;
+  transition: color var(--dur-fast) ease;
 }
 /* area di tocco più alta della pillola (44 px), senza cambiarne l'aspetto */
 .navdrop__trigger { position: relative; }
 .navdrop__trigger::after { content: ""; position: absolute; inset: -5px; }
-.navdrop__trigger:hover,
-.navdrop__trigger:focus-visible { background-color: var(--c-text); color: var(--c-bg); }
+.navdrop__trigger:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
 
 /* due linee di lunghezza diversa: si allineano al passaggio del mouse, diventano una X col menu a tutto schermo */
 .navdrop__icon { display: grid; gap: 5px; width: 18px; }
@@ -2798,4 +2798,24 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 /* desktop: con il menu nascosto la scena ferma dei lavori sale insieme alla barra delle categorie */
 @media (min-width: 1024px) {
   .nav-hidden .work.has-stuck-filters .showcase { translate: 0 calc(1px - var(--nav-h)); }
+}
+
+/* Telefono e tablet: animazioni leggere.
+   - Apertura: niente sfocatura né ingrandimento del video a ogni fotogramma (pesanti su un video a
+     tutto schermo); il velo scuro che la fa sfumare nello sfondo resta.
+   - Menu e barra delle categorie: fondo pieno invece del vetro sfocato, che durante gli spostamenti
+     va ricalcolato a ogni fotogramma e faceva scattare il movimento. */
+@media (max-width: 1023px), (hover: none) {
+  .hero__video { transform: none; }
+  .hero__video iframe,
+  .hero__poster { filter: none; }
+  .site-nav::before,
+  .filters::before {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background-color: var(--c-bg);
+    background-color: color-mix(in srgb, var(--c-bg) 94%, transparent);
+  }
+  .site-nav,
+  .filters { will-change: transform, translate; }
 }
