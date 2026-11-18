@@ -68,10 +68,10 @@
   <link rel="preconnect" href="https://f.vimeocdn.com">
   <link rel="preload" href="assets/logo/mf-logo-white.webp" as="image" type="image/webp">
   <link rel="preload" href="assets/posters/showreel.webp" as="image" type="image/webp">
-  <link rel="stylesheet" href="style.css?v=20261120d">
+  <link rel="stylesheet" href="style.css?v=20261120f">
   <script src="https://player.vimeo.com/api/player.js" defer></script>
   <!-- ?v=: cambiare la data quando si aggiornano CSS o JS, così i browser non usano la copia vecchia -->
-  <script src="main.js?v=20261120d" defer></script>
+  <script src="main.js?v=20261120f" defer></script>
 </head>
 <body>
   <a class="skip-link label" href="#work">Skip to content</a>
@@ -172,6 +172,8 @@
     </div>
     <!-- categoria Photo: parete di stills che scorre con la pagina -->
     <div class="photo" id="photo-box" hidden>
+      <!-- foglietto con la descrizione della categoria (computer), centrato sopra le foto -->
+      <aside class="showcase__note photo__note"><p class="showcase__note-label label"></p><p class="showcase__note-text"></p></aside>
       <div class="photo__wall" id="photo-wall" aria-label="Photos and stills"></div>
       <p class="photo__hint label faint container">Open any frame to see it larger</p>
     </div>

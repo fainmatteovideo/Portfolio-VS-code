@@ -702,21 +702,23 @@
   // foglietto con la descrizione della categoria (computer): uno solo, fisso in alto a sinistra
   // nello showcase; cambia solo il testo. La sua altezza (--note-h) sposta sotto scheda e pallini.
   function updateNote(category) {
-    const note = showcase && showcase.querySelector(".showcase__note");
-    if (!note) return;
-    note.querySelector(".showcase__note-label").textContent = category ? category.label : "";
-    note.querySelector(".showcase__note-text").textContent = category ? category.intro : "";
-    note.hidden = !category || !category.intro;
+    document.querySelectorAll(".showcase__note").forEach((note) => {
+      note.querySelector(".showcase__note-label").textContent = category ? category.label : "";
+      note.querySelector(".showcase__note-text").textContent = category ? category.intro : "";
+      note.hidden = !category || !category.intro;
+    });
     measureNote();
   }
   function measureNote() {
     const note = showcase && showcase.querySelector(".showcase__note");
     if (!note) return;
-    showcase.style.setProperty("--note-h", (note.hidden ? 0 : note.offsetHeight) + "px");
-    // il foglietto parte all'altezza del bordo alto del video (o della griglia dei reel)
-    // della categoria: offsetTop ignora gli effetti di entrata delle slide
+    // reel (Social): foglietto centrato sopra la griglia, che usa tutta la larghezza
     const slide = stage && stage.querySelector(".slide:not([hidden])");
-    const media = slide && (slide.querySelector(":scope > .video") || slide.querySelector(".slide__grid"));
+    showcase.classList.toggle("is-reels", !!slide && slide.classList.contains("slide--reels"));
+    showcase.style.setProperty("--note-h", (note.hidden ? 0 : note.offsetHeight) + "px");
+    // progetti: il foglietto parte all'altezza del bordo alto del video
+    // (offsetTop ignora gli effetti di entrata delle slide)
+    const media = slide && !showcase.classList.contains("is-reels") && slide.querySelector(":scope > .video");
     if (!media || !desktopMQ.matches) { showcase.style.removeProperty("--note-top"); showcase.style.removeProperty("--media-gap"); return; }
     let y = 0, el = media;
     while (el && el !== showcase) { y += el.offsetTop; el = el.offsetParent; }

@@ -979,7 +979,7 @@ h3 {
 .project__detail { flex-basis: 100%; font-size: var(--fs-small); font-weight: 300; color: var(--c-text-muted); }
 
 /* Foglietto con la descrizione della categoria (solo computer, vedi lo showcase più sotto):
-   carta come le polaroid, appena stropicciata, tenuta da uno scotch giallo */
+   carta come le polaroid, appena stropicciata */
 .showcase__note { display: none; }
 .showcase__note {
   padding: 1.15rem 1.2rem 1.05rem;
@@ -994,17 +994,6 @@ h3 {
     1px 1px 0 #dcd5c6,
     0 14px 30px rgba(0, 0, 0, 0.38),
     0 3px 8px rgba(0, 0, 0, 0.22);
-}
-.showcase__note::before {
-  content: "";
-  position: absolute;
-  top: -15px;
-  left: 50%;
-  width: 42%;
-  height: 28px;
-  background: url("assets/textures/tape.svg") center / 100% 100% no-repeat;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
-  transform: translateX(-50%) rotate(2.5deg);
 }
 .showcase__note-label { color: var(--c-ink); font-weight: 800; margin-bottom: 0.45rem; }
 .showcase__note-text { font-size: var(--fs-small); line-height: 1.55; color: #37342f; }
@@ -2454,8 +2443,25 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
     column-gap: clamp(1.5rem, 3vw, 3rem);
     align-items: center;
   }
-  /* reel: la griglia lascia libero lo spazio del foglietto a sinistra */
-  .showcase__stage .slide--reels { padding-left: calc(var(--meta-w) + clamp(1.5rem, 3vw, 3rem)); }
+  /* reel (Social): foglietto centrato in alto, la griglia sotto usa tutta la larghezza */
+  .showcase.is-reels .showcase__note {
+    left: 50%;
+    top: calc(var(--slide-pad) + 1.75rem);
+    width: min(64ch, 70%);
+    transform: translateX(-50%);
+    text-align: center;
+  }
+  .showcase__stage .slide--reels { padding-top: calc(var(--slide-pad) + 1.75rem + var(--note-h, 0px) + 1.25rem); }
+  /* foto: foglietto centrato sopra la parete, più largo */
+  .photo__note {
+    display: block;
+    position: relative;
+    left: auto;
+    top: auto;
+    width: min(78ch, 80%);
+    margin: 0 auto var(--space-m);
+    text-align: center;
+  }
   .showcase__stage .project > .video {
     grid-area: video;
     width: min(100%, calc((var(--stage-h, 760px) - 64px) * 16 / 9));
@@ -2502,7 +2508,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   .slide__grid .video__sound i { transform: none; }
   /* la griglia è larga quanto serve perché tutte le file stiano nell'altezza della scena */
   .slide__grid {
-    width: min(100%, calc((var(--stage-h, 760px) - 110px - (var(--rows) - 1) * var(--gap)) / var(--rows) * var(--ar) * var(--cols) + (var(--cols) - 1) * var(--gap)));
+    width: min(100%, calc((var(--stage-h, 760px) - 110px - var(--note-h, 0px) - 3rem - (var(--rows) - 1) * var(--gap)) / var(--rows) * var(--ar) * var(--cols) + (var(--cols) - 1) * var(--gap)));
   }
 }
 
