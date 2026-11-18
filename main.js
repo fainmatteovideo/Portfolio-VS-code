@@ -1237,11 +1237,12 @@
     onFrame(() => {
       // bordo inferiore della banda alta (finché l'apertura non è chiusa del tutto)
       const c = curtain();
-      topBlock.forEach((el) => {
-        const hide = c.closed ? 0 : Math.max(0, el.getBoundingClientRect().bottom - c.top);
-        const value = hide > 0 ? `inset(0 0 ${hide.toFixed(1)}px 0)` : "";
-        if (el.style.clipPath !== value) el.style.clipPath = value;
-      });
+      // il blocco iniziale scende intero insieme al bordo della banda alta: il suo fondo (le categorie)
+      // coincide sempre con quel bordo, quindi non viene mai tagliato a metà; a sipario chiuso torna
+      // nella sua posizione normale (spostamento 0)
+      const dy = c.closed ? 0 : c.top - (viewH() - window.scrollY);
+      const shift = dy === 0 ? "" : `translate3d(0, ${dy.toFixed(1)}px, 0)`;
+      topBlock.forEach((el) => { if (el.style.transform !== shift) el.style.transform = shift; });
       // dalla banda bassa sale solo il video: la frase della categoria e i pallini compaiono
       // nell'ultimo tratto, quando il sipario si sta chiudendo
       const run = viewH() - meet;
