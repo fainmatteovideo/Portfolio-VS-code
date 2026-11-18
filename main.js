@@ -282,12 +282,14 @@
       ${videoHTML(p.vimeo, "", p.title, p.thumbnail, p.crop)}
       <div class="project__meta">
         ${categoryNoteHTML(p.category, "project__cat")}
+        <div class="project__body">
         <div class="project__head">
           <span class="project__num slide__num label"></span>
           <h3 class="project__title">${esc(p.title)}</h3>
         </div>
         <ul class="project__credits">${credits}</ul>
         ${logos ? `<div class="project__logos">${logos}</div>` : ""}
+        </div>
       </div>
     </article>`;
   }

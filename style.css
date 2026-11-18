@@ -934,11 +934,7 @@ h3 {
 }
 
 /* --- Testi del progetto -------------------------------------------------- */
-.project__meta {
-  display: grid;
-  gap: var(--space-m);
-  margin-top: var(--space-m);
-}
+.project__meta { margin-top: var(--space-m); }
 /* numero sopra, poi titolo, sottotitolo e loghi tutti allineati a sinistra */
 .project__num { display: block; margin-bottom: 0.6rem; color: var(--c-text-faint); }
 .project__title {
@@ -985,20 +981,43 @@ h3 {
 /* descrizione della categoria dentro la colonna della scheda (solo computer, vedi sotto) */
 .project__cat,
 .slide__cat { display: none; }
-.project__cat {
-  margin-bottom: 1.4rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid var(--c-line);
+/* foglietto di carta come le polaroid, inclinato e tenuto da uno scotch giallo (stessa texture
+   della polaroid in About): richiama il resto del sito */
+.project__cat,
+.slide__cat {
+  position: relative;
+  padding: 1.15rem 1.2rem 1.05rem;
+  background-color: #f4f0e7;
+  color: var(--c-ink);
+  rotate: -1.4deg;
+  box-shadow:
+    1px 1px 0 #dcd5c6,
+    0 14px 30px rgba(0, 0, 0, 0.38),
+    0 3px 8px rgba(0, 0, 0, 0.22);
 }
+.project__cat::before,
+.slide__cat::before {
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  width: 42%;
+  height: 28px;
+  background: url("assets/textures/tape.svg") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+  transform: translateX(-50%) rotate(2.5deg);
+}
+.project__cat { margin: 0.4rem 0.5rem 1.6rem 0; }
 .project__cat-label,
-.slide__cat-label { color: var(--c-yellow); margin-bottom: 0.45rem; }
+.slide__cat-label { color: #77746d; margin-bottom: 0.4rem; }
 .project__cat-text,
-.slide__cat-text { font-size: var(--fs-small); line-height: 1.55; color: var(--c-text-muted); }
-/* reel: sopra la griglia, centrata e stretta */
-.slide__cat { max-width: 62ch; margin: 0 auto 1rem; text-align: center; }
+.slide__cat-text { font-size: var(--fs-small); line-height: 1.55; color: #37342f; }
+/* reel: sopra la griglia, centrato e stretto */
+.slide__cat { max-width: 56ch; margin: 1rem auto 1.4rem; text-align: center; rotate: -0.8deg; }
 
-/* scheda del progetto senza riquadro: un filo giallo verticale, alto quanto il testo */
-.project__meta { border-left: 2px solid var(--c-yellow); padding-left: clamp(1rem, 0.8rem + 1vw, 1.5rem); }
+/* scheda del progetto senza riquadro: un filo giallo verticale, alto quanto il testo
+   (il foglietto della categoria sta sopra, fuori dal filo) */
+.project__body { border-left: 2px solid var(--c-yellow); padding-left: clamp(1rem, 0.8rem + 1vw, 1.5rem); }
 
 /* Start-up: le altre startup con cui ho lavorato, prima di "Let's talk" */
 .work__also { margin-top: var(--space-m); text-align: center; }
@@ -1030,14 +1049,7 @@ h3 {
 }
 .project__logos img { width: auto; }
 
-@media (min-width: 900px) {
-  .project__meta {
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-    column-gap: var(--space-l);
-    align-items: start;
-  }
-  .project__credits { padding-top: 0.6rem; }
-}
+
 
 /* ==========================================================================
    Carosello loghi clienti
@@ -2439,7 +2451,8 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
     grid-area: meta;
     display: block;
     margin: 0;
-    padding: 0.25rem 0 0.25rem 1.5rem;
+    /* spazio sopra e ai lati per lo scotch e l'inclinazione del foglietto (la colonna può scorrere) */
+    padding: 1.1rem 0.5rem 0.25rem 0.4rem;
     max-height: calc(var(--stage-h, 760px) - 64px);
     overflow-y: auto;
     scrollbar-width: none;
