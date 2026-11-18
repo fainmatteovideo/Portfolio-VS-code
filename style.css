@@ -354,7 +354,7 @@ h3 {
 }
 .site-nav.is-scrolled::before { opacity: 1; }
 /* scorrendo verso il basso il menu sale fuori dallo schermo, scorrendo verso l'alto riscende (main.js) */
-.site-nav { transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+.site-nav { transition: transform 0.85s cubic-bezier(0.45, 0, 0.2, 1); }   /* parte piano, accelera, rallenta: sparisce e ricompare dolcemente */
 .site-nav.is-hidden { transform: translateY(-100%); }
 .site-nav__logo img { height: 34px; width: auto; transition: filter var(--dur-med) var(--ease); }
 /* linea sotto la barra: si allunga da sinistra man mano che si scorre la pagina (main.js) */
@@ -724,7 +724,7 @@ h3 {
   z-index: 30;
   /* solo "translate" ha la transizione: "transform" lo usa l'apertura (main.js) e deve restare
      immediato, altrimenti la barra resta indietro rispetto al titolo e sembra rimbalzare */
-  transition: translate 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: translate 0.85s cubic-bezier(0.45, 0, 0.2, 1);
 }
 /* menu nascosto: la barra delle categorie agganciata sale al suo posto, e la scena dei lavori con lei */
 .nav-hidden .filters.is-stuck { translate: 0 calc(1px - var(--nav-h)); }
@@ -2403,7 +2403,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
     position: sticky;
     top: var(--stage-top, 140px);
     height: var(--stage-h, 760px);
-    transition: translate 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: translate 0.85s cubic-bezier(0.45, 0, 0.2, 1);
     display: grid;
     grid-template-columns: 26px minmax(0, 1fr);
     column-gap: var(--dots-gap);
@@ -2798,4 +2798,22 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 /* desktop: con il menu nascosto la scena ferma dei lavori sale insieme alla barra delle categorie */
 @media (min-width: 1024px) {
   .nav-hidden .work.has-stuck-filters .showcase { translate: 0 calc(1px - var(--nav-h)); }
+}
+
+/* Start-up, computer: video un po' più basso e, sotto, la fila "Also worked with" sempre visibile
+   (posizione da main.js, allineata al video) */
+@media (min-width: 1024px) {
+  .showcase.has-also .showcase__stage .project > .video {
+    width: min(100%, calc((var(--stage-h, 760px) - 64px - 15rem) * 16 / 9));
+    justify-self: end;
+  }
+  .showcase > .work__also {
+    position: absolute;
+    z-index: 2;
+    margin: 0;
+    text-align: center;
+  }
+  .showcase > .work__also .work__also-logos { flex-wrap: nowrap; justify-content: space-between; margin-top: 0.7rem; gap: 1rem; }
+  /* loghi più bassi qui, così stanno tutti su una riga, larga quanto il video */
+  .showcase > .work__also .work__also-logos img { max-height: 34px; max-width: 132px; }
 }
