@@ -979,6 +979,8 @@ h3 {
 /* il mio ruolo nel progetto: in evidenza */
 .project__credits li.is-me { font-weight: 700; }
 .project__credits li.is-me span { color: var(--c-yellow); }
+/* cosa ho fatto nel dettaglio, sotto il mio credito */
+.project__detail { flex-basis: 100%; font-size: var(--fs-small); font-weight: 300; color: var(--c-text-muted); }
 
 /* descrizione della categoria dentro la colonna della scheda (solo computer, vedi sotto) */
 .project__cat,

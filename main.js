@@ -267,10 +267,13 @@
     const credits = p.credits.map((c) => {
       const i = c.indexOf(":");
       // il credito con il mio nome è in evidenza
-      const me = c.includes("Matteo Fain") ? ' class="is-me"' : "";
+      const isMe = c.includes("Matteo Fain");
+      const me = isMe ? ' class="is-me"' : "";
+      // il sottotitolo del progetto descrive quello che ho fatto io: va sotto il mio credito
+      const detail = isMe && p.subtitle ? `<small class="project__detail">${esc(p.subtitle)}</small>` : "";
       return i > 0
-        ? `<li${me}><span>${esc(c.slice(0, i))}</span>${esc(c.slice(i + 1).trim())}</li>`
-        : `<li${me}>${esc(c)}</li>`;
+        ? `<li${me}><span>${esc(c.slice(0, i))}</span>${esc(c.slice(i + 1).trim())}${detail}</li>`
+        : `<li${me}>${esc(c)}${detail}</li>`;
     }).join("");
     const logos = p.logos.map((l) =>
       `<img data-src="${esc(l.src)}" alt="${esc(l.alt)}" decoding="async">`).join("");
@@ -282,7 +285,6 @@
         <div class="project__head">
           <span class="project__num slide__num label"></span>
           <h3 class="project__title">${esc(p.title)}</h3>
-          ${p.subtitle ? `<p class="project__subtitle">${esc(p.subtitle)}</p>` : ""}
         </div>
         <ul class="project__credits">${credits}</ul>
         ${logos ? `<div class="project__logos">${logos}</div>` : ""}
