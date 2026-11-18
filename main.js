@@ -1163,6 +1163,10 @@
   window.addEventListener("resize", pinAct);
   pinAct();
   const sheet = document.querySelector(".about__sheet");
+  let sheetFade = 0;
+  const measureFade = () => { if (sheet) sheetFade = parseFloat(getComputedStyle(sheet).paddingBottom) || 0; };
+  measureFade();
+  window.addEventListener("resize", measureFade);
   if (act && about) {
     // taglio diagonale di un bordo che sale: ripido quando entra dal basso, dritto quando arriva in cima
     const slantFor = (top, vh) => {
@@ -1186,16 +1190,95 @@
       const width = act.offsetWidth;
       const actTop = act.getBoundingClientRect().top;
       const aboutTop = about.getBoundingClientRect().top;
-      const sheetBottom = sheet ? sheet.getBoundingClientRect().bottom : aboutTop;
+      // il foglio finisce in trasparenza: per il menu conta fino a metà della sfumatura
+      const sheetBottom = sheet ? sheet.getBoundingClientRect().bottom - sheetFade / 2 : aboutTop;
       const navH = nav.offsetHeight;
       setEdge(act, slantFor(actTop, vh), width);
       setEdge(about, slantFor(aboutTop, vh), width);
       act.classList.toggle("is-covered", aboutTop <= 0);
+      // About copre tutto (anche il triangolo del taglio diagonale): sotto non serve più niente
+      const gone = aboutTop <= -vh * 0.25;
+      act.classList.toggle("is-gone", gone);
+      work.classList.toggle("is-gone", gone);
       // il menu prende il colore del pannello chiaro che ha sotto (crema, poi il foglio di About)
       nav.classList.toggle("is-light", actTop < navH && aboutTop > navH);
       nav.classList.toggle("is-light-2", aboutTop <= navH && sheetBottom > navH);
     });
   }
+
+  /* Testi che salgono da una maschera, riga per riga (riferimento: nickho-motorsports.nl)
+     Ogni parola sta in una finestra (.mw) e sale dal basso; le parole della stessa riga partono
+     insieme (--l = numero di riga). .is-in le mostra, .is-out le fa uscire verso l'alto. */
+  function splitWords(root) {
+    if (root.dataset.split) return;
+    root.dataset.split = "1";
+    const walk = (node) => {
+      [...node.childNodes].forEach((ch) => {
+        if (ch.nodeType === 1) { walk(ch); return; }
+        if (ch.nodeType !== 3 || !ch.textContent.trim()) return;
+        const frag = document.createDocumentFragment();
+        ch.textContent.split(/(\s+)/).forEach((t) => {
+          if (!t) return;
+          if (!t.trim()) { frag.appendChild(document.createTextNode(t)); return; }
+          const mask = document.createElement("span");
+          mask.className = "mw";
+          const word = document.createElement("span");
+          word.className = "mw__in";
+          word.textContent = t;
+          mask.appendChild(word);
+          frag.appendChild(mask);
+        });
+        ch.replaceWith(frag);
+      });
+    };
+    walk(root);
+  }
+  // numera le righe del blocco (offsetTop ignora rotazioni e animazioni in corso)
+  function orderLines(root) {
+    const words = [...root.querySelectorAll(".mw")];
+    const tops = words.map((w) => {
+      let y = 0, el = w;
+      while (el && el !== root) { y += el.offsetTop; el = el.offsetParent; }
+      return y;
+    });
+    const lines = [...new Set(tops)].sort((a, b) => a - b).reduce((acc, t) => {
+      if (!acc.length || t - acc[acc.length - 1] > 4) acc.push(t);
+      return acc;
+    }, []);
+    words.forEach((w, i) => {
+      const l = lines.findIndex((t) => Math.abs(t - tops[i]) <= 4);
+      w.style.setProperty("--l", Math.max(0, l));
+    });
+  }
+  const maskBlocks = [];
+  function maskText(root, parts) {
+    root.classList.add("mask-in");
+    root.querySelectorAll(parts).forEach(splitWords);
+    maskBlocks.push(root);
+    orderLines(root);
+  }
+  function maskShow(root, on) {
+    if (on) {
+      if (root.classList.contains("is-in")) return;
+      // riparte da sotto senza animazione, poi sale
+      root.classList.add("is-reset");
+      root.classList.remove("is-out");
+      void root.offsetWidth;
+      root.classList.remove("is-reset");
+      root.classList.add("is-in");
+    } else if (root.classList.contains("is-in")) {
+      root.classList.remove("is-in");
+      root.classList.add("is-out");
+    }
+  }
+  let maskW = window.innerWidth;
+  const reorderMasks = () => maskBlocks.forEach(orderLines);
+  window.addEventListener("resize", () => {
+    if (window.innerWidth === maskW) return;
+    maskW = window.innerWidth;
+    reorderMasks();
+  });
+  if (document.fonts) document.fonts.ready.then(reorderMasks);
 
   /* 6. How I work: un sentiero tratteggiato serpeggia da uno step all'altro (fogli a zig-zag)
         e si disegna scorrendo; il quadratino giallo in testa segue una linea di lettura sullo schermo */
@@ -1295,6 +1378,17 @@
       steps.forEach((el, i) => el.classList.toggle("is-reached", target >= entries[i] + 4));
     };
 
+    // i fogli si riempiono appena entrano nello schermo, prima che arrivi il sentiero
+    steps.forEach((el) => maskText(el, ".process__num, .process__text h3, .process__text p, .process__points li"));
+    const fillObserver = new IntersectionObserver((list) => {
+      list.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        maskShow(entry.target, true);
+        fillObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: "0px 0px -6% 0px" });
+    steps.forEach((el) => fillObserver.observe(el));
+
     if ("ResizeObserver" in window) new ResizeObserver(buildTrail).observe(route);
     window.addEventListener("resize", buildTrail);
     if (document.fonts) document.fonts.ready.then(buildTrail);
@@ -1311,6 +1405,9 @@
     partners.style.setProperty("--count", n);
     partners.classList.add("is-pinned");
     const imgs = cards.map((c) => c.querySelector(".partner__img"));
+    // il testo di chi è in primo piano entra riga per riga; quello di prima esce verso l'alto
+    const infos = cards.map((c) => c.querySelector(".partner__info"));
+    infos.forEach((el) => maskText(el, ".partner__num, .partner__name, .label, .partner__text"));
     // telefono: la polaroid prende tutta l'altezza libera tra la frase e il testo del collaboratore
     // (la riga "photo" della griglia), così non resta piccola sugli schermi alti
     const pin = partners.querySelector(".partners__pin");
@@ -1357,14 +1454,18 @@
       // la prima foto inizia a entrare quando la sezione è a metà schermo
       const total = partners.offsetHeight - vh + vh * 0.5;
       const p = Math.min(1, Math.max(0, (vh * 0.5 - r.top) / total));
-      let now = 0;
+      let now = -1;
       cards.forEach((c, i) => {
         target[i] = Math.min(1, Math.max(0, (p * n - i) / 0.7));
-        if (target[i] > 0.5) now = i;
+        // il primo testo entra appena la prima foto inizia a salire
+        if (target[i] > (i ? 0.5 : 0.15)) now = i;
       });
       if (now !== current) {
         current = now;
-        cards.forEach((c, i) => c.classList.toggle("is-current", i === current));
+        cards.forEach((c, i) => {
+          c.classList.toggle("is-current", i === current);
+          maskShow(infos[i], i === current);
+        });
       }
       if (!gliding) { gliding = true; requestAnimationFrame(glide); }
     });

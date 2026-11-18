@@ -1041,6 +1041,23 @@ h3 {
   line-height: 1.05;
 }
 .services__list p { max-width: 36ch; }
+/* numero a sinistra, piccola icona al tratto a destra (nera come i testi) */
+.services__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.35rem;
+}
+.services__icon {
+  width: clamp(30px, 2.2rem, 38px);
+  height: auto;
+  fill: none;
+  stroke: var(--c-text);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  overflow: visible;
+}
 
 @media (min-width: 768px) {
   .services__list { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-l); }
@@ -1072,6 +1089,9 @@ h3 {
   .services__list li:hover h3 { transform: translateX(8px); }
   .services__list li:hover p { transform: translateX(8px); color: var(--c-text); transition-delay: 0.04s; }
   .services__list li:hover .label { color: var(--c-text); }
+  /* l'icona fa un piccolo salto */
+  .services__icon { transition: transform 0.5s var(--ease); }
+  .services__list li:hover .services__icon { transform: translateY(-3px) rotate(-4deg); }
 }
 
 /* ==========================================================================
@@ -1263,12 +1283,9 @@ h3 {
 /* --- Collaborazioni ------------------------------------------------------ */
 /* Base (senza JS o con "riduci movimento"): elenco con le polaroid e il testo a fianco.
    Con .is-pinned (main.js) la sezione si ferma e le polaroid vengono "lanciate" sul tavolo una alla volta. */
+/* nessuno sfondo proprio: si vede lo sfondo fisso della pagina, continuo fino ai Contatti */
 .partners {
-  padding-block: var(--space-l);
-  background-color: var(--c-ink);
-  background-image: var(--grain-light), var(--shade-spots), var(--shade-sides);
-  background-size: auto, 100% 130vh, auto;
-  background-size: auto, 100% 130svh, auto;
+  padding-block: var(--space-m) var(--space-l);
 }
 .partners__pin {
   max-width: var(--max-width);
@@ -1417,21 +1434,21 @@ h3 {
 .is-pinned .partner:nth-child(2) .partner__img { --dx: 9%; --dy: -3%; }
 .is-pinned .partner:nth-child(3) .partner__img { --dx: -1%; --dy: 3%; }
 
-/* testo di chi è in primo piano: compare in dissolvenza */
+/* testo di chi è in primo piano: entra riga per riga dal basso, quello di prima esce verso l'alto
+   (maschere .mw, vedi "Testi che salgono da una maschera"); finita l'uscita si nasconde */
 .is-pinned .partner__info {
   grid-area: info;
   align-self: start;
   text-align: center;
-  opacity: 0;
+  position: relative;
   visibility: hidden;
-  transform: translateY(14px);
-  transition: opacity 0.6s var(--ease), transform 0.7s var(--ease), visibility 0s linear 0.6s;
+  transition: visibility 0s linear 0.8s;
 }
+/* il testo nuovo sale quando quello di prima è quasi uscito: niente sovrapposizioni */
+.is-pinned .partner__info { --mask-delay: 300ms; }
 .is-pinned .partner.is-current .partner__info {
-  opacity: 1;
   visibility: visible;
-  transform: none;
-  transition: opacity 0.7s var(--ease) 0.1s, transform 0.8s var(--ease) 0.1s, visibility 0s;
+  transition: visibility 0s;
 }
 .is-pinned .partner__text { margin-inline: auto; }
 
@@ -1838,6 +1855,34 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   pointer-events: none;
 }
 .hero__video::after { z-index: 1; }
+
+/* Testi che salgono da una maschera, riga per riga (main.js: maskText / maskShow).
+   Ogni parola è in una finestra .mw; --l è il numero di riga, così ogni riga parte un attimo dopo */
+.mask-in { position: relative; }
+.mw {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-block: 0.06em 0.14em;
+  margin-block: -0.06em -0.14em;
+}
+.mw__in {
+  display: inline-block;
+  transform: translateY(130%);
+  will-change: transform;
+}
+.mask-in.is-in .mw__in {
+  transform: none;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--l, 0) * 70ms + var(--mask-delay, 60ms));
+}
+.mask-in.is-out .mw__in {
+  transform: translateY(-130%);
+  transition: transform 0.38s cubic-bezier(0.5, 0, 0.75, 0) calc(var(--l, 0) * 20ms);
+}
+.mask-in.is-reset .mw__in { transition: none !important; }
+/* trattini dei punti di How I work: compaiono con il testo */
+.mask-in .process__points li::before { opacity: 0; transition: opacity 0.6s ease 0.5s; }
+.mask-in.is-in .process__points li::before { opacity: 1; }
 
 /* 4. Titoli delle sezioni che salgono da una maschera, come titoli di testa */
 .title-mask { display: block; overflow: hidden; padding-bottom: 0.16em; margin-bottom: -0.16em; }
@@ -2352,6 +2397,10 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   }
   .act.is-covered { visibility: visible; opacity: 1; }
 }
+/* quando About copre tutto lo schermo, lavori e pannello crema sotto spariscono del tutto:
+   Collaboration non ha uno sfondo suo e sotto deve vedersi solo lo sfondo della pagina */
+.work.is-gone,
+.act.is-gone { visibility: hidden; opacity: 0; }
 /* mentre si calcola la posizione vera delle sezioni (link del menu) niente sticky */
 .is-measuring .work,
 .is-measuring .act { position: relative !important; top: 0 !important; }
@@ -2391,36 +2440,19 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   padding-block: 0;
   clip-path: polygon(0 var(--slant), 100% 0, 100% 100%, 0 100%);
 }
-/* il fondo del foglio verde sfuma nel nero di Collaboration, lungo uno schermo intero
-   (come jjettas.com): la sfumatura parte già dietro le ultime righe del testo, quasi invisibile */
+/* il fondo del foglio verde diventa trasparente piano piano (maschera, come jjettas.com):
+   sotto c'è lo sfondo nero fisso della pagina, lo stesso di Collaboration, Clienti e Contatti,
+   così da qui in giù sembra un unico sfondo. La sfumatura occupa solo lo spazio sotto il testo */
 .about__sheet {
-  --fade-h: 100vh;
-  position: relative;
-  isolation: isolate;
-  padding-block: var(--space-xl) 55vh;
+  --fade-h: clamp(220px, 42vh, 460px);
+  padding-block: var(--space-xl) var(--fade-h);
   background-color: var(--c-green);
   background-image: var(--grain-light), var(--shade-spots), var(--shade-sides);
   background-size: auto, 100% 130vh, auto;
   background-size: auto, 100% 130svh, auto;
-}
-.about__sheet::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1;   /* sotto il testo, sopra il verde */
-  height: var(--fade-h);
-  pointer-events: none;
-  /* in fondo è identico all'inizio di Collaboration (nero, grana, lati in ombra);
-     la maschera lo fa comparire piano piano sopra il verde */
-  background-color: var(--c-ink);
-  background-image:
-    var(--grain-light),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.42), transparent 24%, transparent 76%, rgba(0, 0, 0, 0.42));
-  /* curva morbida (smoothstep): nessun punto in cui si vede dove inizia o finisce */
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.03) 10%, rgba(0, 0, 0, 0.1) 20%, rgba(0, 0, 0, 0.22) 30%, rgba(0, 0, 0, 0.35) 40%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.65) 60%, rgba(0, 0, 0, 0.78) 70%, rgba(0, 0, 0, 0.9) 80%, rgba(0, 0, 0, 0.97) 90%, #000 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.03) 10%, rgba(0, 0, 0, 0.1) 20%, rgba(0, 0, 0, 0.22) 30%, rgba(0, 0, 0, 0.35) 40%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.65) 60%, rgba(0, 0, 0, 0.78) 70%, rgba(0, 0, 0, 0.9) 80%, rgba(0, 0, 0, 0.97) 90%, #000 100%);
+  /* curva morbida (smoothstep): non si vede dove inizia o finisce */
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--fade-h)), rgba(0, 0, 0, 0.97) calc(100% - var(--fade-h) * 0.9), rgba(0, 0, 0, 0.9) calc(100% - var(--fade-h) * 0.8), rgba(0, 0, 0, 0.78) calc(100% - var(--fade-h) * 0.7), rgba(0, 0, 0, 0.65) calc(100% - var(--fade-h) * 0.6), rgba(0, 0, 0, 0.5) calc(100% - var(--fade-h) * 0.5), rgba(0, 0, 0, 0.35) calc(100% - var(--fade-h) * 0.4), rgba(0, 0, 0, 0.22) calc(100% - var(--fade-h) * 0.3), rgba(0, 0, 0, 0.1) calc(100% - var(--fade-h) * 0.2), rgba(0, 0, 0, 0.03) calc(100% - var(--fade-h) * 0.1), transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - var(--fade-h)), rgba(0, 0, 0, 0.97) calc(100% - var(--fade-h) * 0.9), rgba(0, 0, 0, 0.9) calc(100% - var(--fade-h) * 0.8), rgba(0, 0, 0, 0.78) calc(100% - var(--fade-h) * 0.7), rgba(0, 0, 0, 0.65) calc(100% - var(--fade-h) * 0.6), rgba(0, 0, 0, 0.5) calc(100% - var(--fade-h) * 0.5), rgba(0, 0, 0, 0.35) calc(100% - var(--fade-h) * 0.4), rgba(0, 0, 0, 0.22) calc(100% - var(--fade-h) * 0.3), rgba(0, 0, 0, 0.1) calc(100% - var(--fade-h) * 0.2), rgba(0, 0, 0, 0.03) calc(100% - var(--fade-h) * 0.1), transparent 100%);
 }
 
 /* Grana anche sui fondi delle schermate a tutto schermo. Solo fondi: riquadri, schede e polaroid restano lisci */
