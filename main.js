@@ -925,7 +925,7 @@
   /* --- Carosello loghi clienti ------------------------------------------ */
   const tracks = [...document.querySelectorAll(".clients__track")];
   if (tracks.length) {
-    const logoBase = window.matchMedia("(min-width: 768px)").matches ? 70 : 50;
+    const logoBase = window.matchMedia("(min-width: 768px)").matches ? 88 : 60;
     tracks.forEach((t) => {
       // quattro copie di ogni fila: metà fila (due copie) è sempre più larga dello schermo,
       // e scorrendo di metà fila (vedi @keyframes marquee) il giro è continuo
