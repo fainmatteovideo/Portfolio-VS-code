@@ -1004,35 +1004,32 @@ h3 {
     0 14px 30px rgba(0, 0, 0, 0.38),
     0 3px 8px rgba(0, 0, 0, 0.22);
 }
-/* biglietto di carta scura, appena stropicciata, inclinato verso destra, scritta chiara,
-   tenuto da uno scotch bianco semitrasparente (vale per tutte le categorie) */
+/* biglietto giallo, dritto, testo scuro, con l'icona della categoria (stesso tratto di What I do).
+   Niente scotch (vale per tutte le categorie, anche Photo) */
 .showcase__note.showcase__note {
-  background-color: #2d2a26;
-  background-image: linear-gradient(rgba(45, 42, 38, 0.7), rgba(45, 42, 38, 0.7)), var(--paper-texture);
-  background-size: auto, 320px 320px;
-  background-blend-mode: normal, soft-light;
-  color: var(--c-paper);
-  rotate: 2deg;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 16px 34px rgba(0, 0, 0, 0.55),
-    0 3px 8px rgba(0, 0, 0, 0.35);
+  background: var(--c-yellow);
+  color: var(--c-ink);
+  rotate: 0deg;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
 }
-.showcase__note .showcase__note-label { color: var(--c-paper); }
-.showcase__note .showcase__note-text { color: #cfc9bd; }
-.showcase__note::before {
-  content: "";
-  position: absolute;
-  top: -20px;
-  left: 50%;
-  width: min(44%, 132px);   /* stessa misura su tutti i biglietti, anche quelli larghi (Social, Photo) */
+.showcase__note .showcase__note-label { color: var(--c-ink); }
+.showcase__note .showcase__note-text { color: var(--c-ink); }
+.showcase__note::before { content: none; }
+.showcase__note-icon {
+  display: block;
+  width: 30px;
   height: 30px;
-  /* stessa striscia della polaroid, resa bianca e trasparente */
-  background: url("assets/textures/tape.svg") center / 100% 100% no-repeat;
-  filter: grayscale(1) brightness(3) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
-  opacity: 0.62;
-  transform: translateX(-50%) rotate(4deg);
+  margin-bottom: 0.7rem;
+  fill: none;
+  stroke: var(--c-ink);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
+.showcase__note-icon:empty { display: none; }
+/* reel e Photo: biglietto centrato, icona centrata */
+.showcase.is-reels .showcase__note-icon,
+.photo__note .showcase__note-icon { margin-inline: auto; }
 .showcase__note-label { color: var(--c-ink); font-weight: 800; margin-bottom: 0.45rem; }
 .showcase__note-text { font-size: var(--fs-small); line-height: 1.55; color: #37342f; }
 
@@ -1600,7 +1597,6 @@ h3 {
 }
 .partner__text { margin-top: 0.9rem; max-width: 38ch; }
 /* parole chiave di ogni collaboratore */
-.partner__text strong { color: var(--c-text); font-weight: 600; }
 
 /* --- Scena ferma ---------------------------------------------------------- */
 .partners.is-pinned {
@@ -2381,7 +2377,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 @media (hover: hover) and (pointer: fine) {
   .slide[data-category="social"] .slide__grid .video {
     z-index: 0;
-    cursor: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='32'%20height='32'%20viewBox='0%200%2032%2032'%3E%3Cg%20fill='none'%20stroke-linecap='round'%3E%3Ccircle%20cx='13'%20cy='13'%20r='8'%20stroke='rgba(0,0,0,.55)'%20stroke-width='4'/%3E%3Cpath%20d='M19%2019l7%207'%20stroke='rgba(0,0,0,.55)'%20stroke-width='5'/%3E%3Ccircle%20cx='13'%20cy='13'%20r='8'%20stroke='white'%20stroke-width='2'%20fill='rgba(255,255,255,.12)'/%3E%3Cpath%20d='M19%2019l7%207'%20stroke='white'%20stroke-width='2.5'/%3E%3Cpath%20d='M13%209.5v7M9.5%2013h7'%20stroke='white'%20stroke-width='1.6'/%3E%3C/g%3E%3C/svg%3E") 13 13, zoom-in;
+    cursor: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='44'%20height='44'%20viewBox='0%200%2044%2044'%3E%3Cg%20stroke='%23151412'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M26.5%2026.5%2037%2037'%20stroke-width='9'/%3E%3Cpath%20d='M26.5%2026.5%2037%2037'%20stroke='%23FFC800'%20stroke-width='5'/%3E%3Ccircle%20cx='17'%20cy='17'%20r='12'%20fill='%23FFC800'%20stroke-width='3'/%3E%3Ccircle%20cx='17'%20cy='17'%20r='7.5'%20fill='%23F1EDE4'%20stroke-width='2.5'/%3E%3Cpath%20d='M13%2014.5a5%205%200%200%201%203.5-3'%20fill='none'%20stroke='%23151412'%20stroke-width='2'/%3E%3C/g%3E%3C/svg%3E") 17 17, zoom-in;
     transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.7s cubic-bezier(0.22, 1, 0.36, 1),
       filter 0.5s ease;
   }
@@ -2393,7 +2389,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
     position: absolute;
     inset: 0;
     z-index: 3;
-    border: 1.5px solid var(--c-paper);
+    border: 2px solid var(--c-yellow);
     opacity: 0;
     transition: opacity 0.45s ease;
     pointer-events: none;
@@ -2404,8 +2400,8 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   .slide[data-category="social"] .slide__grid .video__open { cursor: inherit; }
   .slide[data-category="social"] .slide__grid .video:hover {
     z-index: 5;
-    transform: scale(1.6);
-    box-shadow: 0 0 0 6px var(--c-ink), 0 34px 90px rgba(0, 0, 0, 0.7);
+    transform: scale(1.45);
+    box-shadow: 0 0 0 5px var(--c-ink), 0 34px 90px rgba(0, 0, 0, 0.7);
     transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.7s cubic-bezier(0.22, 1, 0.36, 1),
       filter 0.5s ease, z-index 0s;
   }
@@ -2566,7 +2562,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 /* ==========================================================================
    Categoria Photo: tre file di stills che scorrono in orizzontale
    ========================================================================== */
-.photo { overflow: hidden; margin-top: var(--space-m); padding-top: 26px; }   /* spazio per lo scotch del biglietto */
+.photo { overflow: hidden; margin-top: var(--space-m); padding-top: 0; }
 .photo[hidden] { display: none; }
 .photo__wall {
   display: grid;

@@ -317,7 +317,7 @@
       // nome letto dagli screen reader: "label" in projects.json è solo il nome interno del file
       const title = (i) => `${label} reel ${i + 1} of ${n} (${kind === "h" ? "horizontal" : "vertical"})`;
       const many = kind === "h" ? n > 8 : n > 6;
-      const cols = kind === "h" ? [many ? 3 : 2, many ? 5 : 4] : [many ? 4 : 3, many ? 8 : 5];
+      const cols = kind === "h" ? [many ? 3 : 2, many ? 5 : 4] : [many ? 4 : 3, Math.max(5, n)];
       return `<article class="slide slide--reels" data-category="${esc(category)}" data-group="${group}" data-name="${name}">
         <p class="slide__num label"></p>
         <div class="slide__grid slide__grid--${kind}" style="--cm:${cols[0]};--cd:${cols[1]};--rd:${Math.ceil(n / cols[1])}">
@@ -325,12 +325,19 @@
         </div>
       </article>`;
     };
+    // al massimo 8 reel per pagina, divisi in parti uguali: video più grandi
+    // (Social: 15 orizzontali = 8 + 7, 14 verticali = 7 + 7, quattro pagine in tutto)
+    const pages = (items) => {
+      const n = Math.ceil(items.length / 8);
+      const size = Math.ceil(items.length / n);
+      return Array.from({ length: n }, (_, i) => items.slice(i * size, (i + 1) * size)).filter((p) => p.length);
+    };
     return categories.map((category) => {
       const of = (o) => reels.filter((r) => r.category === category.id && r.orientation === o);
-      const h = of("horizontal");
-      const v = of("vertical");
-      return (h.length ? slide(category, "16:9", "Horizontal reels", h, "h") : "") +
-        (v.length ? slide(category, "9:16", "Vertical reels", v, "v") : "");
+      const h = pages(of("horizontal"));
+      const v = pages(of("vertical"));
+      return h.map((p, i) => slide(category, "16:9", `Horizontal reels${h.length > 1 ? " " + (i + 1) : ""}`, p, "h")).join("") +
+        v.map((p, i) => slide(category, "9:16", `Vertical reels${v.length > 1 ? " " + (i + 1) : ""}`, p, "v")).join("");
     }).join("");
   }
 
@@ -725,11 +732,24 @@
   });
   if (document.fonts) document.fonts.ready.then(() => { if (!introOpen()) clampIntro(false); });
 
+  // icone delle categorie per il biglietto (stesso tratto delle icone di What I do)
+  const NOTE_ICONS = {
+    "commercial": '<rect x="2" y="9.5" width="13" height="9" rx="1.5"/><circle cx="5.8" cy="5.6" r="2.6"/><circle cx="11.6" cy="5.9" r="2.2"/><path d="M15 12.4 21.5 9.5v9l-6.5-2.9"/>',
+    "startup": '<path d="M12 2.5c3 2.2 4.5 5.4 4.5 9.3V16h-9v-4.2c0-3.9 1.5-7.1 4.5-9.3z"/><circle cx="12" cy="9.6" r="1.9"/><path d="M7.5 12.6 5 15.6v3.2l2.5-1.4M16.5 12.6l2.5 3v3.2l-2.5-1.4"/><path d="M10.4 18.6c.1 1.3.7 2.2 1.6 2.9.9-.7 1.5-1.6 1.6-2.9"/>',
+    "social": '<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10.8 4.8h2.4"/><path d="M10 8.6v6.8l5.8-3.4z"/>',
+    "documentary": '<rect x="3" y="9.5" width="18" height="11" rx="1.2"/><path d="M3.4 9.5 4.7 4.6l15.5 0-1.3 4.9"/><path d="M8.6 4.6 7.3 9.5M13.6 4.6l-1.3 4.9M18.4 4.6l-1.3 4.9"/>',
+    "motion-graphic": '<circle cx="15.5" cy="12" r="5.5"/><path d="M2 8.5h6M1 12h6.5M2 15.5h6"/>',
+    "aftermovie": '<path d="M2.5 7.5h19v3a1.9 1.9 0 0 0 0 3.8v3h-19v-3a1.9 1.9 0 0 0 0-3.8z"/><path d="M15.5 8.5v1.4M15.5 11.3v1.4M15.5 14.1v1.4"/><path d="M8.5 10.2l.8 1.6 1.8.3-1.3 1.2.3 1.8-1.6-.9-1.6.9.3-1.8-1.3-1.2 1.8-.3z"/>',
+    "photo": '<path d="M2.5 8.5h4.2L8.4 6h7.2l1.7 2.5h4.2v11.5h-19z"/><circle cx="12" cy="14" r="3.7"/><path d="M18 11h.01"/>',
+  };
+
   // foglietto con la descrizione della categoria (computer): uno solo, fisso in alto a sinistra
   // nello showcase; cambia solo il testo. La sua altezza (--note-h) sposta sotto scheda e pallini.
   function updateNote(category) {
     document.querySelectorAll(".showcase__note").forEach((note) => {
       note.querySelector(".showcase__note-label").textContent = category ? category.label : "";
+      const icon = note.querySelector(".showcase__note-icon");
+      if (icon) icon.innerHTML = category && NOTE_ICONS[category.id] ? NOTE_ICONS[category.id] : "";
       note.querySelector(".showcase__note-text").textContent = category ? category.intro : "";
       note.hidden = !category || !category.intro;
       note.dataset.cat = category ? category.id : "";
@@ -1296,7 +1316,7 @@
 
       list.innerHTML = `<div class="showcase">
           <nav class="showcase__dots" aria-label="Projects"></nav>
-          <aside class="showcase__note"><p class="showcase__note-label label"></p><p class="showcase__note-text"></p></aside>
+          <aside class="showcase__note"><svg class="showcase__note-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"></svg><p class="showcase__note-label label"></p><p class="showcase__note-text"></p></aside>
           <div class="showcase__stage">${data.projects.map(projectHTML).join("")}${reelSlidesHTML(data.reels, data.categories)}</div>
         </div>`;
       setupShowcase();
