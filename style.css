@@ -1000,8 +1000,8 @@ h3 {
 /* prova (solo con Security - Office in primo piano): biglietto di carta scura, appena stropicciata,
    inclinato verso destra, scritta chiara, tenuto da uno scotch bianco semitrasparente */
 .showcase__note[data-project="project-security-office"] {
-  background-color: #1f1d1a;
-  background-image: linear-gradient(rgba(31, 29, 26, 0.72), rgba(31, 29, 26, 0.72)), var(--paper-texture);
+  background-color: #2d2a26;
+  background-image: linear-gradient(rgba(45, 42, 38, 0.7), rgba(45, 42, 38, 0.7)), var(--paper-texture);
   background-size: auto, 320px 320px;
   background-blend-mode: normal, soft-light;
   color: var(--c-paper);
