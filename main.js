@@ -1178,7 +1178,26 @@
      ====================================================================== */
 
   /* 2. Scorrendo, logo e frase dell'apertura si allontanano e il video si scurisce */
+  // il titolo dei lavori (01 — Work, Selected works) sta appena sopra l'inizio della sezione e si
+  // vede solo nella banda alta del sipario: scende da sopra mentre le categorie salgono da sotto
+  const workHead = document.querySelector(".work__head");
+  const pullHead = () => {
+    if (!workHead) return;
+    const pad = parseFloat(getComputedStyle(work).paddingTop) || 0;
+    workHead.style.marginTop = -(pad + workHead.offsetHeight) + "px";
+  };
+  pullHead();
+  window.addEventListener("resize", pullHead);
+  if (document.fonts) document.fonts.ready.then(pullHead);
   if (!reducedMotion && hero) {
+    onFrame(() => {
+      if (!workHead) return;
+      // bordo inferiore della banda alta (finché l'apertura non è chiusa del tutto)
+      const cut = Math.min(window.scrollY, hero.offsetHeight / 2);
+      const closed = window.scrollY >= hero.offsetHeight / 2;
+      const hide = closed ? 0 : Math.max(0, workHead.getBoundingClientRect().bottom - cut);
+      workHead.style.clipPath = hide > 0 ? `inset(0 0 ${hide.toFixed(1)}px 0)` : "";
+    });
     onFrame(() => {
       const p = Math.min(1, Math.max(0, window.scrollY / (hero.offsetHeight * 0.8)));
       hero.style.setProperty("--hero-p", p.toFixed(3));

@@ -68,10 +68,10 @@
   <link rel="preconnect" href="https://f.vimeocdn.com">
   <link rel="preload" href="assets/logo/mf-logo-white.webp" as="image" type="image/webp">
   <link rel="preload" href="assets/posters/showreel.webp" as="image" type="image/webp">
-  <link rel="stylesheet" href="style.css?v=20261118w">
+  <link rel="stylesheet" href="style.css?v=20261118x">
   <script src="https://player.vimeo.com/api/player.js" defer></script>
   <!-- ?v=: cambiare la data quando si aggiornano CSS o JS, così i browser non usano la copia vecchia -->
-  <script src="main.js?v=20261118w" defer></script>
+  <script src="main.js?v=20261118x" defer></script>
 </head>
 <body>
   <a class="skip-link label" href="#work">Skip to content</a>
@@ -146,7 +146,9 @@
   <!-- 2. Lavori -->
   <!-- I progetti vengono generati da projects.json (vedi main.js) -->
   <section id="work" class="section work">
-    <div class="container">
+    <!-- il titolo sta sopra l'inizio della sezione: compare nella banda alta del sipario dell'apertura,
+         mentre categorie e lavori salgono da sotto (main.js) -->
+    <div class="container work__head">
       <div class="section-head">
         <p class="label faint">01 — Work</p>
         <h2>Selected works</h2>
@@ -392,7 +394,7 @@
       <div class="section-head clients__head">
         <p class="label faint">06 — Clients</p>
         <h2>Who I work with</h2>
-        <p class="lead muted">I work as a freelancer on very different projects. For small brands and start-ups I often take care of the whole video, from the shoot to the final cut. With institutions and larger companies I join bigger teams, and agencies bring me in as a motion graphic designer or editor on their productions. From global names like Swisscom, ESA and BYD to small local businesses, every project gets the same care.</p>
+        <p class="lead muted">I work as a freelancer on many different projects, for very different clients. For start-ups and small brands I work on my own or team up with a fellow freelancer who fits the project. With institutions and larger companies I join bigger teams, and agencies bring me in as a motion graphic designer or editor on their productions. From global names like Swisscom, ESA and BYD to small local businesses, every project gets the same care.</p>
       </div>
       <p class="label faint" id="clients-title">Some of the clients &amp; partners I've worked with</p>
     </div>
