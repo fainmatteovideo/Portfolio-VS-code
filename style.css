@@ -2799,23 +2799,3 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 @media (min-width: 1024px) {
   .nav-hidden .work.has-stuck-filters .showcase { translate: 0 calc(1px - var(--nav-h)); }
 }
-
-/* Start-up, computer: video un po' più basso e, sotto, la fila "Also worked with" sempre visibile
-   (posizione da main.js, allineata al video) */
-@media (min-width: 1024px) {
-  .showcase.has-also .showcase__stage .project > .video {
-    width: min(100%, calc((var(--stage-h, 760px) - 64px - 15rem) * 16 / 9));
-    justify-self: end;
-  }
-  /* a tutta larghezza, centrata, con i loghi della misura di sempre */
-  .showcase > .work__also {
-    position: absolute;
-    left: 0;
-    right: 0;
-    z-index: 2;
-    margin: 0;
-    text-align: center;
-  }
-  .showcase > .work__also .work__also-logos { flex-wrap: nowrap; margin-top: 0.8rem; gap: clamp(2rem, 4vw, 4rem); }
-  .showcase > .work__also .work__also-logos img { max-height: 48px; }
-}

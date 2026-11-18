@@ -624,7 +624,6 @@
       list.style.height = "";
       fitStage();
     }
-    if (typeof placeAlso === "function") requestAnimationFrame(placeAlso);
   }
 
   function updateFromScroll() {
@@ -676,7 +675,6 @@
     loadImages(items[i]);
     if (items[i + 1]) loadImages(items[i + 1]);
     syncPlayback();
-    placeAlso();
   }
 
   // solo il video del progetto attivo è in riproduzione; il successivo si prepara
@@ -787,7 +785,6 @@
       clampIntro(false);
       if (photoBox) photoBox.hidden = cat !== "photo";
       if (alsoBox) alsoBox.hidden = cat !== "startup";
-      requestAnimationFrame(placeAlso);
     };
 
     if (!animate || reducedMotion) { swap(); return; }
@@ -806,25 +803,6 @@
 
   // Start-up: loghi delle altre startup, alla stessa altezza visiva di quelli dei progetti
   const alsoBox = document.getElementById("work-also");
-  // Start-up, computer: la fila "Also worked with" entra nella scena ferma dei lavori, sotto il video
-  // e a tutta larghezza, e resta visibile mentre si scorrono i progetti. Telefono: resta sotto il carosello.
-  const alsoHome = alsoBox && { parent: alsoBox.parentNode, next: alsoBox.nextSibling };
-  function placeAlso() {
-    if (!alsoBox || !showcase) return;
-    const inStage = desktopMQ.matches && !alsoBox.hidden;
-    if (inStage && alsoBox.parentNode !== showcase) showcase.appendChild(alsoBox);
-    if (!inStage && alsoBox.parentNode === showcase) alsoHome.parent.insertBefore(alsoBox, alsoHome.next);
-    showcase.classList.toggle("has-also", inStage);
-    if (!inStage) { alsoBox.style.removeProperty("left"); alsoBox.style.removeProperty("top"); alsoBox.style.removeProperty("width"); return; }
-    const active = items[Math.max(0, activeIndex)];
-    const v = active && active.querySelector(".video");
-    if (!v) return;
-    const sr = showcase.getBoundingClientRect();
-    const r = v.getBoundingClientRect();
-    // a tutta larghezza (CSS), subito sotto il video
-    alsoBox.style.top = Math.round(r.bottom - sr.top + 22) + "px";
-  }
-  window.addEventListener("resize", () => requestAnimationFrame(placeAlso));
   if (alsoBox) alsoBox.querySelectorAll("img").forEach((img) => sizeLogo(img, window.matchMedia("(min-width: 768px)").matches ? 56 : 40));
 
   /* --- Foto e stills: tre file che scorrono in orizzontale con la pagina -- */
@@ -1290,8 +1268,7 @@
         const stuck = filtersBox.getBoundingClientRect().top <= nav.offsetHeight + 1;
         filtersBox.classList.toggle("is-stuck", stuck);
         work.classList.toggle("has-stuck-filters", stuck);
-        // (in Start-up su computer i loghi stanno nella scena ferma: la fine la segna "Let's talk")
-        const end = also && !also.hidden && !also.closest(".showcase") ? also : cta;
+        const end = also && !also.hidden ? also : cta;
         if (!end) return;
         const vh = viewH();
         const top = end.getBoundingClientRect().top;
