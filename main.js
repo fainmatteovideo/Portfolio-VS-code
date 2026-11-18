@@ -255,6 +255,14 @@
             </div>`;
   }
 
+  // descrizione della categoria (computer): sta a sinistra, sopra la scheda del progetto, e resta
+  // visibile mentre si scorre tra i lavori della categoria
+  function categoryNoteHTML(id, cls) {
+    const c = data && data.categories.find((x) => x.id === id);
+    if (!c || !c.intro) return "";
+    return `<div class="${cls}"><p class="${cls}-label label">${esc(c.label)}</p><p class="${cls}-text">${esc(c.intro)}</p></div>`;
+  }
+
   function projectHTML(p) {
     const credits = p.credits.map((c) => {
       const i = c.indexOf(":");
@@ -270,6 +278,7 @@
     return `<article class="project slide" data-category="${esc(p.category)}" data-name="${esc(p.title)}" id="project-${esc(p.id)}">
       ${videoHTML(p.vimeo, "", p.title, p.thumbnail, p.crop)}
       <div class="project__meta">
+        ${categoryNoteHTML(p.category, "project__cat")}
         <div class="project__head">
           <span class="project__num slide__num label"></span>
           <h3 class="project__title">${esc(p.title)}</h3>
@@ -292,6 +301,7 @@
       const cols = kind === "h" ? [many ? 3 : 2, many ? 5 : 4] : [many ? 4 : 3, many ? 8 : 5];
       return `<article class="slide slide--reels" data-category="${esc(category)}" data-group="${group}" data-name="${name}">
         <p class="slide__num label"></p>
+        ${categoryNoteHTML(category, "slide__cat")}
         <div class="slide__grid slide__grid--${kind}" style="--cm:${cols[0]};--cd:${cols[1]};--rd:${Math.ceil(n / cols[1])}">
           ${items.map((r, i) => videoHTML(r.vimeo, r.hash, title(i), r.poster)).join("")}
         </div>

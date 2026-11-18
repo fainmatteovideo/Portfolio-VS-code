@@ -976,6 +976,21 @@ h3 {
 .project__credits li.is-me { font-weight: 700; }
 .project__credits li.is-me span { color: var(--c-yellow); }
 
+/* descrizione della categoria dentro la colonna della scheda (solo computer, vedi sotto) */
+.project__cat,
+.slide__cat { display: none; }
+.project__cat {
+  margin-bottom: 1.4rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--c-line);
+}
+.project__cat-label,
+.slide__cat-label { color: var(--c-yellow); margin-bottom: 0.45rem; }
+.project__cat-text,
+.slide__cat-text { font-size: var(--fs-small); line-height: 1.55; color: var(--c-text-muted); }
+/* reel: sopra la griglia, centrata e stretta */
+.slide__cat { max-width: 62ch; margin: 0 auto 1rem; text-align: center; }
+
 /* scheda del progetto senza riquadro: un filo giallo verticale, alto quanto il testo */
 .project__meta { border-left: 2px solid var(--c-yellow); padding-left: clamp(1rem, 0.8rem + 1vw, 1.5rem); }
 
@@ -2347,6 +2362,11 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 }
 
 @media (min-width: 1024px) {
+  /* descrizione della categoria: a sinistra sopra la scheda, sempre visibile; sotto i filtri non serve */
+  .work__intro,
+  .work__more { display: none !important; }
+  .project__cat,
+  .slide__cat { display: block; }
   .work__list { position: relative; }
   .showcase {
     position: sticky;
