@@ -760,8 +760,10 @@
     setTimeout(() => {
       swap();
       // se si era già scesi nella lista, riparto dall'inizio dei lavori filtrati
+      // sotto menu e barra delle categorie (non sotto il solo menu: la barra copriva l'inizio)
       const navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--nav-h"));
-      const listTop = work.querySelector(".section-head").getBoundingClientRect().bottom + window.scrollY + 24 - navH;
+      const barH = document.getElementById("filters").offsetHeight;
+      const listTop = work.querySelector(".section-head").getBoundingClientRect().bottom + window.scrollY + 24 - navH - barH;
       if (window.scrollY > listTop) window.scrollTo({ top: listTop, behavior: "auto" });
       requestAnimationFrame(() => work.classList.remove("is-filtering"));
     }, 450);

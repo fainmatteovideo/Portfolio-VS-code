@@ -2562,7 +2562,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 /* ==========================================================================
    Categoria Photo: tre file di stills che scorrono in orizzontale
    ========================================================================== */
-.photo { overflow: hidden; margin-top: var(--space-m); }
+.photo { overflow: hidden; margin-top: var(--space-m); padding-top: 26px; }   /* spazio per lo scotch del biglietto */
 .photo[hidden] { display: none; }
 .photo__wall {
   display: grid;
@@ -2578,7 +2578,8 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 .photo__item {
   position: relative;
   flex: 0 0 auto;
-  height: clamp(110px, 22vw, 250px);
+  /* tre file e il biglietto stanno in uno schermo, sotto menu e categorie */
+  height: clamp(110px, min(20vw, calc((100svh - 400px) / 3)), 220px);
   overflow: hidden;
   background-color: var(--c-ink-2);
   cursor: zoom-in;
