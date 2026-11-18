@@ -1497,7 +1497,7 @@
         const onLeft = b.x + b.w / 2 < W / 2;
         const free = onLeft ? W - (b.x + b.w) : b.x;            // spazio vuoto a lato del foglio
         // su schermi stretti il sentiero usa quasi tutto il margine libero, così si vede bene
-        const reach = Math.max(24, free * (W < 600 ? 0.8 : 0.55));
+        const reach = Math.max(24, free * (W < 600 ? 0.9 : 0.55));
         const inX = b.x + b.w / 2, inY = b.y;
         if (i === 0) {
           // parte dal centro, sotto il titolo, e scende nel primo foglio

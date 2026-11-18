@@ -1135,6 +1135,18 @@ h3 {
   overflow: visible;
 }
 
+/* telefono: schede compatte, icona a sinistra accanto al testo */
+@media (max-width: 767px) {
+  .services__list li {
+    grid-template-columns: 34px minmax(0, 1fr);
+    column-gap: 0.9rem;
+    row-gap: 0.15rem;
+    padding-block: 0.9rem 1rem;
+  }
+  .services__icon { grid-row: span 2; width: 30px; margin: 0.15rem 0 0; }
+  .services__list h3 { font-size: 1.3rem; }
+  .services__list p { font-size: var(--fs-small); line-height: 1.5; }
+}
 @media (min-width: 768px) {
   .services__list { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-l); }
 }
@@ -1201,27 +1213,46 @@ h3 {
 /* telefono: fogli più stretti (il sentiero ha spazio ai lati) e compatti: l'elenco puntato si apre
    toccando il foglio (main.js) */
 @media (max-width: 899px) {
-  .process__step { width: 80%; position: relative; cursor: pointer; padding-right: 2.75rem; }
-  .process__list .process__points { display: none; }
-  .process__list .process__step.is-open .process__points { display: grid; padding-top: 0.4rem; }
-  .process__step::after {
+  .process__step {
+    width: 74%;
+    position: relative;
+    cursor: pointer;
+    padding-right: 2.75rem;
+    -webkit-tap-highlight-color: transparent;   /* niente lampo blu al tocco */
+  }
+  /* l'elenco si apre scorrendo verso il basso e comparendo, non di colpo */
+  .process__list .process__points {
+    display: grid;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.55s var(--ease), opacity 0.35s ease, padding-top 0.55s var(--ease);
+  }
+  .process__list .process__step.is-open .process__points {
+    max-height: 14rem;
+    opacity: 1;
+    padding-top: 0.4rem;
+    transition: max-height 0.6s var(--ease), opacity 0.5s ease 0.12s, padding-top 0.6s var(--ease);
+  }
+  /* quadratino giallo con il "+": la stanghetta verticale si chiude e diventa "−" */
+  .process__step::after,
+  .process__step::before {
     content: "";
     position: absolute;
     right: 1rem;
     top: 1.15rem;
     width: 22px;
     height: 22px;
-    background:
-      linear-gradient(var(--c-ink), var(--c-ink)) center / 12px 2px no-repeat,
-      linear-gradient(var(--c-ink), var(--c-ink)) center / 2px 12px no-repeat,
-      var(--c-yellow);
-    transition: transform 0.4s var(--ease);
   }
-  .process__step.is-open::after {
-    background:
-      linear-gradient(var(--c-ink), var(--c-ink)) center / 12px 2px no-repeat,
-      var(--c-yellow);
+  .process__step::after {
+    background: linear-gradient(var(--c-ink), var(--c-ink)) center / 12px 2px no-repeat, var(--c-yellow);
   }
+  .process__step::before {
+    z-index: 1;
+    background: linear-gradient(var(--c-ink), var(--c-ink)) center / 2px 12px no-repeat;
+    transition: transform 0.45s var(--ease);
+  }
+  .process__step.is-open::before { transform: rotate(90deg) scaleX(0); }
   .process__step:focus-visible { outline: 2px solid var(--c-ink); outline-offset: 4px; }
 }
 .process__num {
