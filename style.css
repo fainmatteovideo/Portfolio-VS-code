@@ -49,13 +49,14 @@
 
 /* --- Variabili ----------------------------------------------------------- */
 :root {
-  /* Colori: tinte piene, niente trasparenze (palette: grigio scuro, giallo, verde salvia + crema) */
+  /* Colori: tinte piene, niente trasparenze (palette: nero caldo, crema, giallo + verde bottiglia per About) */
   --c-ink: #151412;           /* nero caldo, quasi carbone: fondo principale */
   --c-ink-2: #23211e;         /* superfici sul fondo scuro (segnaposto di video e foto, pulsante menu) */
   --c-ink-3: #37342f;         /* stati hover sul fondo scuro */
   --c-paper: #f1ede4;         /* crema: testi sul fondo scuro, fondo delle sezioni chiare */
-  --c-paper-2: #e6e0d4;       /* secondo foglio, appena più scuro */
-  --c-paper-3: #d8d1c3;       /* pannelli sulle sezioni chiare */
+  --c-paper-2: #e6e0d4;       /* pannelli sulle sezioni chiare */
+  --c-green: #1f3b30;         /* verde bottiglia: fondo di About */
+  --c-green-2: #284a3d;       /* superfici su About */
   --c-yellow: #ffc800;        /* accento: pulsanti, categoria attiva, etichette di sezione */
   --c-error: #e0816f;
 
@@ -144,12 +145,10 @@ body::after {
   background-image: var(--grain-light);
 }
 
-/* Sezioni chiare (pannello Services/How I work, foglio di About, menu quando ci passa sopra):
+/* Sezioni chiare (pannello Services/How I work, menu quando ci passa sopra):
    stessi componenti, colori di contesto invertiti */
 .act,
-.about__sheet,
-.site-nav.is-light,
-.site-nav.is-light-2 {
+.site-nav.is-light {
   --c-bg: var(--c-paper);
   --c-panel: var(--c-paper-2);
   --c-text: var(--c-ink);
@@ -160,11 +159,18 @@ body::after {
   --grain: var(--grain-dark);
   color: var(--c-text);
 }
+/* About (e menu quando ci passa sopra): verde bottiglia, testi panna come sul fondo scuro */
 .about__sheet,
 .site-nav.is-light-2 {
-  --c-bg: var(--c-paper-2);
-  --c-panel: var(--c-paper-3);
-  --c-line: #c3bcad;
+  --c-bg: var(--c-green);
+  --c-panel: var(--c-green-2);
+  --c-text: var(--c-paper);
+  --c-text-muted: #b8bdb0;
+  --c-text-faint: #a3ab9f;
+  --c-line: #35564a;
+  --c-line-strong: #4f7264;
+  --grain: var(--grain-light);
+  color: var(--c-text);
 }
 
 ::selection { background: var(--c-yellow); color: var(--c-ink); }
@@ -288,11 +294,9 @@ h3 {
   transform: scaleX(0);
   transform-origin: left;
 }
-.site-nav.is-light .site-nav__progress,
-.site-nav.is-light-2 .site-nav__progress { background: var(--c-ink); }
+.site-nav.is-light .site-nav__progress { background: var(--c-ink); }
 /* sulle sezioni chiare il logo bianco diventa scuro */
-.site-nav.is-light .site-nav__logo img,
-.site-nav.is-light-2 .site-nav__logo img { filter: brightness(0); }
+.site-nav.is-light .site-nav__logo img { filter: brightness(0); }
 
 
 /* --- Pulsante principale: rettangolo giallo pieno con un quadratino davanti al testo
@@ -1123,8 +1127,8 @@ h3 {
   box-shadow:
     1px 1px 0 #dcd5c6,
     2px 2px 0 #cdc5b4,
-    0 24px 48px rgba(60, 45, 20, 0.28),
-    0 5px 12px rgba(60, 45, 20, 0.2);
+    0 24px 48px rgba(0, 0, 0, 0.4),
+    0 5px 12px rgba(0, 0, 0, 0.25);
 }
 .about__photo img { object-position: 42% center; }
 /* striscia di scotch di carta gialla (assets/textures/tape.svg: bordi strappati, fibre e una piega)
@@ -1138,7 +1142,7 @@ h3 {
   width: 56%;
   height: 46px;
   background: url("assets/textures/tape.svg") center / 100% 100% no-repeat;
-  filter: drop-shadow(0 1px 2px rgba(60, 45, 20, 0.22));
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
   /* appena inclinato nel verso opposto alla polaroid; resta sopra la cornice, mai sulla foto */
   transform: translateX(-50%) rotate(3deg);
 }
@@ -2282,7 +2286,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   background: var(--c-yellow);
   pointer-events: none;
 }
-/* About sale sopra il pannello crema come un secondo foglio, appena più scuro; sotto il foglio
+/* About sale sopra il pannello crema come un foglio verde bottiglia; sotto il foglio
    la scena Collaboration torna sul fondo scuro */
 .about {
   --slant: 0px;
@@ -2294,8 +2298,8 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 }
 .about__sheet {
   padding-block: var(--space-xl);
-  background-color: var(--c-paper-2);
-  background-image: var(--grain-dark);
+  background-color: var(--c-green);
+  background-image: var(--grain-light);
 }
 
 /* Grana anche sui fondi delle schermate a tutto schermo. Solo fondi: riquadri, schede e polaroid restano lisci */

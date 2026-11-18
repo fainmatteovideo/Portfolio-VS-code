@@ -35,12 +35,12 @@ Sostituire il sito attuale (index / work / about / contact separati) con **un'un
 ## Estetica
 - Dal branch `nuova-estetica`: aspetto da videomaker/studio creativo, non da sito tech. Cambiano forme, colori e font; impaginazione, struttura e funzioni restano quelle già costruite.
 - Riferimento per palette, font e grafica dei pulsanti: 1stdecember.com. Riferimento per le foto dei collaboratori: le polaroid di paragonproductions.co. Prendere lo *stile*, non copiare codice, testi o asset.
-- Palette (variabili in `style.css`): nero caldo `#151412` (fondo principale; niente grigi freddi o bluastri), crema `#F1EDE4` (testi sul fondo scuro e fondo delle sezioni chiare), giallo `#FFC800` (accento: pulsanti, categoria attiva, etichette di sezione).
+- Palette (variabili in `style.css`): nero caldo `#151412` (fondo principale; niente grigi freddi o bluastri), crema `#F1EDE4` (testi sul fondo scuro e fondo delle sezioni chiare), verde bottiglia `#1F3B30` (solo fondo di About, con testi panna), giallo `#FFC800` (accento: pulsanti, categoria attiva, etichette di sezione).
 - Sul giallo solo testo scuro. Mai testo giallo sul crema (contrasto insufficiente).
 - Riquadri sul fondo scuro: niente riempimento, solo un bordo sottile (1px) color panna attenuato, con testi panna. Vale per la scheda del progetto e per i campi del form (il form non ha un riquadro esterno). Niente blocchi crema pieni accanto ai video: gli unici elementi chiari pieni sul nero sono le polaroid.
 - Colori pieni: niente pannelli trasparenti o sfocati (`backdrop-filter`), niente sfumature di sfondo. Unica texture: una grana leggera tipo carta, solo sui fondi (non su riquadri, schede e polaroid).
 - Forme squadrate: nessun `border-radius` (pulsanti, campi, pannelli e schede sono rettangoli).
-- Sezioni alternate: apertura, Lavori, Collaboration, Clienti e Contatti sul fondo scuro; Services/How I work e About su crema.
+- Sezioni alternate: apertura, Lavori, Collaboration, Clienti e Contatti sul fondo scuro; Services/How I work su crema; About su verde bottiglia.
 - Font (self-hosted): Anton per i titoli (maiuscolo, stretto e pesante, sullo stile dei titoli di paragonproductions.co), Albert Sans per testi, pulsanti ed etichette (queste in maiuscolo grassetto), come alternativa libera al Roobert di Paragon.
 - Polaroid (collaboratori e foto di Matteo in About, classe `.polaroid`): cornice di carta spessa con bordo del cartoncino visibile, striscia larga sotto con il nome scritto a mano (font Reenie Beanie, self-hosted, usato solo lì), inclinate; i collaboratori sparsi uno sull'altro.
 - Pulsante principale: rettangolo giallo pieno con un quadratino davanti al testo.
