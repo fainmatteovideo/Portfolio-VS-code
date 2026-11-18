@@ -1206,12 +1206,15 @@
     const reveal = route.querySelector(".process__reveal");
     const marker = route.querySelector(".process__marker");
     const steps = [...route.querySelectorAll(".process__step")];
-    let samples = [], total = 0, entries = [], lastLen = -1;
+    let samples = [], total = 0, total0 = 0, entries = [], lastLen = -1;
 
     // il sentiero entra in ogni foglio dal centro del lato alto ed esce dal lato libero (verso il
     // margine vuoto), poi curva fino al foglio successivo; passa sotto i fogli
     const buildTrail = () => {
-      const W = route.clientWidth, H = route.clientHeight;
+      // il sentiero arriva fino al fondo del pannello crema, non solo dell'elenco
+      const panel = route.closest(".act") || route;
+      const W = route.clientWidth;
+      const H = panel.getBoundingClientRect().bottom - route.getBoundingClientRect().top;
       if (!W || !steps.length) return;
       const list = steps[0].offsetParent;   // l'elenco (posizionato) dentro il percorso
       const ox = list.offsetLeft, oy = list.offsetTop;
@@ -1235,11 +1238,13 @@
           const nX = next.x + next.w / 2, nY = next.y;
           d += ` M${r(outX)} ${r(outY)} C${r(outX + side * reach)} ${r(outY)} ${r(nX)} ${r(nY - (nY - outY) * 0.55)} ${r(nX)} ${r(nY)}`;
         } else {
-          // ultimo foglio: il sentiero scende ancora un po' e si ferma
+          // ultimo foglio: il sentiero scende fino al fondo del pannello ed esce dalla pagina
           const endX = outX + side * reach * 0.7;
-          d += ` M${r(outX)} ${r(outY)} C${r(outX + side * reach)} ${r(outY)} ${r(endX)} ${r(outY + (H - outY) * 0.4)} ${r(endX)} ${r(H - 8)}`;
+          d += ` M${r(outX)} ${r(outY)} C${r(outX + side * reach)} ${r(outY)} ${r(endX)} ${r(outY + (H - outY) * 0.4)} ${r(endX)} ${r(H)}`;
         }
       });
+      total0 = H;
+      svg.style.height = H + "px";
       svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
       dash.setAttribute("d", d);
       reveal.setAttribute("d", d);
@@ -1262,9 +1267,9 @@
       const vh = viewH();
       const top = route.getBoundingClientRect().top;
       // linea di lettura a 65% dello schermo; verso la fine scende fino in fondo, così il sentiero
-      // è completo prima che il pannello si fermi e About ci salga sopra
-      const bottom = top + route.offsetHeight;
-      const f = 0.65 + 0.35 * Math.min(1, Math.max(0, (vh * 1.35 - bottom) / (vh * 0.4)));
+      // è completo quando il fondo del pannello tocca lo schermo, prima che About ci salga sopra
+      const bottom = top + total0;
+      const f = 0.65 + 0.35 * Math.min(1, Math.max(0, (vh * 1.4 - bottom) / (vh * 0.4)));
       const target = vh * f - top;   // altezza della linea di lettura dentro il percorso
       // primo campione sotto la linea (le y crescono lungo il sentiero)
       let lo = 0, hi = samples.length - 1;
