@@ -2085,13 +2085,15 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   scrollbar-width: none;
 }
 .showcase__stage::-webkit-scrollbar { display: none; }
+/* le slide non attive sono scurite, non trasparenti: con l'opacità lo sfondo e la grana
+   trasparivano attraverso il video che stava per entrare */
 .showcase__stage .slide {
   flex: 0 0 100%;
   scroll-snap-align: start;
-  opacity: 0.35;
-  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  filter: brightness(0.32);
+  transition: filter 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.showcase__stage .slide.is-active { opacity: 1; }
+.showcase__stage .slide.is-active { filter: none; }
 .showcase__stage .slide__num { white-space: nowrap; }
 .slide__num.label { display: block; margin-bottom: 0.75rem; color: var(--c-text-faint); }
 
