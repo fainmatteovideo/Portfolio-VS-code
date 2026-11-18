@@ -811,10 +811,10 @@ h3 {
   pointer-events: none;
 }
 .filters.is-stuck::before { opacity: 1; }
-/* alla fine dei lavori (quando arrivano "Also worked with" e "Let's talk") la barra sparisce
-   piano piano invece di restare sopra l'ultimo video (--filters-out da main.js) */
-.filters { opacity: calc(1 - var(--filters-out, 0)); }
-.filters.is-leaving { pointer-events: none; }
+/* alla fine dei lavori (quando arrivano "Also worked with" e "Let's talk") la barra scivola in alto
+   fuori dallo schermo, come il menu quando si nasconde (niente dissolvenza: nessuno strato a metà
+   trasparenza sopra la transizione successiva). Doppia classe: vince sulla regola del menu nascosto */
+.filters.is-leaving.is-leaving { translate: 0 calc(-100% - var(--nav-h) - 12px); pointer-events: none; }
 
 /* segnaposto vuoto prima della barra (serve solo alle misure in main.js) */
 .filters__hint { height: 0; margin: 0 0 var(--space-s); }

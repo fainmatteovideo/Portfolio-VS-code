@@ -1260,10 +1260,8 @@
         if (!end) return;
         const vh = viewH();
         const top = end.getBoundingClientRect().top;
-        const out = Math.min(1, Math.max(0, (vh * 1.05 - top) / (vh * 0.25)));
-        const value = out.toFixed(3);
-        if (filtersBox.style.getPropertyValue("--filters-out") !== value) filtersBox.style.setProperty("--filters-out", value);
-        filtersBox.classList.toggle("is-leaving", out > 0.5);
+        // la barra sale via quando ciò che segue l'ultimo video è entrato di un buon tratto
+        filtersBox.classList.toggle("is-leaving", top < vh * 0.92);
       });
 
       list.innerHTML = `<div class="showcase">
