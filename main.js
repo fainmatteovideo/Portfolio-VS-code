@@ -925,7 +925,7 @@
   /* --- Carosello loghi clienti ------------------------------------------ */
   const tracks = [...document.querySelectorAll(".clients__track")];
   if (tracks.length) {
-    const logoBase = window.matchMedia("(min-width: 768px)").matches ? 88 : 60;
+    const logoBase = window.matchMedia("(min-width: 768px)").matches ? 78 : 54;
     tracks.forEach((t) => {
       // quattro copie di ogni fila: metà fila (due copie) è sempre più larga dello schermo,
       // e scorrendo di metà fila (vedi @keyframes marquee) il giro è continuo
@@ -1243,41 +1243,52 @@
         }
       });
 
-      // invito a scegliere: finché la parte alta dei lavori è sullo schermo, il bordo di una
-      // categoria a caso si accende di giallo, poi di un'altra. Si ferma al primo tocco o clic.
-      const hint = document.querySelector(".filters__hint");
-      if (hint) {
-        let on = true, seen = false, timer = 0, lastBtn = null;
-        const later = (fn, ms) => { clearTimeout(timer); timer = setTimeout(fn, ms); };
-        const end = () => {
+      // invito a scegliere: finché nessuno ha scelto una categoria e la barra è sullo schermo, un
+      // puntatore scivola sotto le categorie visibili, una dopo l'altra, e le "tocca".
+      // Sparisce per sempre al primo tocco, clic o tasto sulla barra.
+      const pointer = document.querySelector(".filters__pointer");
+      if (pointer) {
+        const box = pointer.parentElement;
+        let on = true, seen = false, timer = 0, step = -1, dir = 1;
+        const stop = () => {
           on = false;
           clearTimeout(timer);
-          filterList.querySelectorAll(".is-poked").forEach((b) => b.classList.remove("is-poked"));
-          setTimeout(() => filterList.querySelectorAll(".is-breathing").forEach((b) => b.classList.remove("is-breathing")), 1200);
+          pointer.classList.remove("is-on");
         };
-        ["pointerdown", "keydown"].forEach((ev) => filterList.addEventListener(ev, end, { once: true }));
-        const glow = () => {
+        ["pointerdown", "keydown"].forEach((ev) => filterList.addEventListener(ev, stop, { once: true }));
+        const move = () => {
           if (!on || !seen) return;
+          const br = box.getBoundingClientRect();
           const lr = filterList.getBoundingClientRect();
-          // solo categorie interamente visibili (su telefono la barra scorre)
+          // solo le categorie interamente visibili (su telefono la barra scorre)
           const btns = [...filterList.querySelectorAll(".filter")].filter((b) => {
             const r = b.getBoundingClientRect();
-            return r.left >= lr.left - 2 && r.right <= lr.right + 2 && b !== lastBtn && b.getAttribute("aria-pressed") !== "true";
+            return r.left >= lr.left - 2 && r.right <= lr.right + 2;
           });
           if (btns.length) {
-            const b = btns[Math.floor(Math.random() * btns.length)];
-            lastBtn = b;
-            b.classList.add("is-breathing", "is-poked");
-            setTimeout(() => b.classList.remove("is-poked"), 1500);
-            setTimeout(() => b.classList.remove("is-breathing"), 2700);
+            // avanti e indietro lungo la fila
+            if (step >= btns.length - 1) dir = -1;
+            if (step <= 0) dir = 1;
+            step = Math.max(0, Math.min(btns.length - 1, step + dir));
+            const r = btns[step].getBoundingClientRect();
+            pointer.style.setProperty("--px", Math.round(r.left - br.left + r.width / 2 - 6) + "px");
+            pointer.classList.add("is-on");
+            // arrivato sotto la categoria, un piccolo "tocco"
+            setTimeout(() => {
+              if (!on) return;
+              pointer.classList.remove("is-tap");
+              void pointer.offsetWidth;
+              pointer.classList.add("is-tap");
+            }, 1000);
           }
-          later(glow, 3000);
+          timer = setTimeout(move, 1900);
         };
         new IntersectionObserver(([e]) => {
           seen = e.isIntersecting;
-          if (seen && on) later(glow, 900);
-          else clearTimeout(timer);
-        }).observe(hint);
+          clearTimeout(timer);
+          if (seen && on) timer = setTimeout(move, 700);
+          else pointer.classList.remove("is-on");
+        }, { threshold: 0.5 }).observe(filterList);
       }
 
       // la barra si ferma sotto il menu: compare il fondo sfocato
@@ -1291,6 +1302,8 @@
         const stuck = filtersBox.getBoundingClientRect().top <= nav.offsetHeight + 1;
         filtersBox.classList.toggle("is-stuck", stuck);
         work.classList.toggle("has-stuck-filters", stuck);
+        // scesi nei progetti di oltre mezza schermata: il puntatore delle categorie si nasconde
+        filtersBox.classList.toggle("is-deep", stuck && list.getBoundingClientRect().top < -viewH() * 0.5);
         const end = also && !also.hidden ? also : cta;
         if (!end) return;
         const vh = viewH();

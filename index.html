@@ -156,11 +156,13 @@
       </div>
     </div>
 
-    <p class="filters__hint label">Choose a category
-      <svg class="arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 2v8M2.5 6.5L6 10l3.5-3.5"/></svg></p>
+    <!-- segnaposto vuoto: main.js lo usa per misurare il blocco iniziale dei lavori -->
+    <p class="filters__hint" aria-hidden="true"></p>
     <div class="filters" id="filters">
       <div class="container">
         <div class="filters__list" role="group" aria-label="Filter projects by category"></div>
+        <!-- puntatore che invita a scegliere una categoria (main.js); sparisce alla prima scelta -->
+        <svg class="filters__pointer" viewBox="0 0 24 28" aria-hidden="true" focusable="false"><path d="M5 2.5v19.2l5.1-4.6 3.4 7.6 3.4-1.5-3.4-7.5 6.9-.4z"/></svg>
       </div>
     </div>
 
@@ -437,17 +439,17 @@
         <div class="brief__grid">
           <label class="brief__field">
             <span class="brief__label">Name</span>
-            <input type="text" name="name" placeholder="Your name" autocomplete="name" required>
+            <input type="text" name="name" autocomplete="name" required>
           </label>
           <label class="brief__field">
             <span class="brief__label">Email</span>
-            <input type="email" name="email" placeholder="you@company.com" autocomplete="email" required aria-describedby="email-hint">
+            <input type="email" name="email" autocomplete="email" required aria-describedby="email-hint">
             <!-- proposta di correzione per i domini scritti male (es. gmial.com), riempita da main.js -->
             <span class="brief__hint" id="email-hint" aria-live="polite"></span>
           </label>
           <label class="brief__field">
             <span class="brief__label">Company</span>
-            <input type="text" name="company" placeholder="Company / brand" autocomplete="organization">
+            <input type="text" name="company" autocomplete="organization">
           </label>
           <label class="brief__field">
             <span class="brief__label">Service</span>
