@@ -300,7 +300,6 @@
       <div class="project__meta">
         <div class="project__body">
         <div class="project__head">
-          <span class="project__num slide__num label"></span>
           <h3 class="project__title">${esc(p.title)}</h3>
         </div>
         <ul class="project__credits">${credits}</ul>
@@ -583,15 +582,14 @@
   function buildShowcase() {
     items = [...stage.querySelectorAll(".slide:not([hidden])")];
     list.hidden = items.length === 0;
-    // numerazione e pallini per gruppo (progetti, reel 16:9, reel 9:16)
+    // pallini per gruppo (progetti, reel 16:9, reel 9:16); le pagine dei reel mostrano solo il formato
     const groups = {};
     items.forEach((p) => { const g = p.dataset.group || ""; (groups[g] = groups[g] || []).push(p); });
-    const pad = (x) => String(x).padStart(2, "0");
     dotsNav.innerHTML = items.map((p, i) => {
       const g = p.dataset.group || "";
       const k = groups[g].indexOf(p);
-      const count = groups[g].length > 1 ? `${pad(k + 1)} / ${pad(groups[g].length)}` : "";
-      p.querySelector(".slide__num").textContent = [g, count].filter(Boolean).join(" — ");
+      const label = p.querySelector(".slide__num");
+      if (label) label.textContent = g;
       const cls = g === "9:16" ? " showcase__dot--tall" : "";
       const first = k === 0 && i > 0 ? " is-group-start" : "";
       return `<button class="showcase__dot${cls}${first}" type="button" data-index="${i}" aria-label="${esc(p.dataset.name)} (${i + 1} of ${items.length})"></button>`;
@@ -1716,7 +1714,7 @@
     const imgs = cards.map((c) => c.querySelector(".partner__img"));
     // il testo di chi è in primo piano entra riga per riga; quello di prima esce verso l'alto
     const infos = cards.map((c) => c.querySelector(".partner__info"));
-    infos.forEach((el) => maskText(el, ".partner__num, .partner__name, .label, .partner__text"));
+    infos.forEach((el) => maskText(el, ".partner__name, .label, .partner__text"));
     // telefono: la polaroid prende tutta l'altezza libera tra la frase e il testo del collaboratore
     // (la riga "photo" della griglia), così non resta piccola sugli schermi alti
     const pin = partners.querySelector(".partners__pin");

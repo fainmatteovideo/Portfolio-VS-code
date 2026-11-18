@@ -944,7 +944,6 @@ h3 {
 /* --- Testi del progetto -------------------------------------------------- */
 .project__meta { margin-top: var(--space-m); }
 /* numero sopra, poi titolo, sottotitolo e loghi tutti allineati a sinistra */
-.project__num { display: block; margin-bottom: 0.6rem; color: var(--c-text-faint); }
 .project__title {
   font-size: clamp(1.9rem, 1.4rem + 1.8vw, 3rem);
   font-family: var(--f-display);
@@ -1590,7 +1589,6 @@ h3 {
 .partner:nth-child(3) .partner__img { --rot: -2.5deg; }
 .partner:nth-child(2) .polaroid__caption { transform: rotate(1.5deg); }
 
-.partner__num { margin-bottom: 1rem; }
 .partner__name {
   font-size: clamp(2.1rem, 1.5rem + 2vw, 3.25rem);
   font-family: var(--f-display);
@@ -1702,7 +1700,6 @@ h3 {
   .is-pinned .partners__intro { display: none; }
   .is-pinned .partner__name { font-size: 1.6rem; }
   .is-pinned .partner__text { font-size: var(--fs-small); margin-top: 0.5rem; }
-  .is-pinned .partner__num { margin-bottom: 0.5rem; }
 }
 
 /* telefoni bassi: ancora un po' più stretti */
