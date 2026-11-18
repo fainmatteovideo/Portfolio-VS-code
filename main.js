@@ -1023,6 +1023,22 @@
     const markEmpty = () => service.classList.toggle("is-empty", service.value === "");
     service.addEventListener("change", markEmpty);
     markEmpty();
+    // i campi della frase sono larghi quanto il testo scritto (o il suggerimento, se vuoti)
+    const blanks = [...brief.querySelectorAll(".brief__sentence input, .brief__sentence select")];
+    const ruler = document.createElement("canvas").getContext("2d");
+    const fit = (el) => {
+      const cs = getComputedStyle(el);
+      ruler.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+      const text = el.tagName === "SELECT" ? el.options[el.selectedIndex].text : (el.value || el.placeholder);
+      const pad = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+      el.style.width = Math.ceil(ruler.measureText(text).width + pad + 4) + "px";
+    };
+    const fitAll = () => blanks.forEach(fit);
+    blanks.forEach((el) => el.addEventListener(el.tagName === "SELECT" ? "change" : "input", () => fit(el)));
+    brief.addEventListener("reset", () => setTimeout(() => { markEmpty(); fitAll(); }));
+    window.addEventListener("resize", fitAll);
+    if (document.fonts) document.fonts.ready.then(fitAll);
+    fitAll();
     // l'errore sparisce appena il campo viene corretto
     brief.addEventListener("input", (e) => e.target.classList.remove("is-invalid"));
     brief.addEventListener("change", (e) => { if (e.target.name === "consent") e.target.closest("label").classList.remove("is-invalid"); });
