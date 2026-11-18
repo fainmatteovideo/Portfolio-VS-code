@@ -196,6 +196,8 @@
     const target = id === "top" ? document.body : document.getElementById(id);
     if (!target || (data && data.categories.some((c) => c.id === id))) return; // i filtri usano l'hash
     e.preventDefault();
+    // "Back to top": torna subito all'inizio, senza scorrimento né dissolvenza
+    if (a.classList.contains("site-footer__top")) { window.scrollTo({ top: 0, behavior: "instant" }); return; }
     const y = id === "top" ? 0 : sectionY(target);
     // sezione lontana: stacco a nero come nel montaggio (lo schermo sfuma, la pagina salta, poi
     // riappare) invece di far sfrecciare tutte le sezioni in mezzo. Vicina: scorrimento normale.

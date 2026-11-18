@@ -635,11 +635,16 @@ h3 {
   opacity: 0.4;
   transition: opacity 0.6s var(--ease), transform 0.8s var(--ease);
 }
-/* col mouse sopra il logo diventa bianco pieno */
+/* "Video • Photo • Editing" come il logo: semitrasparente (colore, non opacity: l'opacity la usa
+   l'animazione d'entrata) */
+.hero__tagline { color: rgba(241, 237, 228, 0.45); transition: color 0.6s var(--ease); }
+/* col mouse sopra il logo o sopra la frase, si accendono entrambi di bianco pieno */
 @media (hover: hover) {
-  .hero__logo img:hover { opacity: 1; }
+  .hero__logo img:hover,
+  .hero__content:has(.hero__tagline:hover) .hero__logo img { opacity: 1; }
+  .hero__tagline:hover,
+  .hero__content:has(.hero__logo img:hover) .hero__tagline { color: var(--c-paper); }
 }
-.hero__tagline { color: var(--c-paper); }
 
 .hero__scroll {
   position: absolute;
@@ -717,10 +722,12 @@ h3 {
   position: sticky;
   top: calc(var(--nav-h) - 1px);
   z-index: 30;
-  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  /* solo "translate" ha la transizione: "transform" lo usa l'apertura (main.js) e deve restare
+     immediato, altrimenti la barra resta indietro rispetto al titolo e sembra rimbalzare */
+  transition: translate 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 /* menu nascosto: la barra delle categorie agganciata sale al suo posto, e la scena dei lavori con lei */
-.nav-hidden .filters.is-stuck { transform: translateY(calc(1px - var(--nav-h))); }
+.nav-hidden .filters.is-stuck { translate: 0 calc(1px - var(--nav-h)); }
 .filters__list {
   position: relative;
   display: flex;
@@ -2391,7 +2398,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
     position: sticky;
     top: var(--stage-top, 140px);
     height: var(--stage-h, 760px);
-    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: translate 0.5s cubic-bezier(0.22, 1, 0.36, 1);
     display: grid;
     grid-template-columns: 26px minmax(0, 1fr);
     column-gap: var(--dots-gap);
@@ -2786,5 +2793,5 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 
 /* desktop: con il menu nascosto la scena ferma dei lavori sale insieme alla barra delle categorie */
 @media (min-width: 1024px) {
-  .nav-hidden .work.has-stuck-filters .showcase { transform: translateY(calc(1px - var(--nav-h))); }
+  .nav-hidden .work.has-stuck-filters .showcase { translate: 0 calc(1px - var(--nav-h)); }
 }
