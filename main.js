@@ -1265,9 +1265,11 @@
     // distanza dall'inizio della sezione al fondo delle categorie, senza lo spostamento attuale
     const depth = workHint.offsetTop - current + workHint.offsetHeight + mb + workFilters.offsetHeight;
     workHead.style.marginTop = -depth + "px";
-    // il sipario si chiude dove c'è posto per tutto il blocco sotto il menu (almeno a metà schermo)
-    const vh = viewH();
-    meet = Math.min(vh * 0.8, Math.max(vh * 0.5, depth + nav.offsetHeight + 24));
+    // le due bande si incontrano a metà del logo dell'apertura
+    // (offsetTop: posizione senza gli spostamenti dell'animazione di scroll)
+    const content = hero && hero.querySelector(".hero__content");
+    const logo = hero && hero.querySelector(".hero__logo img");
+    meet = content && logo ? content.offsetTop + logo.offsetTop + logo.offsetHeight / 2 : viewH() / 2;
   };
   let meet = window.innerHeight / 2;
   // sipario: banda bassa = inizio dei lavori che sale (scrollY); la banda alta scende e le due si
@@ -1311,7 +1313,7 @@
       // dalla banda bassa sale solo il video: la frase della categoria e i pallini compaiono
       // nell'ultimo tratto, quando il sipario si sta chiudendo
       const run = viewH() - meet;
-      const show = c.closed ? 1 : Math.max(0, Math.min(1, (window.scrollY - run * 0.55) / (run * 0.45)));
+      const show = c.closed ? 1 : Math.max(0, Math.min(1, (window.scrollY - run * 0.7) / (run * 0.3)));
       const value = show >= 1 ? "" : show.toFixed(3);
       document.querySelectorAll("#work-intro, #work-intro-more, .showcase__dots").forEach((el) => {
         if (el.style.opacity !== value) el.style.opacity = value;
