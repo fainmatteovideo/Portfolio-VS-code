@@ -283,9 +283,9 @@
           <span class="project__num slide__num label"></span>
           <h3 class="project__title">${esc(p.title)}</h3>
           ${p.subtitle ? `<p class="project__subtitle">${esc(p.subtitle)}</p>` : ""}
-          ${logos ? `<div class="project__logos">${logos}</div>` : ""}
         </div>
         <ul class="project__credits">${credits}</ul>
+        ${logos ? `<div class="project__logos">${logos}</div>` : ""}
       </div>
     </article>`;
   }

@@ -955,18 +955,21 @@ h3 {
   font-weight: 300;
 }
 
-/* crediti come titoli di coda: ruolo piccolo in maiuscolo spaziato, nome sotto */
+/* crediti come titoli di coda: ruolo piccolo in maiuscolo spaziato e nome sulla stessa riga
+   (va a capo solo se non c'è spazio) */
 .project__credits {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.9rem 1.5rem;
+  grid-template-columns: 1fr;
+  gap: 0.45rem;
+  margin-top: 1.25rem;
   font-size: var(--fs-small);
   line-height: 1.4;
   color: var(--c-text);
 }
+.project__credits li { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 0.6rem; }
 .project__credits span {
-  display: block;
-  margin-bottom: 0.2rem;
+  display: inline-block;
+  margin-bottom: 0;
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.14em;
@@ -2457,13 +2460,8 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   .showcase__stage .project__meta::-webkit-scrollbar { display: none; }
   .showcase__stage .project__title { font-size: clamp(1.4rem, 1rem + 1vw, 2rem); }
   .showcase__stage .project__subtitle { margin-top: 0.4rem; font-size: var(--fs-small); }
-  .showcase__stage .project__logos { margin-top: 1.25rem; gap: 1rem 1.5rem; }
-  /* crediti su due colonne: le schede con molte persone restano corte */
-  .showcase__stage .project__credits {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem 1rem;
-    margin-top: 1.5rem;
-  }
+  .showcase__stage .project__logos { margin-top: 1.4rem; gap: 1rem 1.5rem; }
+  .showcase__stage .project__credits { margin-top: 1.25rem; }
   /* la scheda entra con un piccolo movimento quando il progetto diventa attivo */
   .showcase__stage .project.is-active .project__meta { animation: card-in 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both; }
   @keyframes card-in {
