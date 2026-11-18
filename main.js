@@ -1243,54 +1243,6 @@
         }
       });
 
-      // invito a scegliere: finché nessuno ha scelto una categoria e la barra è sullo schermo, un
-      // puntatore scivola sotto le categorie visibili, una dopo l'altra, e le "tocca".
-      // Sparisce per sempre al primo tocco, clic o tasto sulla barra.
-      const pointer = document.querySelector(".filters__pointer");
-      if (pointer) {
-        const box = pointer.parentElement;
-        let on = true, seen = false, timer = 0, step = -1, dir = 1;
-        const stop = () => {
-          on = false;
-          clearTimeout(timer);
-          pointer.classList.remove("is-on");
-        };
-        ["pointerdown", "keydown"].forEach((ev) => filterList.addEventListener(ev, stop, { once: true }));
-        const move = () => {
-          if (!on || !seen) return;
-          const br = box.getBoundingClientRect();
-          const lr = filterList.getBoundingClientRect();
-          // solo le categorie interamente visibili (su telefono la barra scorre)
-          const btns = [...filterList.querySelectorAll(".filter")].filter((b) => {
-            const r = b.getBoundingClientRect();
-            return r.left >= lr.left - 2 && r.right <= lr.right + 2;
-          });
-          if (btns.length) {
-            // avanti e indietro lungo la fila
-            if (step >= btns.length - 1) dir = -1;
-            if (step <= 0) dir = 1;
-            step = Math.max(0, Math.min(btns.length - 1, step + dir));
-            const r = btns[step].getBoundingClientRect();
-            pointer.style.setProperty("--px", Math.round(r.left - br.left + r.width / 2 - 6) + "px");
-            pointer.classList.add("is-on");
-            // arrivato sotto la categoria, un piccolo "tocco"
-            setTimeout(() => {
-              if (!on) return;
-              pointer.classList.remove("is-tap");
-              void pointer.offsetWidth;
-              pointer.classList.add("is-tap");
-            }, 1000);
-          }
-          timer = setTimeout(move, 1900);
-        };
-        new IntersectionObserver(([e]) => {
-          seen = e.isIntersecting;
-          clearTimeout(timer);
-          if (seen && on) timer = setTimeout(move, 700);
-          else pointer.classList.remove("is-on");
-        }, { threshold: 0.5 }).observe(filterList);
-      }
-
       // la barra si ferma sotto il menu: compare il fondo sfocato
       const filtersBox = document.getElementById("filters");
       // alla fine dei lavori la barra si dissolve: inizia quando ciò che segue l'ultimo video
@@ -1302,8 +1254,6 @@
         const stuck = filtersBox.getBoundingClientRect().top <= nav.offsetHeight + 1;
         filtersBox.classList.toggle("is-stuck", stuck);
         work.classList.toggle("has-stuck-filters", stuck);
-        // scesi nei progetti di oltre mezza schermata: il puntatore delle categorie si nasconde
-        filtersBox.classList.toggle("is-deep", stuck && list.getBoundingClientRect().top < -viewH() * 0.5);
         const end = also && !also.hidden ? also : cta;
         if (!end) return;
         const vh = viewH();

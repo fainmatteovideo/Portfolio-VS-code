@@ -789,39 +789,6 @@ h3 {
   .filter::after { content: ""; position: absolute; inset: -6px 0; }
 }
 
-/* invito a scegliere: un puntatore bianco (punta in alto, contorno scuro come le icone) che scivola
-   sotto le categorie e "tocca" ognuna; sparisce alla prima scelta (main.js) */
-.filters .container { position: relative; }
-.filters__pointer {
-  position: absolute;
-  top: calc(100% - 6px);
-  left: 0;
-  z-index: 3;
-  width: 26px;
-  height: 30px;
-  fill: var(--c-paper);
-  stroke: var(--c-ink);
-  stroke-width: 1.8;
-  stroke-linejoin: round;
-  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.45));
-  opacity: 0;
-  transform: translate3d(var(--px, 0px), 0, 0);
-  transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.5s ease;
-  pointer-events: none;
-}
-.filters__pointer.is-on { opacity: 1; }
-/* telefono: appena la barra si aggancia il puntatore sparisce (sotto ci sono già testo e video) */
-@media (max-width: 1023px) {
-  .filters.is-stuck .filters__pointer { opacity: 0; }
-}
-/* già scesi nei progetti: il puntatore non disturba i video */
-.filters.is-deep .filters__pointer { opacity: 0; }
-.filters__pointer.is-tap { animation: pointer-tap 0.6s ease-in-out; }
-@keyframes pointer-tap {
-  0%, 100% { translate: 0 0; }
-  45%      { translate: 0 -7px; }
-}
-
 /* quando la barra si ferma sotto il menu compare un fondo sfocato: i video e i testi che ci
    passano sotto non disturbano le categorie */
 .filters::before {
@@ -858,7 +825,7 @@ h3 {
 /* telefono: due righe e "Read more", così il primo video resta in alto (stato da main.js) */
 .work__more { display: none; }
 @media (max-width: 767px) {
-  .work__intro { margin-top: 1.25rem; font-size: 1.02rem; }
+  .work__intro { margin-top: 1.25rem; font-size: 0.96rem; }
   .work__intro.is-clamped {
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -1043,7 +1010,7 @@ h3 {
   color: var(--c-ink);
   font-size: clamp(0.95rem, 0.85rem + 0.35vw, 1.15rem);
 }
-.showcase__note .showcase__note-text { color: var(--c-text); font-size: clamp(0.98rem, 0.9rem + 0.25vw, 1.08rem); line-height: 1.6; }
+.showcase__note .showcase__note-text { color: var(--c-text); font-size: clamp(0.92rem, 0.86rem + 0.2vw, 1rem); line-height: 1.6; }
 .showcase__note-label { color: var(--c-ink); font-weight: 800; margin-bottom: 0.45rem; }
 .showcase__note-text { font-size: var(--fs-small); line-height: 1.55; color: #37342f; }
 
