@@ -978,16 +978,16 @@ h3 {
 /* cosa ho fatto nel dettaglio, sotto il mio credito */
 .project__detail { flex-basis: 100%; font-size: var(--fs-small); font-weight: 300; color: var(--c-text-muted); }
 
-/* descrizione della categoria dentro la colonna della scheda (solo computer, vedi sotto) */
-.project__cat,
-.slide__cat { display: none; }
-/* foglietto di carta come le polaroid, inclinato e tenuto da uno scotch giallo (stessa texture
-   della polaroid in About): richiama il resto del sito */
-.project__cat,
-.slide__cat {
-  position: relative;
+/* Foglietto con la descrizione della categoria (solo computer, vedi lo showcase più sotto):
+   carta come le polaroid, appena stropicciata, inclinata e tenuta da uno scotch giallo */
+.showcase__note { display: none; }
+.showcase__note {
   padding: 1.15rem 1.2rem 1.05rem;
   background-color: #f4f0e7;
+  /* texture di carta stropicciata, molto leggera (velo color carta sopra la luce/ombra) */
+  background-image: linear-gradient(rgba(244, 240, 231, 0.62), rgba(244, 240, 231, 0.62)), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.011 0.019' numOctaves='5' seed='7'/%3E%3CfeDiffuseLighting lighting-color='%23ffffff' surfaceScale='3.2'%3E%3CfeDistantLight azimuth='225' elevation='52'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+  background-size: auto, 320px 320px;
+  background-blend-mode: normal, multiply;
   color: var(--c-ink);
   rotate: -1.4deg;
   box-shadow:
@@ -995,8 +995,7 @@ h3 {
     0 14px 30px rgba(0, 0, 0, 0.38),
     0 3px 8px rgba(0, 0, 0, 0.22);
 }
-.project__cat::before,
-.slide__cat::before {
+.showcase__note::before {
   content: "";
   position: absolute;
   top: -15px;
@@ -1007,13 +1006,8 @@ h3 {
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
   transform: translateX(-50%) rotate(2.5deg);
 }
-.project__cat { margin: 0.4rem 0.5rem 1.6rem 0; }
-.project__cat-label,
-.slide__cat-label { color: #77746d; margin-bottom: 0.4rem; }
-.project__cat-text,
-.slide__cat-text { font-size: var(--fs-small); line-height: 1.55; color: #37342f; }
-/* reel: sopra la griglia, centrato e stretto */
-.slide__cat { max-width: 56ch; margin: 1rem auto 1.4rem; text-align: center; rotate: -0.8deg; }
+.showcase__note-label { color: var(--c-ink); font-weight: 800; margin-bottom: 0.45rem; }
+.showcase__note-text { font-size: var(--fs-small); line-height: 1.55; color: #37342f; }
 
 /* scheda del progetto senza riquadro: un filo giallo verticale, alto quanto il testo
    (il foglietto della categoria sta sopra, fuori dal filo) */
@@ -2383,19 +2377,39 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   /* descrizione della categoria: a sinistra sopra la scheda, sempre visibile; sotto i filtri non serve */
   .work__intro,
   .work__more { display: none !important; }
-  .project__cat,
-  .slide__cat { display: block; }
   .work__list { position: relative; }
   .showcase {
+    --meta-w: clamp(260px, 22vw, 330px);
+    --dots-gap: clamp(1.25rem, 2.5vw, 2.5rem);
+    --slide-pad: clamp(16px, 3vh, 32px);
+    --note-top: calc(var(--slide-pad) + 14px);              /* spazio per lo scotch */
+    --below-note: calc(var(--note-top) + var(--note-h, 0px) + 1.75rem);
     position: sticky;
     top: var(--stage-top, 140px);
     height: var(--stage-h, 760px);
     display: grid;
     grid-template-columns: 26px minmax(0, 1fr);
-    column-gap: clamp(1.25rem, 2.5vw, 2.5rem);
+    column-gap: var(--dots-gap);
     align-items: center;
   }
-  .showcase__dots { flex-direction: column; margin: 0; }
+  /* il foglietto: fisso in alto a sinistra, sempre nello stesso punto */
+  .showcase__note {
+    display: block;
+    position: absolute;
+    z-index: 2;
+    left: calc(26px + var(--dots-gap));
+    top: var(--note-top);
+    width: var(--meta-w);
+  }
+  .showcase__note[hidden] { display: none; }
+  /* i pallini restano fermi, centrati nello spazio sotto il foglietto (dove sta la scheda) */
+  .showcase__dots {
+    flex-direction: column;
+    justify-content: center;
+    align-self: stretch;
+    margin: 0;
+    padding: var(--below-note) 0 var(--slide-pad);
+  }
   .showcase__dot::after { inset: -5px -9px; }
   .showcase__dot[aria-current="true"] { width: 8px; height: 26px; }
   .showcase__dot--tall { width: 8px; height: 8px; }
@@ -2410,7 +2424,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   .showcase__stage .slide {
     position: absolute;
     inset: 0;
-    padding-block: clamp(16px, 3vh, 32px);
+    padding-block: var(--slide-pad);
     opacity: 0;
     visibility: hidden;
     /* in uscita: dissolvenza rapida, il video si allontana appena */
@@ -2435,11 +2449,13 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   /* progetto: scheda a sinistra, video grande a destra */
   .showcase__stage .project {
     display: grid;
-    grid-template-columns: minmax(260px, 330px) minmax(0, 1fr);
+    grid-template-columns: var(--meta-w) minmax(0, 1fr);
     grid-template-areas: "meta video";
     column-gap: clamp(1.5rem, 3vw, 3rem);
     align-items: center;
   }
+  /* reel: la griglia lascia libero lo spazio del foglietto a sinistra */
+  .showcase__stage .slide--reels { padding-left: calc(var(--meta-w) + clamp(1.5rem, 3vw, 3rem)); }
   .showcase__stage .project > .video {
     grid-area: video;
     width: min(100%, calc((var(--stage-h, 760px) - 64px) * 16 / 9));
@@ -2451,13 +2467,17 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
     grid-area: meta;
     display: block;
     margin: 0;
-    /* spazio sopra e ai lati per lo scotch e l'inclinazione del foglietto (la colonna può scorrere) */
-    padding: 1.1rem 0.5rem 0.25rem 0.4rem;
-    max-height: calc(var(--stage-h, 760px) - 64px);
+    /* sotto il foglietto: la scheda sta al centro dello spazio rimasto, come i pallini */
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    padding: calc(var(--below-note) - var(--slide-pad)) 0 0.25rem;
+    max-height: calc(var(--stage-h, 760px) - 2 * var(--slide-pad));
     overflow-y: auto;
     scrollbar-width: none;
   }
   .showcase__stage .project__meta::-webkit-scrollbar { display: none; }
+  .showcase__stage .project__body { margin-block: auto; }
   .showcase__stage .project__title { font-size: clamp(1.4rem, 1rem + 1vw, 2rem); }
   .showcase__stage .project__subtitle { margin-top: 0.4rem; font-size: var(--fs-small); }
   .showcase__stage .project__logos { margin-top: 1.4rem; gap: 1rem 1.5rem; }

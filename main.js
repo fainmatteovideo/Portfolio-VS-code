@@ -255,14 +255,6 @@
             </div>`;
   }
 
-  // descrizione della categoria (computer): sta a sinistra, sopra la scheda del progetto, e resta
-  // visibile mentre si scorre tra i lavori della categoria
-  function categoryNoteHTML(id, cls) {
-    const c = data && data.categories.find((x) => x.id === id);
-    if (!c || !c.intro) return "";
-    return `<div class="${cls}"><p class="${cls}-label label">${esc(c.label)}</p><p class="${cls}-text">${esc(c.intro)}</p></div>`;
-  }
-
   function projectHTML(p) {
     const credits = p.credits.map((c) => {
       const i = c.indexOf(":");
@@ -281,7 +273,6 @@
     return `<article class="project slide" data-category="${esc(p.category)}" data-name="${esc(p.title)}" id="project-${esc(p.id)}">
       ${videoHTML(p.vimeo, "", p.title, p.thumbnail, p.crop)}
       <div class="project__meta">
-        ${categoryNoteHTML(p.category, "project__cat")}
         <div class="project__body">
         <div class="project__head">
           <span class="project__num slide__num label"></span>
@@ -305,7 +296,6 @@
       const cols = kind === "h" ? [many ? 3 : 2, many ? 5 : 4] : [many ? 4 : 3, many ? 8 : 5];
       return `<article class="slide slide--reels" data-category="${esc(category)}" data-group="${group}" data-name="${name}">
         <p class="slide__num label"></p>
-        ${categoryNoteHTML(category, "slide__cat")}
         <div class="slide__grid slide__grid--${kind}" style="--cm:${cols[0]};--cd:${cols[1]};--rd:${Math.ceil(n / cols[1])}">
           ${items.map((r, i) => videoHTML(r.vimeo, r.hash, title(i), r.poster)).join("")}
         </div>
@@ -708,6 +698,22 @@
   });
   if (document.fonts) document.fonts.ready.then(() => { if (!introOpen()) clampIntro(false); });
 
+  // foglietto con la descrizione della categoria (computer): uno solo, fisso in alto a sinistra
+  // nello showcase; cambia solo il testo. La sua altezza (--note-h) sposta sotto scheda e pallini.
+  function updateNote(category) {
+    const note = showcase && showcase.querySelector(".showcase__note");
+    if (!note) return;
+    note.querySelector(".showcase__note-label").textContent = category ? category.label : "";
+    note.querySelector(".showcase__note-text").textContent = category ? category.intro : "";
+    note.hidden = !category || !category.intro;
+    measureNote();
+  }
+  function measureNote() {
+    const note = showcase && showcase.querySelector(".showcase__note");
+    if (note) showcase.style.setProperty("--note-h", (note.hidden ? 0 : note.offsetHeight) + "px");
+  }
+  window.addEventListener("resize", measureNote);
+
   function applyFilter(cat, animate) {
     filterList.querySelectorAll(".filter").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.filter === cat)));
     moveIndicator(true);
@@ -717,6 +723,7 @@
       buildShowcase();
       const category = data.categories.find((c) => c.id === cat);
       intro.textContent = category ? category.intro : "";
+      updateNote(category);
       clampIntro(false);
       if (photoBox) photoBox.hidden = cat !== "photo";
       if (alsoBox) alsoBox.hidden = cat !== "startup";
@@ -1236,6 +1243,7 @@
 
       list.innerHTML = `<div class="showcase">
           <nav class="showcase__dots" aria-label="Projects"></nav>
+          <aside class="showcase__note"><p class="showcase__note-label label"></p><p class="showcase__note-text"></p></aside>
           <div class="showcase__stage">${data.projects.map(projectHTML).join("")}${reelSlidesHTML(data.reels, data.categories)}</div>
         </div>`;
       setupShowcase();
