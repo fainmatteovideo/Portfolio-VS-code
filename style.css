@@ -2430,7 +2430,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
     display: block;
     position: absolute;
     z-index: 2;
-    left: calc(26px + var(--dots-gap));
+    left: var(--note-left, calc(26px + var(--dots-gap)));
     top: var(--note-top);
     width: var(--meta-w);
   }
@@ -2482,9 +2482,11 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   /* progetto: scheda a sinistra, video grande a destra */
   .showcase__stage .project {
     display: grid;
-    grid-template-columns: var(--meta-w) minmax(0, 1fr);
+    /* scheda e video vicini e centrati insieme; il video è largo quanto permette l'altezza */
+    grid-template-columns: var(--meta-w) minmax(0, calc((var(--stage-h, 760px) - 2 * var(--slide-pad)) * 16 / 9));
     grid-template-areas: "meta video";
-    column-gap: clamp(1.5rem, 3vw, 3rem);
+    justify-content: center;
+    column-gap: clamp(1.25rem, 2vw, 2rem);
     align-items: center;
   }
   /* reel (Social): foglietto centrato in alto, la griglia sotto usa tutta la larghezza */
@@ -2508,8 +2510,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
   }
   .showcase__stage .project > .video {
     grid-area: video;
-    width: min(100%, calc((var(--stage-h, 760px) - 64px) * 16 / 9));
-    justify-self: center;
+    width: 100%;
   }
 
   /* scheda del progetto */

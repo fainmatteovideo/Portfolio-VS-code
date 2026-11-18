@@ -727,6 +727,13 @@
     let y = 0, el = media;
     while (el && el !== showcase) { y += el.offsetTop; el = el.offsetParent; }
     showcase.style.setProperty("--note-top", Math.round(y) + "px");
+    // in orizzontale segue la colonna della scheda (scheda e video sono centrati nella pagina)
+    const meta = slide.querySelector(".project__meta");
+    if (meta) {
+      let x = 0, m = meta;
+      while (m && m !== showcase) { x += m.offsetLeft; m = m.offsetParent; }
+      showcase.style.setProperty("--note-left", Math.round(x) + "px");
+    }
     // e scheda e pallini finiscono dove finisce il video
     showcase.style.setProperty("--media-gap", Math.max(0, Math.round(showcase.offsetHeight - y - media.offsetHeight)) + "px");
   }
