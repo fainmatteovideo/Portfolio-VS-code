@@ -179,11 +179,11 @@ body::after {
   --c-line-strong: #a39d92;
   --grain: var(--grain-dark);
   --shade-spots:
-    radial-gradient(ellipse 46% 32% at 30% 30%, rgba(255, 253, 247, 0.6), transparent 72%),
-    radial-gradient(ellipse 36% 28% at 74% 76%, rgba(255, 253, 247, 0.45), transparent 72%),
-    radial-gradient(ellipse 36% 26% at 84% 22%, rgba(95, 72, 38, 0.13), transparent 72%),
-    radial-gradient(ellipse 34% 28% at 14% 80%, rgba(95, 72, 38, 0.12), transparent 72%);
-  --shade-sides: linear-gradient(90deg, rgba(95, 72, 38, 0.16), transparent 22%, transparent 78%, rgba(95, 72, 38, 0.16));
+    radial-gradient(ellipse 46% 32% at 30% 30%, rgba(255, 253, 247, 0.75), transparent 72%),
+    radial-gradient(ellipse 36% 28% at 74% 76%, rgba(255, 253, 247, 0.6), transparent 72%),
+    radial-gradient(ellipse 38% 28% at 84% 22%, rgba(95, 72, 38, 0.26), transparent 72%),
+    radial-gradient(ellipse 36% 30% at 14% 80%, rgba(95, 72, 38, 0.24), transparent 72%);
+  --shade-sides: linear-gradient(90deg, rgba(95, 72, 38, 0.3), transparent 24%, transparent 76%, rgba(95, 72, 38, 0.3));
   color: var(--c-text);
 }
 /* About (e menu quando ci passa sopra): verde bottiglia, testi panna come sul fondo scuro */
@@ -2096,6 +2096,21 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 /* passaggio a Selected works: il video si chiude dall'alto e dal basso come un sipario (--hero-cut
    da main.js); la banda di sotto segue esattamente la sezione che sale */
 .hero { clip-path: inset(var(--hero-cut-top, 0px) 0 var(--hero-cut, 0px) 0); }
+/* fili gialli sui due bordi del sipario, come nelle altre transizioni (compaiono appena si chiude) */
+.hero__edge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  height: 3px;
+  background: var(--c-yellow);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.hero__edge--top { top: var(--hero-cut-top, 0px); }
+.hero__edge--bottom { bottom: var(--hero-cut, 0px); }
+.hero.is-closing .hero__edge { opacity: 1; }
 
 .hero__video { transform: scale(calc(1 + var(--hero-p) * 0.08)); }
 /* mentre il sipario si chiude il video si sfoca e si scurisce: alla chiusura (--hero-p ~0,6) è al massimo */

@@ -1336,6 +1336,7 @@
       const c = curtain();
       hero.style.setProperty("--hero-cut-top", c.top.toFixed(1) + "px");
       hero.style.setProperty("--hero-cut", c.bottom.toFixed(1) + "px");
+      hero.classList.toggle("is-closing", c.bottom > 1);
       // coperta del tutto: si nasconde (è ferma dietro a tutta la pagina)
       hero.classList.toggle("is-past", window.scrollY > hero.offsetHeight * 1.05);
     });
