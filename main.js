@@ -439,10 +439,6 @@
     v._leaveTimer = setTimeout(() => v.classList.remove("is-leaving"), 700);
   });
 
-  // logo dell'apertura: apre lo showreel completo, con l'audio
-  const heroPlay = document.querySelector(".hero__play");
-  if (heroPlay) heroPlay.addEventListener("click", () => openPlayer(heroPlay));
-
   // Click sul pulsante con le barre = audio sul posto; click sul resto del video = player completo
   work.addEventListener("click", (e) => {
     const v = e.target.closest(".video");
@@ -1357,8 +1353,9 @@
     let samples = [], total = 0, total0 = 0, entries = [], lastLen = -1;
     const OVER = 40;   // quanto il sentiero prosegue oltre il fondo del pannello
 
-    // il sentiero entra in ogni foglio dal centro del lato alto ed esce dal lato libero (verso il
-    // margine vuoto), poi curva fino al foglio successivo; passa sotto i fogli
+    // il sentiero entra in ogni foglio dal centro del lato alto, lo attraversa (nascosto sotto il
+    // foglio) ed esce dal lato libero, poi curva fino al foglio successivo. È una linea unica e
+    // continua: il quadratino passa sotto i fogli invece di saltare da un bordo all'altro
     const buildTrail = () => {
       // il sentiero arriva fino al fondo del pannello crema, non solo dell'elenco
       const panel = route.closest(".act") || route;
@@ -1385,12 +1382,12 @@
         const next = box[i + 1];
         if (next) {
           const nX = next.x + next.w / 2, nY = next.y;
-          d += ` M${r(outX)} ${r(outY)} C${r(outX + side * reach)} ${r(outY)} ${r(nX)} ${r(nY - (nY - outY) * 0.55)} ${r(nX)} ${r(nY)}`;
+          d += ` L${r(outX)} ${r(outY)} C${r(outX + side * reach)} ${r(outY)} ${r(nX)} ${r(nY - (nY - outY) * 0.55)} ${r(nX)} ${r(nY)}`;
         } else {
           // ultimo foglio: il sentiero scende fino al fondo del pannello e continua oltre il bordo
           // (OVER px, tagliati dal pannello): il quadratino esce del tutto invece di fermarsi
           const endX = outX + side * reach * 0.7;
-          d += ` M${r(outX)} ${r(outY)} C${r(outX + side * reach)} ${r(outY)} ${r(endX)} ${r(outY + (H - outY) * 0.4)} ${r(endX)} ${r(H + OVER)}`;
+          d += ` L${r(outX)} ${r(outY)} C${r(outX + side * reach)} ${r(outY)} ${r(endX)} ${r(outY + (H - outY) * 0.4)} ${r(endX)} ${r(H + OVER)}`;
         }
       });
       total0 = H;
@@ -1423,24 +1420,15 @@
       const f = 0.65 + 0.35 * Math.min(1, Math.max(0, (vh * 1.4 + OVER - bottom) / (vh * 0.4)));
       const extra = Math.max(0, Math.min(OVER, vh + OVER - bottom));
       const target = vh * f - top + extra;   // altezza della linea di lettura dentro il percorso
-      // primo campione sotto la linea (le y crescono lungo il sentiero)
-      let lo = 0, hi = samples.length - 1;
-      while (lo < hi) { const mid = (lo + hi) >> 1; if (samples[mid].y < target) lo = mid + 1; else hi = mid; }
-      let len;
-      if (lo === 0) len = 0;
-      else if (samples[lo].y < target) len = total;
-      else {
-        const a = samples[lo - 1], b = samples[lo];
-        const t = b.y > a.y ? (target - a.y) / (b.y - a.y) : 1;
-        len = a.len + (b.len - a.len) * t;
-      }
+      // velocità costante lungo il sentiero: la lunghezza disegnata cresce in proporzione allo scroll
+      const len = total * Math.min(1, Math.max(0, target / (total0 + OVER)));
       if (Math.abs(len - lastLen) < 0.5) return;
       lastLen = len;
       reveal.style.strokeDashoffset = (total - len).toFixed(1);
       const pt = dash.getPointAtLength(len);
       marker.style.transform = `translate(${pt.x.toFixed(1)}px, ${pt.y.toFixed(1)}px)`;
       route.classList.toggle("is-drawn", len > 2);
-      steps.forEach((el, i) => el.classList.toggle("is-reached", target >= entries[i] + 4));
+      steps.forEach((el, i) => el.classList.toggle("is-reached", pt.y >= entries[i] + 4));
     };
 
     // i fogli si riempiono appena entrano nello schermo, prima che arrivi il sentiero
