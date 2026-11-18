@@ -548,6 +548,7 @@
       setTimeout(() => { settling = false; }, 700);
     }
     window.addEventListener("resize", layoutShowcase);
+    window.addEventListener("resize", () => requestAnimationFrame(measureNote));
     desktopMQ.addEventListener("change", () => { layoutShowcase(); activeIndex = -1; setActive(0); updateFromScroll(); });
 
     // video in pausa quando lo showcase non è sullo schermo
@@ -710,7 +711,18 @@
   }
   function measureNote() {
     const note = showcase && showcase.querySelector(".showcase__note");
-    if (note) showcase.style.setProperty("--note-h", (note.hidden ? 0 : note.offsetHeight) + "px");
+    if (!note) return;
+    showcase.style.setProperty("--note-h", (note.hidden ? 0 : note.offsetHeight) + "px");
+    // il foglietto parte all'altezza del bordo alto del video (o della griglia dei reel)
+    // della categoria: offsetTop ignora gli effetti di entrata delle slide
+    const slide = stage && stage.querySelector(".slide:not([hidden])");
+    const media = slide && (slide.querySelector(":scope > .video") || slide.querySelector(".slide__grid"));
+    if (!media || !desktopMQ.matches) { showcase.style.removeProperty("--note-top"); showcase.style.removeProperty("--media-gap"); return; }
+    let y = 0, el = media;
+    while (el && el !== showcase) { y += el.offsetTop; el = el.offsetParent; }
+    showcase.style.setProperty("--note-top", Math.round(y) + "px");
+    // e scheda e pallini finiscono dove finisce il video
+    showcase.style.setProperty("--media-gap", Math.max(0, Math.round(showcase.offsetHeight - y - media.offsetHeight)) + "px");
   }
   window.addEventListener("resize", measureNote);
 
@@ -724,6 +736,7 @@
       const category = data.categories.find((c) => c.id === cat);
       intro.textContent = category ? category.intro : "";
       updateNote(category);
+      requestAnimationFrame(measureNote);   // dopo l'impaginazione delle slide della categoria
       clampIntro(false);
       if (photoBox) photoBox.hidden = cat !== "photo";
       if (alsoBox) alsoBox.hidden = cat !== "startup";

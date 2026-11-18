@@ -2382,7 +2382,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
     --meta-w: clamp(260px, 22vw, 330px);
     --dots-gap: clamp(1.25rem, 2.5vw, 2.5rem);
     --slide-pad: clamp(16px, 3vh, 32px);
-    --note-top: calc(var(--slide-pad) + 14px);              /* spazio per lo scotch */
+    --note-top: calc(var(--slide-pad) + 14px);              /* di base; main.js lo allinea al video */
     --below-note: calc(var(--note-top) + var(--note-h, 0px) + 1.75rem);
     position: sticky;
     top: var(--stage-top, 140px);
@@ -2408,7 +2408,7 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
     justify-content: center;
     align-self: stretch;
     margin: 0;
-    padding: var(--below-note) 0 var(--slide-pad);
+    padding: var(--below-note) 0 var(--media-gap, var(--slide-pad));
   }
   .showcase__dot::after { inset: -5px -9px; }
   .showcase__dot[aria-current="true"] { width: 8px; height: 26px; }
@@ -2471,17 +2471,17 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
     align-self: stretch;
     display: flex;
     flex-direction: column;
-    padding: calc(var(--below-note) - var(--slide-pad)) 0 0.25rem;
+    padding: calc(var(--below-note) - var(--slide-pad)) 0 calc(var(--media-gap, var(--slide-pad)) - var(--slide-pad));
     max-height: calc(var(--stage-h, 760px) - 2 * var(--slide-pad));
     overflow-y: auto;
     scrollbar-width: none;
   }
   .showcase__stage .project__meta::-webkit-scrollbar { display: none; }
   .showcase__stage .project__body { margin-block: auto; }
-  .showcase__stage .project__title { font-size: clamp(1.4rem, 1rem + 1vw, 2rem); }
+  .showcase__stage .project__title { font-size: clamp(1.35rem, 0.9rem + 0.9vw, 1.85rem); }
   .showcase__stage .project__subtitle { margin-top: 0.4rem; font-size: var(--fs-small); }
-  .showcase__stage .project__logos { margin-top: 1.4rem; gap: 1rem 1.5rem; }
-  .showcase__stage .project__credits { margin-top: 1.25rem; }
+  .showcase__stage .project__logos { margin-top: 1.1rem; gap: 1rem 1.5rem; }
+  .showcase__stage .project__credits { margin-top: 1rem; gap: 0.32rem; }
   /* la scheda entra con un piccolo movimento quando il progetto diventa attivo */
   .showcase__stage .project.is-active .project__meta { animation: card-in 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both; }
   @keyframes card-in {
