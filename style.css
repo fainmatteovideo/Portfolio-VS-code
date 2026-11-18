@@ -987,10 +987,11 @@ h3 {
    Carosello loghi clienti
    ========================================================================== */
 .clients {
-  /* più respiro dopo l'ultimo video dei lavori */
-  padding-top: var(--space-l);
-  scroll-margin-top: calc(var(--nav-h) - var(--space-l) + 1.5rem);
+  /* sezione vera e propria: titolo, due righe su di me e i loghi; più respiro sopra e sotto */
+  padding-block: var(--space-xl) var(--space-l);
+  scroll-margin-top: calc(var(--nav-h) - var(--space-xl) + 1.5rem);
 }
+.clients__head { margin-bottom: var(--space-l); }
 .clients .label { margin-bottom: 0.9rem; text-align: center; }
 
 .clients__marquee {

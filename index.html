@@ -68,10 +68,10 @@
   <link rel="preconnect" href="https://f.vimeocdn.com">
   <link rel="preload" href="assets/logo/mf-logo-white.webp" as="image" type="image/webp">
   <link rel="preload" href="assets/posters/showreel.webp" as="image" type="image/webp">
-  <link rel="stylesheet" href="style.css?v=20261118o">
+  <link rel="stylesheet" href="style.css?v=20261118p">
   <script src="https://player.vimeo.com/api/player.js" defer></script>
   <!-- ?v=: cambiare la data quando si aggiornano CSS o JS, così i browser non usano la copia vecchia -->
-  <script src="main.js?v=20261118o" defer></script>
+  <script src="main.js?v=20261118p" defer></script>
 </head>
 <body>
   <a class="skip-link label" href="#work">Skip to content</a>
@@ -384,7 +384,12 @@
          la seconda verso destra (dopo i primi entrano gli ultimi dell'elenco, a ritroso).
          I loghi con un link aprono il sito del cliente; col mouse sopra compare l'etichetta "Visit website" (main.js). -->
     <div class="container">
-      <p class="label faint" id="clients-title">Clients &amp; partners I've worked with</p>
+      <div class="section-head clients__head">
+        <p class="label faint">05 — Clients</p>
+        <h2>Who I work with</h2>
+        <p class="lead muted">I work as a freelancer and team up with other creatives when a project needs it. My clients are mostly start-ups and tech companies, but I have also worked with commercial agencies in Zurich, big brands and small businesses on their social media.</p>
+      </div>
+      <p class="label faint" id="clients-title">Some of the clients &amp; partners I've worked with</p>
     </div>
     <div class="clients__marquee">
       <ul class="clients__track">
@@ -417,7 +422,7 @@
   <section id="contact" class="section contact">
     <div class="container">
       <div class="section-head">
-        <p class="label faint">05 — Contact</p>
+        <p class="label faint">06 — Contact</p>
         <h2>Let's work together</h2>
         <p class="lead muted contact__intro">Tell me about your project.</p>
       </div>
