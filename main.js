@@ -635,6 +635,9 @@
     activeIndex = i;
     // anche le slide nascoste (altre categorie) perdono lo stato attivo: niente schede sovrapposte
     stage.querySelectorAll(".slide").forEach((p) => p.classList.toggle("is-active", p === items[i]));
+    // il foglietto sa quale progetto è in primo piano (prove di stile su un singolo progetto)
+    const note = showcase.querySelector(".showcase__note");
+    if (note) note.dataset.project = items[i].id || "";
     dotsNav.querySelectorAll(".showcase__dot").forEach((d, j) => d.setAttribute("aria-current", String(j === i)));
     // immagini del progetto attivo e del successivo
     loadImages(items[i]);
