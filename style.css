@@ -979,7 +979,7 @@ h3 {
 .project__detail { flex-basis: 100%; font-size: var(--fs-small); font-weight: 300; color: var(--c-text-muted); }
 
 /* Foglietto con la descrizione della categoria (solo computer, vedi lo showcase più sotto):
-   carta come le polaroid, appena stropicciata, inclinata e tenuta da uno scotch giallo */
+   carta come le polaroid, appena stropicciata, tenuta da uno scotch giallo */
 .showcase__note { display: none; }
 .showcase__note {
   padding: 1.15rem 1.2rem 1.05rem;
@@ -989,7 +989,7 @@ h3 {
   background-size: auto, 320px 320px;
   background-blend-mode: normal, multiply;
   color: var(--c-ink);
-  rotate: -1.4deg;
+  /* dritto: inclinato il testo veniva meno nitido */
   box-shadow:
     1px 1px 0 #dcd5c6,
     0 14px 30px rgba(0, 0, 0, 0.38),
