@@ -43,9 +43,10 @@
   const nav = document.getElementById("site-nav");
   const hero = document.getElementById("top");
 
-  new IntersectionObserver(([entry]) => {
-    nav.classList.toggle("is-scrolled", !entry.isIntersecting);
-  }, { rootMargin: "-80px 0px 0px 0px" }).observe(hero);
+  // l'apertura resta ferma (sticky): conta quanto si è scorso, non se è ancora sullo schermo
+  onFrame(() => {
+    nav.classList.toggle("is-scrolled", window.scrollY > (hero ? hero.offsetHeight * 0.6 : 0));
+  });
 
   /* --- Menu mobile ------------------------------------------------------- */
   const toggle = document.getElementById("menu-toggle");
@@ -1091,55 +1092,46 @@
         }
       });
 
-      // cursore giallo finto: passa da una categoria all'altra e fa finta di cliccare, finché
-      // la parte alta dei lavori è sullo schermo. Al primo tocco o clic sulla barra sparisce.
-      const filtersBox = document.getElementById("filters");
+      // invito a scegliere: finché la parte alta dei lavori è sullo schermo, il bordo di una
+      // categoria a caso si accende di giallo, poi di un'altra. Si ferma al primo tocco o clic.
       const hint = document.querySelector(".filters__hint");
-      if (filtersBox && hint) {
-        const cursor = document.createElement("span");
-        cursor.className = "filters__cursor no-anim";
-        cursor.setAttribute("aria-hidden", "true");
-        cursor.innerHTML = '<svg viewBox="0 0 24 24"><path d="M4 3l15 9.2-6.6 1.5 3.8 7.2-2.9 1.5-3.8-7.3L4 20z"/></svg>';
-        filtersBox.appendChild(cursor);
-        let on = true, seen = false, timer = 0, lastBtn = null, placed = false;
+      if (hint) {
+        let on = true, seen = false, timer = 0, lastBtn = null;
         const later = (fn, ms) => { clearTimeout(timer); timer = setTimeout(fn, ms); };
-        const end = () => { on = false; clearTimeout(timer); cursor.classList.add("is-gone"); };
+        const end = () => {
+          on = false;
+          clearTimeout(timer);
+          filterList.querySelectorAll(".is-poked").forEach((b) => b.classList.remove("is-poked"));
+        };
         ["pointerdown", "keydown"].forEach((ev) => filterList.addEventListener(ev, end, { once: true }));
-        const tour = () => {
+        const glow = () => {
           if (!on || !seen) return;
-          const box = filtersBox.getBoundingClientRect();
           const lr = filterList.getBoundingClientRect();
           // solo categorie interamente visibili (su telefono la barra scorre)
           const btns = [...filterList.querySelectorAll(".filter")].filter((b) => {
             const r = b.getBoundingClientRect();
             return r.left >= lr.left - 2 && r.right <= lr.right + 2 && b !== lastBtn && b.getAttribute("aria-pressed") !== "true";
           });
-          if (!btns.length) { later(tour, 1200); return; }
-          const b = btns[Math.floor(Math.random() * btns.length)];
-          lastBtn = b;
-          const r = b.getBoundingClientRect();
-          const x = r.left - box.left + r.width * (0.35 + Math.random() * 0.3);
-          const y = r.top - box.top + r.height * 0.5;
-          cursor.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
-          if (!placed) {
-            placed = true;
-            cursor.classList.add("is-on");
-            void cursor.offsetWidth;
-            cursor.classList.remove("no-anim");
-          }
-          later(() => {
-            cursor.classList.add("is-click");
+          if (btns.length) {
+            const b = btns[Math.floor(Math.random() * btns.length)];
+            lastBtn = b;
             b.classList.add("is-poked");
-            setTimeout(() => { cursor.classList.remove("is-click"); b.classList.remove("is-poked"); }, 500);
-            later(tour, 1400);
-          }, placed ? 1100 : 500);
+            setTimeout(() => b.classList.remove("is-poked"), 900);
+          }
+          later(glow, 1700);
         };
         new IntersectionObserver(([e]) => {
           seen = e.isIntersecting;
-          if (seen && on) later(tour, 700);
+          if (seen && on) later(glow, 900);
           else clearTimeout(timer);
         }).observe(hint);
       }
+
+      // la barra si ferma sotto il menu: compare il fondo sfocato
+      const filtersBox = document.getElementById("filters");
+      if (filtersBox) onFrame(() => {
+        filtersBox.classList.toggle("is-stuck", filtersBox.getBoundingClientRect().top <= nav.offsetHeight + 1);
+      });
 
       list.innerHTML = `<div class="showcase">
           <nav class="showcase__dots" aria-label="Projects"></nav>

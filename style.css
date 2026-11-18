@@ -311,10 +311,23 @@ h3 {
   align-items: center;
   justify-content: space-between;
   padding: 14px var(--gutter);
-  transition: background-color var(--dur-med) var(--ease);
 }
-/* Dopo l'apertura il menu diventa una barra piena, del colore della sezione che ha sotto */
-.site-nav.is-scrolled { background-color: var(--c-bg); background-image: var(--grain); }
+/* Dopo l'apertura compare piano piano un fondo sfocato e velato del colore della sezione che ha
+   sotto: i testi che scorrono sotto il menu non si sovrappongono alle voci */
+.site-nav::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--c-bg);
+  background-color: color-mix(in srgb, var(--c-bg) 60%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease), background-color var(--dur-med) var(--ease);
+  pointer-events: none;
+}
+.site-nav.is-scrolled::before { opacity: 1; }
 .site-nav__logo img { height: 34px; width: auto; transition: filter var(--dur-med) var(--ease); }
 /* linea sotto la barra: si allunga da sinistra man mano che si scorre la pagina (main.js) */
 .site-nav__progress {
@@ -731,53 +744,24 @@ h3 {
   .filter::after { content: ""; position: absolute; inset: -6px 0; }
 }
 
-/* cursore giallo finto che passa da una categoria all'altra e fa finta di cliccare (main.js):
-   invita a scegliere. Sparisce al primo tocco o clic sulla barra */
-.filters__cursor {
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 3;
-  width: 24px;
-  height: 24px;
-  pointer-events: none;
-  opacity: 0;
-  transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.4s ease;
-}
-.filters__cursor.is-on { opacity: 1; }
-.filters__cursor.is-gone { opacity: 0; }
-.filters__cursor.no-anim { transition: opacity 0.4s ease; }
-.filters__cursor svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  fill: var(--c-yellow);
-  stroke: var(--c-ink);
-  stroke-width: 1.4;
-  stroke-linejoin: round;
-  transform-origin: 4px 3px;
-  transition: transform 0.15s ease;
-  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.45));
-}
-.filters__cursor.is-click svg { transform: scale(0.8); }
-/* cerchio giallo del clic */
-.filters__cursor::before {
+/* invito a scegliere: il bordo di una categoria si accende di giallo (main.js) */
+.filter.is-poked { color: var(--c-text); border-color: var(--c-yellow); transition-duration: 0.35s, 0.5s, 0.35s; }
+
+/* quando la barra si ferma sotto il menu compare un fondo sfocato: i video e i testi che ci
+   passano sotto non disturbano le categorie */
+.filters::before {
   content: "";
   position: absolute;
-  left: -10px;
-  top: -10px;
-  width: 28px;
-  height: 28px;
-  border: 2px solid var(--c-yellow);
-  border-radius: 50%;
+  inset: 0;
+  z-index: -1;
+  background-color: rgba(21, 20, 18, 0.55);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
   opacity: 0;
+  transition: opacity 0.5s var(--ease);
+  pointer-events: none;
 }
-.filters__cursor.is-click::before { animation: cursor-poke 0.55s ease-out; }
-@keyframes cursor-poke {
-  from { opacity: 1; transform: scale(0.3); }
-  to   { opacity: 0; transform: scale(1.4); }
-}
-.filter.is-poked { color: var(--c-text); border-color: var(--c-yellow); }
+.filters.is-stuck::before { opacity: 1; }
 
 /* invito sopra la barra */
 .filters__hint {
