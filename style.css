@@ -1004,32 +1004,25 @@ h3 {
     0 14px 30px rgba(0, 0, 0, 0.38),
     0 3px 8px rgba(0, 0, 0, 0.22);
 }
-/* biglietto giallo, dritto, testo scuro, con l'icona della categoria (stesso tratto di What I do).
-   Niente scotch (vale per tutte le categorie, anche Photo) */
+/* descrizione della categoria: solo il titolo in un riquadro giallo (testo scuro, più grande),
+   il testo sotto in chiaro, senza fondo. Niente scotch, niente rotazione (anche Photo) */
 .showcase__note.showcase__note {
+  background: none;
+  box-shadow: none;
+  rotate: 0deg;
+  padding: 0;
+  color: var(--c-text);
+}
+.showcase__note::before { content: none; }
+.showcase__note .showcase__note-label {
+  display: inline-block;
+  padding: 0.45em 0.7em 0.4em;
+  margin-bottom: 0.85rem;
   background: var(--c-yellow);
   color: var(--c-ink);
-  rotate: 0deg;
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+  font-size: clamp(0.95rem, 0.85rem + 0.35vw, 1.15rem);
 }
-.showcase__note .showcase__note-label { color: var(--c-ink); }
-.showcase__note .showcase__note-text { color: var(--c-ink); }
-.showcase__note::before { content: none; }
-.showcase__note-icon {
-  display: block;
-  width: 30px;
-  height: 30px;
-  margin-bottom: 0.7rem;
-  fill: none;
-  stroke: var(--c-ink);
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.showcase__note-icon:empty { display: none; }
-/* reel e Photo: biglietto centrato, icona centrata */
-.showcase.is-reels .showcase__note-icon,
-.photo__note .showcase__note-icon { margin-inline: auto; }
+.showcase__note .showcase__note-text { color: var(--c-text); }
 .showcase__note-label { color: var(--c-ink); font-weight: 800; margin-bottom: 0.45rem; }
 .showcase__note-text { font-size: var(--fs-small); line-height: 1.55; color: #37342f; }
 
