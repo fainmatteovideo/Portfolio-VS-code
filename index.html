@@ -108,7 +108,10 @@
 
   <div class="mobile-menu" id="mobile-menu" hidden>
     <nav aria-label="Main mobile">
-      <a href="#work">Work</a>
+      <!-- Work apre il sottomenu con le categorie (riempito da main.js da projects.json) -->
+      <button class="mobile-menu__toggle" type="button" aria-expanded="false" aria-controls="menu-work">Work
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div class="mobile-menu__sub" id="menu-work" hidden></div>
       <a href="#services">Services</a>
       <a href="#process">How I work</a>
       <a href="#about">About</a>

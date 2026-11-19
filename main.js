@@ -138,6 +138,25 @@
   // finestra allargata col menu aperto: si chiude, le voci sono tornate nella barra
   inlineMQ.addEventListener("change", (e) => { if (e.matches && !menu.hidden) setMenu(false); });
   menu.addEventListener("click", (e) => { if (e.target.closest("a")) setMenu(false); });
+  // Work nel menu del telefono: apre e chiude il sottomenu con le categorie
+  const workToggle = menu.querySelector(".mobile-menu__toggle");
+  const workSub = document.getElementById("menu-work");
+  if (workToggle && workSub) {
+    workToggle.addEventListener("click", () => {
+      const open = workToggle.getAttribute("aria-expanded") !== "true";
+      workToggle.setAttribute("aria-expanded", String(open));
+      workSub.hidden = !open;
+    });
+    // una categoria: chiude il menu e apre i lavori con quel filtro (anche se è già quella scelta)
+    workSub.addEventListener("click", (e) => {
+      const a = e.target.closest("a");
+      if (!a) return;
+      e.preventDefault();
+      const id = a.getAttribute("href").slice(1);
+      if (location.hash === "#" + id) history.replaceState(null, "", location.pathname);
+      location.hash = id;
+    });
+  }
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !menu.hidden) setMenu(false);
   });
@@ -553,6 +572,17 @@
       const dot = e.target.closest(".showcase__dot");
       if (dot) goToProject(Number(dot.dataset.index));
     });
+    // telefono: freccine quasi trasparenti ai lati del video, per far capire che si può fare swipe
+    // (si possono anche toccare)
+    ["prev", "next"].forEach((dir) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = `showcase__swipe showcase__swipe--${dir}`;
+      b.setAttribute("aria-label", dir === "prev" ? "Previous project" : "Next project");
+      b.innerHTML = ARROW(dir === "prev" ? "M15 5l-7 7 7 7" : "M9 5l7 7-7 7");
+      b.addEventListener("click", () => goToProject(activeIndex + (dir === "prev" ? -1 : 1)));
+      showcase.appendChild(b);
+    });
     stage.addEventListener("scroll", () => {
       if (desktopMQ.matches) return;
       const i = items.findIndex((p) => Math.abs(p.offsetLeft - stage.scrollLeft) < stage.clientWidth / 2);
@@ -650,6 +680,19 @@
   function fitStage() {
     if (desktopMQ.matches || !items.length) return;
     stage.style.height = Math.max(...items.map((p) => p.offsetHeight)) + "px";
+    placeSwipe();
+  }
+  // freccine dello swipe: all'altezza del centro del video della slide attiva; spente ai due capi
+  function placeSwipe() {
+    if (!showcase || desktopMQ.matches) return;
+    const active = items[Math.max(0, activeIndex)];
+    const v = active && (active.querySelector(".slide__grid") || active.querySelector(".video"));
+    if (!v) return;
+    const y = v.getBoundingClientRect().top - showcase.getBoundingClientRect().top + v.offsetHeight / 2;
+    showcase.style.setProperty("--swipe-y", Math.round(y) + "px");
+    showcase.classList.toggle("is-first", activeIndex <= 0);
+    showcase.classList.toggle("is-last", activeIndex >= items.length - 1);
+    showcase.classList.toggle("is-single", items.length < 2);
   }
   // le slide cambiano altezza quando arrivano loghi e font: lo stage le segue
   const slideResize = "ResizeObserver" in window ? new ResizeObserver(() => fitStage()) : null;
@@ -675,6 +718,7 @@
     loadImages(items[i]);
     if (items[i + 1]) loadImages(items[i + 1]);
     syncPlayback();
+    placeSwipe();
   }
 
   // solo il video del progetto attivo è in riproduzione; il successivo si prepara
@@ -1287,6 +1331,9 @@
       list.querySelectorAll(".project__logos img").forEach((img) => sizeLogo(img, projectLogoBase));
       // un indirizzo come fainmatteo.com/#documentary apre i lavori con quel filtro attivo
       const isCategory = (id) => data.categories.some((c) => c.id === id);
+      // sottomenu "Work" del menu del telefono: le stesse categorie dei filtri
+      const menuWork = document.getElementById("menu-work");
+      if (menuWork) menuWork.innerHTML = data.categories.map((c) => `<a href="#${esc(c.id)}">${esc(c.label)}</a>`).join("");
       const goToWork = () => requestAnimationFrame(() => work.scrollIntoView({ behavior: "auto" }));
       const fromHash = location.hash.slice(1);
       applyFilter(isCategory(fromHash) ? fromHash : data.categories[0].id, false);
