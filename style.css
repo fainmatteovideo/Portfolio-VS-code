@@ -2832,7 +2832,16 @@ a > .arrow:first-child { margin: 0 0.35em 0 0; }
 }
 
 /* Menu del telefono: Work apre le categorie */
-.mobile-menu { overflow-y: auto; align-items: safe center; }
+/* il menu parte sotto la barra con logo e "Close": con il sottomenu aperto scorre al suo interno
+   invece di finire sotto la barra; se c'è spazio resta centrato (margin auto) */
+.mobile-menu {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  align-items: flex-start;
+  padding-top: calc(var(--nav-h) + 1rem);
+  padding-bottom: 2rem;
+}
+.mobile-menu nav { margin-block: auto; }
 .mobile-menu__toggle { text-align: left; }
 .mobile-menu__toggle svg {
   width: 0.5em;

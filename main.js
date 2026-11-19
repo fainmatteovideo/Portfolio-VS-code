@@ -147,14 +147,18 @@
       workToggle.setAttribute("aria-expanded", String(open));
       workSub.hidden = !open;
     });
-    // una categoria: chiude il menu e apre i lavori con quel filtro (anche se è già quella scelta)
+    // una categoria: stacco a nero (come dal menu del computer); al buio si chiude il menu, si sceglie
+    // la categoria e si salta ai lavori, poi lo schermo riappare
     workSub.addEventListener("click", (e) => {
       const a = e.target.closest("a");
       if (!a) return;
       e.preventDefault();
+      e.stopPropagation();
       const id = a.getAttribute("href").slice(1);
-      if (location.hash === "#" + id) history.replaceState(null, "", location.pathname);
-      location.hash = id;
+      dipThen(() => {
+        setMenu(false);
+        if (openCategory) openCategory(id);
+      });
     });
   }
   document.addEventListener("keydown", (e) => {
@@ -192,14 +196,16 @@
   dip.setAttribute("aria-hidden", "true");
   document.body.appendChild(dip);
   let dipping = false;
-  function dipTo(y) {
+  function dipTo(y) { dipThen(() => window.scrollTo(0, y)); }
+  // stacco a nero: lo schermo sfuma al nero, "action" cambia la pagina sotto, poi riappare
+  function dipThen(action) {
     if (dipping) return;
     dipping = true;
     dip.classList.add("is-on");
     setTimeout(() => {
       const root = document.documentElement;
       root.style.scrollBehavior = "auto";
-      window.scrollTo(0, y);
+      action();
       root.style.scrollBehavior = "";
       // due fotogrammi per far assestare sezioni ferme e animazioni, poi si riapre
       requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -758,6 +764,7 @@
     filterList.scrollTo({ left: Math.max(0, left), behavior: reducedMotion ? "auto" : "smooth" });
   }
   let data = null;
+  let openCategory = null;   // impostata quando arrivano i progetti
 
   // Telefono: il testo della categoria è tagliato a due righe (CSS) e "Read more" lo apre.
   // Il pulsante compare solo se il testo è davvero tagliato.
@@ -1331,6 +1338,12 @@
       list.querySelectorAll(".project__logos img").forEach((img) => sizeLogo(img, projectLogoBase));
       // un indirizzo come fainmatteo.com/#documentary apre i lavori con quel filtro attivo
       const isCategory = (id) => data.categories.some((c) => c.id === id);
+      // apre subito i lavori con una categoria (usato dal sottomenu del telefono, dentro lo stacco a nero)
+      openCategory = (id) => {
+        applyFilter(id, false);
+        history.replaceState(null, "", "#" + id);
+        work.scrollIntoView({ behavior: "auto" });
+      };
       // sottomenu "Work" del menu del telefono: le stesse categorie dei filtri
       const menuWork = document.getElementById("menu-work");
       if (menuWork) menuWork.innerHTML = data.categories.map((c) => `<a href="#${esc(c.id)}">${esc(c.label)}</a>`).join("");
@@ -1362,7 +1375,9 @@
   const workFilters = document.getElementById("filters");
   const topBlock = [workHead, workHint, workFilters].filter(Boolean);
   let blockShift = 0;
+  let filtersDocBottom = null;   // si ricalcola (null) quando cambia l'impaginazione
   const pullHead = () => {
+    filtersDocBottom = null;
     if (!workHead || !workFilters || !workHint) return;
     const current = parseFloat(workHead.style.marginTop) || 0;
     const mb = parseFloat(getComputedStyle(workHint).marginBottom) || 0;
@@ -1401,7 +1416,10 @@
       // sua posizione naturale (min 0), senza scattare a 0 nel momento in cui il sipario si chiude
       let dy = 0;
       if (workFilters) {
-        const natural = workFilters.getBoundingClientRect().bottom - blockShift;
+        // posizione "naturale" del fondo delle categorie: calcolata una volta (filtersDocBottom) e
+        // poi solo aggiornata con lo scroll, senza rileggere la pagina a ogni fotogramma
+        if (filtersDocBottom === null) filtersDocBottom = workFilters.getBoundingClientRect().bottom - blockShift + window.scrollY;
+        const natural = filtersDocBottom - window.scrollY;
         dy = Math.min(0, c.top - natural);
       }
       blockShift = dy;
